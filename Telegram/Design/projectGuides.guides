@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ProjectGuidesConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectItemGuides>
+    <ProjectItemGuide TargetFile="UI\SignupPhone.xaml">
+      <GuideModels>
+        <GuideModel>
+          <Guides>
+            <Guide Alignment="Top" Position="167" />
+            <Guide Alignment="Left" Position="400" />
+            <Guide Alignment="Top" Position="156" />
+            <Guide Alignment="Top" Position="216" />
+            <Guide Alignment="Top" Position="27" />
+            <Guide Alignment="Left" Position="11" />
+            <Guide Alignment="Top" Position="7" />
+            <Guide Alignment="Top" Position="38" />
+          </Guides>
+        </GuideModel>
+      </GuideModels>
+    </ProjectItemGuide>
+  </ProjectItemGuides>
+</ProjectGuidesConfiguration>

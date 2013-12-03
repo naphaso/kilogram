@@ -22,6 +22,14 @@ namespace Telegram
             //BuildLocalizedApplicationBar();
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e) {
+            DemoClass.HelloDemo();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e) {
+
+        }
+
         // Sample code for building a localized ApplicationBar
         //private void BuildLocalizedApplicationBar()
         //{
