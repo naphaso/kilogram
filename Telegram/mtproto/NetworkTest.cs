@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-using System.Diagnostics;
+using System.Text;
+using Telegram.Core.Logging;
 
 namespace Telegram.mtproto {
     class NetworkTest /*: IDisposable*/ {
-        public NetworkTest() {
-
-        }
+        private static Logger logger = LoggerFactory.getLogger(typeof (NetworkTest));
 
         public static void start() {
-            Debug.WriteLine("start network test");
+            logger.debug("start network test");
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             args.RemoteEndPoint = new DnsEndPoint("naphaso.com", 8787);
             args.UserToken = socket;
             args.Completed += new EventHandler<SocketAsyncEventArgs>(onCompleted);
+
+            
 
             socket.ConnectAsync(args);
         }
@@ -37,14 +34,14 @@ namespace Telegram.mtproto {
                     ProcessSend(args);
                     break;
                 default:
-                    Debug.WriteLine("warning: unknown operation completed");
+                    logger.debug("warning: unknown operation completed");
                     break;
             }
         }
 
         private static void ProcessConnect(SocketAsyncEventArgs args) {
             if (args.SocketError == SocketError.Success) {
-                Debug.WriteLine("on connection completed successfully");
+                logger.debug("on connection completed successfully");
 
                 byte[] buffer = Encoding.UTF8.GetBytes("Hello World");
                 args.SetBuffer(buffer, 0, buffer.Length);
@@ -55,17 +52,17 @@ namespace Telegram.mtproto {
                     ProcessSend(args);
                 }
             } else {
-                Debug.WriteLine("on connection error: " + args.SocketError);
+                logger.debug("on connection error: {0}", args.SocketError);
             }
         }
 
         private static void ProcessReceive(SocketAsyncEventArgs args) {
             if (args.SocketError == SocketError.Success) {
-                Debug.WriteLine("on receive completed");
+                logger.debug("on receive completed");
                 // Received data from server
                 //args.Buffer
                 string data = Encoding.UTF8.GetString(args.Buffer, 0, args.BytesTransferred);
-                Debug.WriteLine("received data: " + data);
+                logger.debug("received data: {0}", data);
                 // Data has now been sent and received from the server. 
                 // Disconnect from the server
                 //Socket sock = args.UserToken as Socket;
@@ -80,7 +77,7 @@ namespace Telegram.mtproto {
                 }
                 //clientDone.Set();
             } else {
-                Debug.WriteLine("on receive error: " + args.SocketError);
+                logger.debug("on receive error: {}", args.SocketError);
             }
         }
 
@@ -88,7 +85,7 @@ namespace Telegram.mtproto {
             if (args.SocketError == SocketError.Success) {
                 // Sent "Hello World" to the server successfully
 
-                Debug.WriteLine("on send completed");
+                logger.debug("on send completed");
 
                 //Read data sent from the server
                 Socket sock = args.UserToken as Socket;
@@ -101,7 +98,8 @@ namespace Telegram.mtproto {
                     ProcessReceive(args);
                 }
             } else {
-                Debug.WriteLine("on send error: " + args.SocketError);
+                logger.debug("on send error: {0}", args.SocketError);
+                
             }
             
         }

@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Telegram.mtproto;
 using Telegram.Resources;
 
 namespace Telegram
@@ -23,7 +24,8 @@ namespace Telegram
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/Signup.xaml", UriKind.Relative));
+            //NavigationService.Navigate(new Uri("/UI/Signup.xaml", UriKind.Relative));
+            NetworkTest.start();
         }
 
         // Sample code for building a localized ApplicationBar
