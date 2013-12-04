@@ -1,0 +1,32 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:Telegram" x:Class="Telegram.SignupName_Control"
+    mc:Ignorable="d"
+    d:DesignHeight="358" d:DesignWidth="456">
+    
+	<UserControl.FontFamily>
+		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+	</UserControl.FontFamily>
+	<UserControl.FontSize>
+		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
+	</UserControl.FontSize>
+	<UserControl.Foreground>
+		<StaticResource ResourceKey="PhoneForegroundBrush"/>
+	</UserControl.Foreground>
+    
+	<Grid x:Name="LayoutRoot">
+
+		<StackPanel x:Name="LayoutRoot_Copy">
+			<local:AvatarPlaceholder_Control Height="130" Margin="15,0,311,0"/>
+			<TextBlock TextWrapping="Wrap" Text="First Name" Style="{StaticResource TextBlockFieldHint}" Margin="12,30,6,-5" Height="27"/>
+			<TextBox TextWrapping="Wrap" BorderThickness="3" HorizontalContentAlignment="Left" Height="72"/>
+			<TextBlock TextWrapping="Wrap" Text="Last Name" Style="{StaticResource TextBlockFieldHint}" Margin="12,0,6,-5" Height="27"/>
+			<TextBox TextWrapping="Wrap" BorderThickness="3" HorizontalContentAlignment="Left" Height="72"/>
+
+		</StackPanel>
+
+	</Grid>
+</UserControl>

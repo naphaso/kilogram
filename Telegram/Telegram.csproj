@@ -15,8 +15,7 @@
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>true</SilverlightApplication>
-    <SupportedCultures>
-    </SupportedCultures>
+    <SupportedCultures>ru-RU</SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
     <XapFilename>Telegram_$(Configuration)_$(Platform).xap</XapFilename>
@@ -94,6 +93,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AvatarPlaceholder_Control.xaml.cs">
+      <DependentUpon>AvatarPlaceholder_Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DemoClass.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -105,8 +107,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SignupCode_Control.xaml.cs">
+      <DependentUpon>SignupCode_Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SignupName_Control.xaml.cs">
+      <DependentUpon>SignupName_Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SignupPhone_Control.xaml.cs">
       <DependentUpon>SignupPhone_Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\DialogList.xaml.cs">
+      <DependentUpon>DialogList.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Signup.xaml.cs">
       <DependentUpon>Signup.xaml</DependentUpon>
@@ -120,11 +131,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="AvatarPlaceholder_Control.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SignupCode_Control.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SignupName_Control.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SignupPhone_Control.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\DialogList.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -164,12 +191,148 @@
     <Content Include="Assets\Tiles\IconicTileSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\UI\appbar.attach.png" />
+    <Content Include="Assets\UI\appbar.cancel.png" />
+    <Content Include="Assets\UI\appbar.check.png" />
+    <Content Include="Assets\UI\appbar.delete.png" />
+    <Content Include="Assets\UI\appbar.edit.png" />
+    <Content Include="Assets\UI\appbar.feature.search.png" />
+    <Content Include="Assets\UI\appbar.forwardmessage.png" />
+    <Content Include="Assets\UI\appbar.manage.png" />
+    <Content Include="Assets\UI\appbar.map.centerme.png" />
+    <Content Include="Assets\UI\appbar.map.checkin.png" />
+    <Content Include="Assets\UI\appbar.new.png" />
+    <Content Include="Assets\UI\appbar.save.png" />
+    <Content Include="Assets\UI\appbar.send.text.png" />
+    <Content Include="Assets\UI\appbar.share.png" />
+    <Content Include="Assets\UI\appbar.smile.png" />
+    <Content Include="Assets\UI\appbar.transport.play.png" />
+    <Content Include="Assets\UI\chat.nomessages-720p.png" />
+    <Content Include="Assets\UI\chat.nomessages-WVGA.png" />
+    <Content Include="Assets\UI\chat.nomessages-WXGA.png" />
+    <Content Include="Assets\UI\chat.state.read-black-720p.png" />
+    <Content Include="Assets\UI\chat.state.read-black-WVGA.png" />
+    <Content Include="Assets\UI\chat.state.read-black-WXGA.png" />
+    <Content Include="Assets\UI\chat.state.read-white-720p.png" />
+    <Content Include="Assets\UI\chat.state.read-white-WVGA.png" />
+    <Content Include="Assets\UI\chat.state.read-white-WXGA.png" />
+    <Content Include="Assets\UI\chat.state.sent-black-720p.png" />
+    <Content Include="Assets\UI\chat.state.sent-black-WVGA.png" />
+    <Content Include="Assets\UI\chat.state.sent-black-WXGA.png" />
+    <Content Include="Assets\UI\chat.state.sent-white-720p.png" />
+    <Content Include="Assets\UI\chat.state.sent-white-WVGA.png" />
+    <Content Include="Assets\UI\chat.state.sent-white-WXGA.png" />
+    <Content Include="Assets\UI\emoji.abc-720p.png" />
+    <Content Include="Assets\UI\emoji.abc-WVGA.png" />
+    <Content Include="Assets\UI\emoji.abc-WXGA.png" />
+    <Content Include="Assets\UI\emoji.backspace-720p.png" />
+    <Content Include="Assets\UI\emoji.backspace-WVGA.png" />
+    <Content Include="Assets\UI\emoji.backspace-WXGA.png" />
+    <Content Include="Assets\UI\emoji.category.1-720p.png" />
+    <Content Include="Assets\UI\emoji.category.1-WVGA.png" />
+    <Content Include="Assets\UI\emoji.category.1-WXGA.png" />
+    <Content Include="Assets\UI\emoji.category.2-720p.png" />
+    <Content Include="Assets\UI\emoji.category.2-WVGA.png" />
+    <Content Include="Assets\UI\emoji.category.3-720p.png" />
+    <Content Include="Assets\UI\emoji.category.3-WVGA.png" />
+    <Content Include="Assets\UI\emoji.category.3-WXGA.png" />
+    <Content Include="Assets\UI\emoji.category.4-720p.png" />
+    <Content Include="Assets\UI\emoji.category.4-WVGA.png" />
+    <Content Include="Assets\UI\emoji.category.4-WXGA.png" />
+    <Content Include="Assets\UI\emoji.category.5-720p.png" />
+    <Content Include="Assets\UI\emoji.category.5-WVGA.png" />
+    <Content Include="Assets\UI\emoji.category.5-WXGA.png" />
+    <Content Include="Assets\UI\emoji.recent-720p.png" />
+    <Content Include="Assets\UI\emoji.recent-WVGA.png" />
+    <Content Include="Assets\UI\emoji.recent-WXGA.png" />
+    <Content Include="Assets\UI\intro.1-720p.png" />
+    <Content Include="Assets\UI\intro.1-WVGA.png" />
+    <Content Include="Assets\UI\intro.1-WXGA.png" />
+    <Content Include="Assets\UI\intro.2-720p.png" />
+    <Content Include="Assets\UI\intro.2-WVGA.png" />
+    <Content Include="Assets\UI\intro.2-WXGA.png" />
+    <Content Include="Assets\UI\intro.3-720p.png" />
+    <Content Include="Assets\UI\intro.3-WVGA.png" />
+    <Content Include="Assets\UI\intro.3-WXGA.png" />
+    <Content Include="Assets\UI\intro.4-720p.png" />
+    <Content Include="Assets\UI\intro.4-WVGA.png" />
+    <Content Include="Assets\UI\intro.4-WXGA.png" />
+    <Content Include="Assets\UI\intro.5-720p.png" />
+    <Content Include="Assets\UI\intro.5-WVGA.png" />
+    <Content Include="Assets\UI\intro.5-WXGA.png" />
+    <Content Include="Assets\UI\intro.6-720p.png" />
+    <Content Include="Assets\UI\intro.6-WVGA.png" />
+    <Content Include="Assets\UI\intro.6-WXGA.png" />
+    <Content Include="Assets\UI\message.state.read-720p.png" />
+    <Content Include="Assets\UI\message.state.read-WVGA.png" />
+    <Content Include="Assets\UI\message.state.read-WXGA.png" />
+    <Content Include="Assets\UI\message.state.sending-720p.png" />
+    <Content Include="Assets\UI\message.state.sending-WVGA.png" />
+    <Content Include="Assets\UI\message.state.sending-WXGA.png" />
+    <Content Include="Assets\UI\message.state.sent-720p.png" />
+    <Content Include="Assets\UI\message.state.sent-WVGA.png" />
+    <Content Include="Assets\UI\message.state.sent-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.group.blue-720p.png" />
+    <Content Include="Assets\UI\placeholder.group.blue-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.group.blue-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.group.cyan-720p.png" />
+    <Content Include="Assets\UI\placeholder.group.cyan-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.group.cyan-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.group.green-720p.png" />
+    <Content Include="Assets\UI\placeholder.group.green-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.group.green-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.group.orange-720p.png" />
+    <Content Include="Assets\UI\placeholder.group.orange-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.group.orange-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.group.pink-720p.png" />
+    <Content Include="Assets\UI\placeholder.group.pink-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.group.pink-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.group.purple-720p.png" />
+    <Content Include="Assets\UI\placeholder.group.purple-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.group.purple-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.group.red-720p.png" />
+    <Content Include="Assets\UI\placeholder.group.red-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.group.red-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.group.yellow-720p.png" />
+    <Content Include="Assets\UI\placeholder.group.yellow-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.group.yellow-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.user.blue-720p.png" />
+    <Content Include="Assets\UI\placeholder.user.blue-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.user.blue-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.user.cyan-720p.png" />
+    <Content Include="Assets\UI\placeholder.user.cyan-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.user.cyan-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.user.green-720p.png" />
+    <Content Include="Assets\UI\placeholder.user.green-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.user.green-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.user.orange-720p.png" />
+    <Content Include="Assets\UI\placeholder.user.orange-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.user.orange-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.user.pink-720p.png" />
+    <Content Include="Assets\UI\placeholder.user.pink-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.user.pink-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.user.purple-720p.png" />
+    <Content Include="Assets\UI\placeholder.user.purple-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.user.purple-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.user.red-720p.png" />
+    <Content Include="Assets\UI\placeholder.user.red-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.user.red-WXGA.png" />
+    <Content Include="Assets\UI\placeholder.user.yellow-720p.png" />
+    <Content Include="Assets\UI\placeholder.user.yellow-WVGA.png" />
+    <Content Include="Assets\UI\placeholder.user.yellow-WXGA.png" />
+    <Content Include="Assets\UI\secretchat-black-720p.png" />
+    <Content Include="Assets\UI\secretchat-black-WVGA.png" />
+    <Content Include="Assets\UI\secretchat-black-WXGA.png" />
+    <Content Include="Assets\UI\secretchat-white-720p.png" />
+    <Content Include="Assets\UI\secretchat-white-WVGA.png" />
+    <Content Include="Assets\UI\secretchat-white-WXGA.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AppResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\AppResources.ru-RU.resx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

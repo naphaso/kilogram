@@ -9,7 +9,7 @@
     <Application.Resources>
         <local:LocalizedStrings xmlns:local="clr-namespace:Telegram" x:Key="LocalizedStrings"/>
         <Style x:Key="TextBlockFieldHint" TargetType="TextBlock">
-        	<Setter Property="Foreground" Value="#FF747474"/>
+        	<Setter Property="Foreground" Value="#FF999999"/>
         </Style>
     </Application.Resources>
 

@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="Telegram.AvatarPlaceholder_Control"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="130" d:DesignWidth="130">
+    
+    <Grid x:Name="LayoutRoot" Background="#FF008A00">
+    	<StackPanel VerticalAlignment="Bottom">
+    		<TextBlock TextWrapping="Wrap" Text="add photo" Style="{StaticResource PhoneTextLargeStyle}" Margin="12,0,12,5"/>
+    	</StackPanel>
+
+    </Grid>
+</UserControl>
