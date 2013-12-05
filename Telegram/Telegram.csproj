@@ -123,6 +123,7 @@
     <Compile Include="UI\DialogList.xaml.cs">
       <DependentUpon>DialogList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\DialogTemplateSelector.cs" />
     <Compile Include="UI\Models\DialogItem.cs" />
     <Compile Include="UI\Models\DialogsModel.cs" />
     <Compile Include="UI\Signup.xaml.cs">
