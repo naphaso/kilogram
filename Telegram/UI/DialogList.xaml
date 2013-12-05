@@ -41,7 +41,7 @@
             <ui:DialogTemplateSelector Content="{Binding}"
                                 DialogTemplate="{StaticResource DialogTemplate}"
                                 ChatTemplate="{StaticResource ChatTemplate}"
-                                       HorizontalContentAlignment="Stretch"/>
+                                HorizontalContentAlignment="Stretch"/>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
 
