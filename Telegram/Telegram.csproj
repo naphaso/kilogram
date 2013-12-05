@@ -96,6 +96,8 @@
     <Compile Include="AvatarPlaceholder_Control.xaml.cs">
       <DependentUpon>AvatarPlaceholder_Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\Logging\Logger.cs" />
+    <Compile Include="Core\Logging\LoggerFactory.cs" />
     <Compile Include="DemoClass.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
