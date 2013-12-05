@@ -17,14 +17,5 @@
         </GuideModel>
       </GuideModels>
     </ProjectItemGuide>
-    <ProjectItemGuide TargetFile="SignupPhone_Control.xaml">
-      <GuideModels>
-        <GuideModel>
-          <Guides>
-            <Guide Alignment="Left" Position="438" />
-          </Guides>
-        </GuideModel>
-      </GuideModels>
-    </ProjectItemGuide>
   </ProjectItemGuides>
 </ProjectGuidesConfiguration>

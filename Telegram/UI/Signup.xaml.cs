@@ -10,19 +10,19 @@ using Microsoft.Phone.Shell;
 
 namespace Telegram {
     public partial class SignupPhone : PhoneApplicationPage {
-        int screenState = 0;
+        int _screenState = 0;
         public SignupPhone() {
             InitializeComponent();
-            showPhoneScene();
+            ShowPhoneScene();
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e) {
-            switch (screenState) {
+            switch (_screenState) {
                 case 0:
-                    showCodeScene();
+                    ShowCodeScene();
                     break;
                 case 1:
-                    showNameScene();
+                    ShowNameScene();
                     break;
                 case 2:
                     NavigationService.Navigate(new Uri("/UI/DialogList.xaml", UriKind.Relative));
@@ -32,22 +32,22 @@ namespace Telegram {
                     break;
             }
 
-            screenState++;
+            _screenState++;
         }
 
-        private void showPhoneScene() {
+        private void ShowPhoneScene() {
             phoneControl.Visibility = System.Windows.Visibility.Visible;
             codeControl.Visibility = System.Windows.Visibility.Collapsed;
             nameControl.Visibility = System.Windows.Visibility.Collapsed;
         }
 
-        private void showCodeScene() {
+        private void ShowCodeScene() {
             phoneControl.Visibility = System.Windows.Visibility.Collapsed;
             codeControl.Visibility = System.Windows.Visibility.Visible;
             nameControl.Visibility = System.Windows.Visibility.Collapsed;
         }
 
-        private void showNameScene() {
+        private void ShowNameScene() {
             phoneControl.Visibility = System.Windows.Visibility.Collapsed;
             codeControl.Visibility = System.Windows.Visibility.Collapsed;
             nameControl.Visibility = System.Windows.Visibility.Visible;

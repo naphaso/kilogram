@@ -1,5 +1,5 @@
 ﻿<phone:PhoneApplicationPage
-    x:Class="Telegram.DialogList"
+    x:Class="Telegram.UI.DialogList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -22,14 +22,32 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="dialog list" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="TELEGRAM" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <phone:Pivot Grid.Row="1">
+                <phone:PivotItem Header="chats" Height="Auto" Margin="12,28,12,6">
+                    <!--ContentPanel - place additional content here-->
+                    <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0" Height="579">
+                        <phone:LongListSelector Name="dialogList" LayoutMode="List" IsGroupingEnabled="False" Height="555" Margin="0,10,10,-455" VerticalAlignment="Top">
+                            <phone:LongListSelector.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Grid>
+                                            <TextBlock Text="{Binding Preview}" Margin="90,54,50,20" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2"/>
+                                            <TextBlock Text="{Binding Timestamp}" Margin="0,10,0,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top"/>
+                                            <Image Margin="12,19,0,0" Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="{Binding Title}" Margin="90,10,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </phone:LongListSelector.ItemTemplate>
+                        </phone:LongListSelector>
+                    </Grid>
+                </phone:PivotItem>
+                <phone:PivotItem Header="contacts">
+                    <TextBlock Text="contacts block!"/>
+                </phone:PivotItem>
+            </phone:Pivot>
         </StackPanel>
-
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-
-        </Grid>
     </Grid>
 
 </phone:PhoneApplicationPage>
