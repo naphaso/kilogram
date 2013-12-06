@@ -24,8 +24,8 @@ namespace Telegram
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {
-            //NavigationService.Navigate(new Uri("/UI/Signup.xaml", UriKind.Relative));
-            NetworkTest.start();
+            NavigationService.Navigate(new Uri("/UI/Signup.xaml", UriKind.Relative));
+//            NetworkTest.start();
         }
 
         // Sample code for building a localized ApplicationBar
