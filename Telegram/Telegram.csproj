@@ -128,6 +128,9 @@
       <DependentUpon>Settings.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\SettingsNotification.xaml.cs">
+      <DependentUpon>SettingsNotification.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
@@ -140,9 +143,6 @@
     <Compile Include="UI\Models\Users\UserTemplateSelector.cs" />
     <Compile Include="UI\Signup.xaml.cs">
       <DependentUpon>Signup.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\SignupPhone.xaml.cs">
-      <DependentUpon>SignupPhone.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +178,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\SettingsNotification.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\StartPage.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -189,10 +193,6 @@
     <Page Include="UI\Signup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\SignupPhone.xaml">
-      <Generator>MSBuild:MarkupCompilePass1</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

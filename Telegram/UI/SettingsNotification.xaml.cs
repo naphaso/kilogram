@@ -8,12 +8,9 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-namespace Telegram
-{
-    public partial class WindowsPhoneControl1 : UserControl
-    {
-        public WindowsPhoneControl1()
-        {
+namespace Telegram.UI {
+    public partial class SettingsNotification : PhoneApplicationPage {
+        public SettingsNotification() {
             InitializeComponent();
         }
     }

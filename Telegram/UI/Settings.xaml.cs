@@ -35,5 +35,35 @@ namespace Telegram.UI
         private void SavePhotos_Unchecked(object sender, RoutedEventArgs e) {
             Debug.WriteLine("SavePhotos_Unchecked");
         }
+
+        private void Edit_Click(object sender, EventArgs e) {
+            throw new NotImplementedException();
+        }
+
+        private void Dummy_Click(object sender, EventArgs e) {
+            throw new NotImplementedException();
+        }
+
+        private void SettingsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (sender.GetType() != typeof (LongListSelector))
+                return;
+
+            var selector = (LongListSelector) sender;
+
+            if (selector.SelectedItem.GetType() != typeof (MainSettingsItem))
+                return;
+
+            var item = (MainSettingsItem) selector.SelectedItem;
+
+            if (item.Name == "notifications") {
+                Debug.WriteLine("Selected notifications");
+                NavigationService.Navigate(new Uri("/UI/SettingsNotification.xaml", UriKind.Relative));
+            }
+            else {
+                Debug.WriteLine("Uknown selection");
+            }
+            
+            
+        }
     }
 }
