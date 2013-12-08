@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -7,7 +8,7 @@ using Telegram.Core.Logging;
 namespace Telegram.mtproto {
     class NetworkTest /*: IDisposable*/ {
         private static Logger logger = LoggerFactory.getLogger(typeof (NetworkTest));
-
+       
         public static void start() {
             logger.debug("start network test");
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
