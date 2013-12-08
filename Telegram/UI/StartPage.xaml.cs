@@ -46,7 +46,7 @@ namespace Telegram.UI
 
             contactsList.ItemsSource = observableUsersSource;
 
-            BuildAppBar();
+//            BuildAppBar();
         }
 
         private void BuildAppBar() {
@@ -62,6 +62,18 @@ namespace Telegram.UI
             ApplicationBar.Buttons.Add(searchButton);
 
             ApplicationBar.MenuItems.Add(new ApplicationBarMenuItem("Settings"));
+        }
+
+        private void New_Click(object sender, EventArgs e) {
+            throw new NotImplementedException();
+        }
+
+        private void Search_Click(object sender, EventArgs e) {
+            throw new NotImplementedException();
+        }
+
+        private void Settings_Click(object sender, EventArgs e) {
+            NavigationService.Navigate(new Uri("/UI/Settings.xaml", UriKind.Relative));
         }
     }
 }

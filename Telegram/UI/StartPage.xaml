@@ -133,4 +133,17 @@
         </StackPanel>
     </Grid>
 
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
+
+            <shell:ApplicationBarIconButton Click="New_Click" IconUri="/Assets/UI/appbar.new.png" Text="new dialog" />
+            <shell:ApplicationBarIconButton Click="Search_Click" IconUri="/Assets/UI/appbar.feature.search.png" Text="search" />
+
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Click="Settings_Click" Text="settings" />
+            </shell:ApplicationBar.MenuItems>
+
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
 </phone:PhoneApplicationPage>

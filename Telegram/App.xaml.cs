@@ -6,12 +6,13 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Telegram.Model;
 using Telegram.Resources;
 
 namespace Telegram
 {
-    public partial class App : Application
-    {
+    public partial class App : Application {
+        public static MainSettingsModel SettingsModel = null;
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
         /// </summary>

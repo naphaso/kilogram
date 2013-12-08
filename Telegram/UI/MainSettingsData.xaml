@@ -1,0 +1,12 @@
+﻿<vm:MainSettingsModel
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:Telegram.Model">
+
+    <vm:MainSettingsModel.Items>
+        <vm:MainSettingsItem Name="notifications" Header="message, group, in-app notifications"/>
+        <vm:MainSettingsItem Name="blocked users" Header="0 users"/>
+        <vm:MainSettingsItem Name="support" Header="ask a question"/>
+    </vm:MainSettingsModel.Items>
+
+</vm:MainSettingsModel>
