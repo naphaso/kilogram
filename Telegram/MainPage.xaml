@@ -13,6 +13,11 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
+	<phone:PhoneApplicationPage.Resources>
+		<Style x:Key="TextBlockStyleGreen" TargetType="TextBlock">
+			<Setter Property="Foreground" Value="#FF008A00"/>
+		</Style>
+	</phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent">
@@ -56,12 +61,10 @@
 			<Button Content="auth" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Button_Click"/>
 		</StackPanel>
 
-        <Grid Margin="12,240,12,206" Grid.Row="1">
-            <TextBlock Text="Hello" Margin="90,79,50,0" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2"/>
-            <TextBlock Text="11:15p" Margin="0,10,0,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top"/>
-            <Image Margin="12,19,0,0" Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-            <TextBlock Text="Chat of fun" Margin="90,10,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
-            <TextBlock HorizontalAlignment="Left" Margin="90,52,0,0" TextWrapping="Wrap" Text="You" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Grid Margin="12,236,12,273" Grid.Row="1">
+            <Image Margin="10,10,0,0" Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBlock Text="Chat of fun" Margin="90,5,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+            <TextBlock HorizontalAlignment="Left" Margin="90,45,0,0" TextWrapping="Wrap" Text="last seen never" VerticalAlignment="Top" Style="{StaticResource TextBlockStyleGreen}" Foreground="#FF008A01"/>
         </Grid>
         <!--ContentPanel - place additional content here-->
 

@@ -1,0 +1,13 @@
+﻿<models:DialogsModel
+    
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="clr-namespace:Telegram.UI.Models">
+
+   <models:DialogsModel.Items>
+        <models:DialogItem Title="John Smith" Avatar="file://somepath.png" Preview="Lorem ipsum, username" Timestamp="11:42a"/>
+        <models:DialogItem Title="Bill Gates" Avatar="file://somepath.png" Preview="Photo" Timestamp="12:42p"/>
+        <models:DialogItem Title="Andrea J" Avatar="file://somepath.png" Preview="hello" Timestamp="1:42p"/>
+        <models:DialogItem Title="John doe" Avatar="file://somepath.png" Preview="what's up?" Timestamp="2:36p"/>
+    </models:DialogsModel.Items>
+</models:DialogsModel>
