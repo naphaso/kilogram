@@ -120,12 +120,17 @@
     <Compile Include="SignupPhone_Control.xaml.cs">
       <DependentUpon>SignupPhone_Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\DialogList.xaml.cs">
-      <DependentUpon>DialogList.xaml</DependentUpon>
+    <Compile Include="UI\Models\AlphaKeyGroup.cs" />
+    <Compile Include="UI\StartPage.xaml.cs">
+      <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\DialogTemplateSelector.cs" />
-    <Compile Include="UI\Models\DialogItem.cs" />
-    <Compile Include="UI\Models\DialogsModel.cs" />
+    <Compile Include="UI\Models\DataTemplateSelector.cs" />
+    <Compile Include="UI\Models\Dialogs\DialogTemplateSelector.cs" />
+    <Compile Include="UI\Models\Dialogs\DialogItem.cs" />
+    <Compile Include="UI\Models\Dialogs\DialogsModel.cs" />
+    <Compile Include="UI\Models\Users\UserItem.cs" />
+    <Compile Include="UI\Models\Users\UsersModel.cs" />
+    <Compile Include="UI\Models\Users\UserTemplateSelector.cs" />
     <Compile Include="UI\Signup.xaml.cs">
       <DependentUpon>Signup.xaml</DependentUpon>
     </Compile>
@@ -158,11 +163,11 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\DialogList.xaml">
+    <Page Include="UI\StartPage.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\Models\DialogModel.xaml">
+    <Page Include="UI\Models\Dialogs\DialogModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
