@@ -44,7 +44,7 @@ namespace Telegram.UI
                 (UserItem s) => s.Name, true);
 
             var observableUsersSource = new ObservableCollection<AlphaKeyGroup<UserItem>>(userDataSource);
-
+            
             contactsList.ItemsSource = observableUsersSource;
 
 //            BuildAppBar();

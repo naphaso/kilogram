@@ -1,0 +1,12 @@
+﻿<vm:DialogMessageModel
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:Telegram.Model">
+
+    <vm:DialogMessageModel.Items>
+        <vm:DialogMessageItem Sender="notifications" Text="message, group, in-app notifications"/>
+        <vm:DialogMessageItem Sender="blocked users" Text="0 users"/>
+        <vm:DialogMessageItem Sender="support" Text="ask a question"/>
+    </vm:DialogMessageModel.Items>
+
+</vm:DialogMessageModel>

@@ -103,6 +103,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\DialogMessageItem.cs" />
+    <Compile Include="Model\DialogMessageModel.cs" />
     <Compile Include="Model\MainSettingsItem.cs" />
     <Compile Include="Model\MainSettingsModel.cs" />
     <Compile Include="MTProto\NetworkGateway.cs" />
@@ -122,6 +124,9 @@
     </Compile>
     <Compile Include="SignupPhone_Control.xaml.cs">
       <DependentUpon>SignupPhone_Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog.xaml.cs">
+      <DependentUpon>Dialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Intro.xaml.cs">
       <DependentUpon>Intro.xaml</DependentUpon>
@@ -146,6 +151,9 @@
     <Compile Include="UI\Models\Users\UserTemplateSelector.cs" />
     <Compile Include="UI\Signup.xaml.cs">
       <DependentUpon>Signup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\test.xaml.cs">
+      <DependentUpon>test.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +185,14 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UI\Dialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\DialogDemoData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Intro.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,6 +216,10 @@
     <Page Include="UI\Signup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\test.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -387,6 +407,7 @@
     <Reference Include="Coding4Fun.Toolkit.Storage">
       <HintPath>..\packages\Coding4Fun.Toolkit.Storage.2.0.7\lib\windowsphone8\Coding4Fun.Toolkit.Storage.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
