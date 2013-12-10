@@ -4,8 +4,8 @@
   <Languages xmlns="">
     <Language code="ru-RU" />
   </Languages>
-  <App xmlns="" ProductID="{370e5e35-dbc0-4df1-980e-30cf8860f3c3}" Title="uTelegram" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Telegram author" Description="Telegram client implementation for dev.stel.com" Publisher="Telegram" PublisherID="{6daf1d88-c20d-4e80-9886-886d7efba23f}">
-    <IconPath IsRelative="true" IsResource="false">Assets\UI\chat.nomessages-720p.png</IconPath>
+  <App xmlns="" ProductID="{370e5e35-dbc0-4df1-980e-30cf8860f3c3}" Title="Telegram" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="team undefware" Description="Telegram client implementation for dev.stel.com" Publisher="undefware" PublisherID="{6daf1d88-c20d-4e80-9886-886d7efba23f}">
+    <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
       <Capability Name="ID_CAP_MEDIALIB_AUDIO" />
@@ -23,11 +23,16 @@
           <Count>0</Count>
           <BackgroundImageURI IsRelative="true" IsResource="false">Assets\UI\chat.nomessages-WVGA.png</BackgroundImageURI>
           <Title>Telegram</Title>
-          <BackContent></BackContent>
-          <BackBackgroundImageURI></BackBackgroundImageURI>
-          <BackTitle></BackTitle>
-          <DeviceLockImageURI></DeviceLockImageURI>
-          <HasLarge></HasLarge>
+          <BackContent>
+          </BackContent>
+          <BackBackgroundImageURI>
+          </BackBackgroundImageURI>
+          <BackTitle>
+          </BackTitle>
+          <DeviceLockImageURI>
+          </DeviceLockImageURI>
+          <HasLarge>
+          </HasLarge>
         </TemplateFlip>
       </PrimaryToken>
     </Tokens>

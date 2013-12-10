@@ -24,7 +24,7 @@ namespace Telegram
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/Signup.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Intro.xaml", UriKind.Relative));
 //            NetworkTest.start();
         }
 

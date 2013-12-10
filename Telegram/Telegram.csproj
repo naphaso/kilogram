@@ -123,6 +123,9 @@
     <Compile Include="SignupPhone_Control.xaml.cs">
       <DependentUpon>SignupPhone_Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Intro.xaml.cs">
+      <DependentUpon>Intro.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Models\AlphaKeyGroup.cs" />
     <Compile Include="UI\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
@@ -173,6 +176,10 @@
     <Page Include="SignupPhone_Control.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Intro.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Settings.xaml">
       <SubType>Designer</SubType>
