@@ -29,15 +29,27 @@
 
         <!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-			<Grid Margin="92,197,55,326" MinWidth="100" MinHeight="50">
+			<Grid Margin="10,194,110,321" MinWidth="100" MinHeight="50">
 				<Rectangle Fill="{StaticResource PhoneAccentBrush}" Margin="0,7,0,-1" Stroke="Black"/>
 
-				<es:RegularPolygon Fill="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Left" InnerRadius="1" Margin="5.812,0,0,0" PointCount="3" Stretch="Fill" Stroke="Black" UseLayoutRounding="False" Width="28" RenderTransformOrigin="0.5,0.5" StrokeThickness="0" Height="16" VerticalAlignment="Top">
+				<es:RegularPolygon Fill="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Left" InnerRadius="1" Margin="12,0,0,0" PointCount="3" Stretch="Fill" Stroke="Black" UseLayoutRounding="False" Width="28" RenderTransformOrigin="0.5,0.5" StrokeThickness="0" Height="16" VerticalAlignment="Top">
 					<es:RegularPolygon.RenderTransform>
 						<CompositeTransform Rotation="90"/>
 					</es:RegularPolygon.RenderTransform>
 				</es:RegularPolygon>
 				<StackPanel Margin="10,19,10,10"/>
+
+			</Grid>
+			<Grid Margin="10,320,110,195" MinWidth="100" MinHeight="50">
+				<Rectangle Fill="{StaticResource PhoneAccentBrush}" Margin="0,7,0,-1" Stroke="Black"/>
+
+				<es:RegularPolygon Fill="{StaticResource PhoneAccentBrush}" InnerRadius="1" Margin="0,0,12,-8" PointCount="3" Stretch="Fill" Stroke="Black" UseLayoutRounding="False" RenderTransformOrigin="0.5,0.5" StrokeThickness="0" HorizontalAlignment="Right" Width="28" Height="16" VerticalAlignment="Bottom">
+					<es:RegularPolygon.RenderTransform>
+						<CompositeTransform Rotation="-90"/>
+					</es:RegularPolygon.RenderTransform>
+				</es:RegularPolygon>
+				<StackPanel Margin="10,19,10,10"/>
+				<Image Height="25" Margin="0,0,5,3" VerticalAlignment="Bottom" Source="/Assets/UI/message.state.read-WXGA.png" HorizontalAlignment="Right" Width="30"/>
 
 			</Grid>
 

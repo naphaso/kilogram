@@ -41,7 +41,7 @@ namespace Telegram.UI {
         }
 
         private void button_Click(object sender, RoutedEventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/StartPage.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Dialog.xaml", UriKind.Relative));
 
         }
     }

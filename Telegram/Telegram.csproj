@@ -132,6 +132,7 @@
       <DependentUpon>Intro.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Models\AlphaKeyGroup.cs" />
+    <Compile Include="UI\Models\MessageBubbleTemplateSelector.cs" />
     <Compile Include="UI\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -410,6 +411,9 @@
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="WatermarkTextbox">
+      <HintPath>..\packages\WatermarkTextbox.1.0.2\lib\WatermarkTextbox.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
