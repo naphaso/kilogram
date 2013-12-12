@@ -26,7 +26,7 @@ namespace Telegram.UI {
         }
 
         private void Dialog_Message_Send(object sender, EventArgs e) {
-            string text = messageEditor.Text;
+            var text = messageEditor.Text;
             var dialogMessageItem = new DialogMessageItem() { Sender = "editor", Text = text, Time = "14:88", IsOut = true};
             MessageModel.Items.Add(dialogMessageItem);
             messageEditor.Text = "";

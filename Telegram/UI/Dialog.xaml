@@ -24,7 +24,10 @@
         				</es:RegularPolygon.RenderTransform>
         			</es:RegularPolygon>
         			<StackPanel Margin="10,19,10,10">
-        				<TextBlock Text="{Binding Text}" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Sender}" Visibility="{Binding SenderVisibility}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding ForwardedFrom}" Visibility="{Binding ForwardedVisibility}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+
+                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"  VerticalAlignment="Top"/>
         				<TextBlock HorizontalAlignment="Right" Text="{Binding Time}" TextWrapping="Wrap"  VerticalAlignment="Top" Opacity="0.6"/>
         			</StackPanel>
         		</Grid>
@@ -41,8 +44,10 @@
         					</es:RegularPolygon.RenderTransform>
         				</es:RegularPolygon>
         			</Grid>
-        			<StackPanel Margin="10,19,10,10">
-        				<TextBlock Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <StackPanel Margin="10,19,10,10">
+                        <TextBlock Text="{Binding ForwardedFrom}" Visibility="{Binding ForwardedVisibility}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+
+                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top"/>
         				<TextBlock HorizontalAlignment="Right" Text="{Binding Time}" TextWrapping="Wrap" Margin="24,0" VerticalAlignment="Top" Opacity="0.6"/>
         				<Image Height="16" Margin="5,-20,0,5" VerticalAlignment="Bottom" Source="/Assets/UI/message.state.read-WVGA.png" HorizontalAlignment="Right" />
         			</StackPanel>

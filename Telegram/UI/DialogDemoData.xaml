@@ -6,7 +6,7 @@
     <vm:DialogMessageModel.Items>
         <vm:DialogMessageItem Sender="notifications" Text="message, group, in-app notifications"/>
         <vm:DialogMessageItem Sender="blocked users" Text="0 users" Time="11:13p" IsOut="False" />
-        <vm:DialogMessageItem Sender="blocked users" Text="0 users" Time="11:13p" IsOut="True" />
+        <vm:DialogMessageItem Sender="blocked users" Text="0 users" Time="11:13p" IsOut="True"/>
         <vm:DialogMessageItem Sender="support" Text="olo lol olo olo lolo lol lo ol lololo olo lol lo lo olo ask ask ask ask ask sak" Time="0:32a" IsOut="False"/>
     </vm:DialogMessageModel.Items>
 
