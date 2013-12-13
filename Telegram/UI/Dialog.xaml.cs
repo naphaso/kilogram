@@ -31,10 +31,12 @@ namespace Telegram.UI {
             MessageModel.Items.Add(dialogMessageItem);
             messageEditor.Text = "";
             dialogList.ScrollTo(dialogMessageItem);
+
+            Toaster.Show("Igor Glotov", text);
         }
 
         private void Dialog_Attach(object sender, EventArgs e) {
-            throw new NotImplementedException();
+            Toaster.Show("Igor Glotov", "Hello");
         }
 
         private void Dialog_Emoji(object sender, EventArgs e) {
