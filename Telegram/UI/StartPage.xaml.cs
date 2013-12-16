@@ -20,7 +20,7 @@ namespace Telegram.UI
         public StartPage()
         {
             InitializeComponent();
-            RemoveBackStack();
+//            RemoveBackStack();
             var items = new ObservableCollection<DialogItem> {
                 new DialogItem() {Avatar = "1", Preview = "Hello.", Timestamp = "11:21a", Title = "John Doe"},
                 new DialogItem() {Avatar = "2", Preview = "Hi there!", Timestamp = "9:56a", Title = "Jane Doe"},

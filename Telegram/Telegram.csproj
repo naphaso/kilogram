@@ -158,6 +158,9 @@
       <DependentUpon>test.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Toaster.cs" />
+    <Compile Include="UI\UserProfile.xaml.cs">
+      <DependentUpon>UserProfile.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -223,6 +226,10 @@
     <Page Include="UI\test.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\UserProfile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
