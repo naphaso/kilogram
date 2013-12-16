@@ -1,0 +1,45 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
+using Telegram.mtproto.Crypto;
+
+namespace Telegram.MTProto.Crypto {
+    class AuthKey {
+        private byte[] key;
+        private ulong keyId;
+        private ulong auxHash;
+        public AuthKey(BigInteger gab) {
+            key = gab.ToByteArrayUnsigned();
+            using(SHA1 hash = new SHA1Managed()) {
+                using(MemoryStream hashStream = new MemoryStream(hash.ComputeHash(key), false)) {
+                    using(BinaryReader hashReader = new BinaryReader(hashStream)) {
+                        auxHash = hashReader.ReadUInt64();
+                        hashReader.ReadBytes(4);
+                        keyId = hashReader.ReadUInt64();
+                    }
+                }
+            }
+        }
+
+        public byte[] CalcNewNonceHash(byte[] newNonce, int number) {
+            using(MemoryStream buffer = new MemoryStream(100)) {
+                using(BinaryWriter bufferWriter = new BinaryWriter(buffer)) {
+                    bufferWriter.Write(newNonce);
+                    bufferWriter.Write((byte)number);
+                    bufferWriter.Write(auxHash);
+                    using(SHA1 sha1 = new SHA1Managed()) {
+                        byte[] hash = sha1.ComputeHash(buffer.GetBuffer(), 0, (int)buffer.Position);
+                        byte[] newNonceHash = new byte[16];
+                        Array.Copy(hash, 4, newNonceHash, 0, 16);
+                        return newNonceHash;
+                    }
+                }
+            }
+        }
+    }
+}
