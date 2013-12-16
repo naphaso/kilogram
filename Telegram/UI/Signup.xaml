@@ -31,8 +31,7 @@
 		<!--TitlePanel contains the name of the application and page title-->
 		<StackPanel Grid.Row="0" Margin="12,17,0,28">
 			<TextBlock Margin="9,50,0,0" Style="{StaticResource PhoneTextLargeStyle}" FontSize="48">
-				<Run Text="Y"/>
-				<Run Text="our phone"/>
+				<Run Text="Your phone"/>
 			</TextBlock>
 			<TextBlock TextWrapping="Wrap" Margin="9,30,100,0" Style="{StaticResource PhoneTextBlockBase}" Text="Please confirm your country code and enter your phone number."/>
 		</StackPanel>

@@ -20,7 +20,8 @@
 	<Grid x:Name="LayoutRoot">
 
 		<StackPanel x:Name="LayoutRoot_Copy">
-			<local:AvatarPlaceholder_Control Height="130" Margin="15,0,311,0"/>
+			<local:AvatarPlaceholder_Control MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp" 
+                                                        Height="130" Margin="15,0,311,0" Name="AvatarHandle"/>
 			<TextBlock TextWrapping="Wrap" Text="First Name" Style="{StaticResource TextBlockFieldHint}" Margin="12,30,6,-5" Height="27"/>
 			<TextBox TextWrapping="Wrap" BorderThickness="3" HorizontalContentAlignment="Left" Height="72"/>
 			<TextBlock TextWrapping="Wrap" Text="Last Name" Style="{StaticResource TextBlockFieldHint}" Margin="12,0,6,-5" Height="27"/>

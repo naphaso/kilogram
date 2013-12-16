@@ -20,6 +20,7 @@ namespace Telegram.UI
         public StartPage()
         {
             InitializeComponent();
+            RemoveBackStack();
             var items = new ObservableCollection<DialogItem> {
                 new DialogItem() {Avatar = "1", Preview = "Hello.", Timestamp = "11:21a", Title = "John Doe"},
                 new DialogItem() {Avatar = "2", Preview = "Hi there!", Timestamp = "9:56a", Title = "Jane Doe"},
@@ -40,13 +41,18 @@ namespace Telegram.UI
 
             List<AlphaKeyGroup<UserItem>> userDataSource = AlphaKeyGroup<UserItem>.CreateGroups(users,
                 System.Threading.Thread.CurrentThread.CurrentUICulture,
-                (UserItem s) => { return s.Name; }, true);
+                (UserItem s) => s.Name, true);
 
             var observableUsersSource = new ObservableCollection<AlphaKeyGroup<UserItem>>(userDataSource);
-
+            
             contactsList.ItemsSource = observableUsersSource;
 
-            BuildAppBar();
+//            BuildAppBar();
+        }
+
+        private void RemoveBackStack() {
+            while (NavigationService.CanGoBack) 
+                NavigationService.RemoveBackEntry();
         }
 
         private void BuildAppBar() {
@@ -62,6 +68,18 @@ namespace Telegram.UI
             ApplicationBar.Buttons.Add(searchButton);
 
             ApplicationBar.MenuItems.Add(new ApplicationBarMenuItem("Settings"));
+        }
+
+        private void New_Click(object sender, EventArgs e) {
+            throw new NotImplementedException();
+        }
+
+        private void Search_Click(object sender, EventArgs e) {
+            throw new NotImplementedException();
+        }
+
+        private void Settings_Click(object sender, EventArgs e) {
+            NavigationService.Navigate(new Uri("/UI/Settings.xaml", UriKind.Relative));
         }
     }
 }

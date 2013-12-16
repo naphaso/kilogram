@@ -61,11 +61,6 @@
 			<Button Content="auth" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Button_Click"/>
 		</StackPanel>
 
-        <Grid Margin="12,236,12,273" Grid.Row="1">
-            <Image Margin="10,10,0,0" Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-            <TextBlock Text="Chat of fun" Margin="90,5,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
-            <TextBlock HorizontalAlignment="Left" Margin="90,45,0,0" TextWrapping="Wrap" Text="last seen never" VerticalAlignment="Top" Style="{StaticResource TextBlockStyleGreen}" Foreground="#FF008A01"/>
-        </Grid>
         <!--ContentPanel - place additional content here-->
 
 	</Grid>

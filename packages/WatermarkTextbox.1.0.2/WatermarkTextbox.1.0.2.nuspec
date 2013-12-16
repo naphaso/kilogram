@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>WatermarkTextbox</id>
+    <version>1.0.2</version>
+    <title>Watermark Textbox For C#/XAML WinRT Apps</title>
+    <authors>Farhan Ghumra</authors>
+    <owners>Farhan Ghumra</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Watermark Textbox For C#/XAML WinRT Apps</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+  </metadata>
+</package>
