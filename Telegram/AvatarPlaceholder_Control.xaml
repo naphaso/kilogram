@@ -12,6 +12,7 @@
     <Grid x:Name="LayoutRoot" Background="#FF008A00">
     	<StackPanel VerticalAlignment="Bottom">
     		<TextBlock TextWrapping="Wrap" Text="add photo" Style="{StaticResource PhoneTextLargeStyle}" Margin="12,0,12,5"/>
+    		<Image x:Name="AvatarImage" Height="130" Source="/Assets/UI/appbar.delete.png" Visibility="Collapsed"/>
     	</StackPanel>
 
     </Grid>

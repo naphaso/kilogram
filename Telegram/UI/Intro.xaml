@@ -46,7 +46,7 @@
                         <Image x:Name="image" Margin="0,0,0,0" 
                                Height="193"
                                Width="193" Source="/Assets/UI/intro.2-WVGA.png" Stretch="Fill" VerticalAlignment="Center" RenderTransformOrigin="1,0.5" HorizontalAlignment="Center"/>
-                        <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="Fast" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0"/>
+                        <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="Fast" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0" Foreground="#FFC54623"/>
                         <TextBlock x:Name="textBlock1" TextWrapping="Wrap" HorizontalAlignment="Left" TextAlignment="Center" Margin="0,20,0,0" Style="{StaticResource PhoneTextTitle3Style}">
                         	<Run Text="Telegram delivers messages faster than"/>
                         	<LineBreak/>
@@ -59,7 +59,7 @@
         				<Image x:Name="image2" Margin="0,0,0,0" 
         					Height="193"
         					Width="193" Source="/Assets/UI/intro.3-WVGA.png" Stretch="Fill" VerticalAlignment="Center" RenderTransformOrigin="1,0.5" HorizontalAlignment="Center"/>
-        				<TextBlock x:Name="textBlock4" TextWrapping="Wrap" Text="Free" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0"/>
+        				<TextBlock x:Name="textBlock4" TextWrapping="Wrap" Text="Free" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0" Foreground="#FFFFA319"/>
         				<TextBlock x:Name="textBlock5" TextWrapping="Wrap" HorizontalAlignment="Left" TextAlignment="Center" Margin="0,20,0,0" Style="{StaticResource PhoneTextTitle3Style}">
         					<Run Text="Telegram is free forever. No ads."/>
         					<LineBreak/>
@@ -72,7 +72,7 @@
         				<Image x:Name="image3" Margin="0,0,0,0" 
         					Height="193"
         					Width="193" Source="/Assets/UI/intro.4-WVGA.png" Stretch="Fill" VerticalAlignment="Center" RenderTransformOrigin="1,0.5" HorizontalAlignment="Center"/>
-        				<TextBlock x:Name="textBlock6" TextWrapping="Wrap" Text="Powerful" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0"/>
+        				<TextBlock x:Name="textBlock6" TextWrapping="Wrap" Text="Powerful" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0" Foreground="#FFFECC01"/>
         				<TextBlock x:Name="textBlock7" TextWrapping="Wrap" HorizontalAlignment="Left" TextAlignment="Center" Margin="0,20,0,0" Style="{StaticResource PhoneTextTitle3Style}">
         					<Run Text="Telegram has no limits on the size of"/>
         					<LineBreak/>
@@ -85,7 +85,7 @@
         				<Image x:Name="image4" Margin="0,0,0,0" 
         					Height="193"
         					Width="193" Source="/Assets/UI/intro.5-WVGA.png" Stretch="Fill" VerticalAlignment="Center" RenderTransformOrigin="1,0.5" HorizontalAlignment="Center"/>
-        				<TextBlock x:Name="textBlock8" TextWrapping="Wrap" Text="Secure" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0"/>
+        				<TextBlock x:Name="textBlock8" TextWrapping="Wrap" Text="Secure" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0" Foreground="#FF5FC527"/>
         				<TextBlock x:Name="textBlock9" TextWrapping="Wrap" HorizontalAlignment="Left" TextAlignment="Center" Margin="0,20,0,0" Style="{StaticResource PhoneTextTitle3Style}">
         					<Run Text="Telegram keeps your messages safe "/>
         					<LineBreak/>
@@ -98,7 +98,7 @@
         				<Image x:Name="image5" Margin="0,0,0,0" 
         					Height="193"
         					Width="193" Source="/Assets/UI/intro.6-WVGA.png" Stretch="Fill" VerticalAlignment="Center" RenderTransformOrigin="1,0.5" HorizontalAlignment="Center"/>
-        				<TextBlock x:Name="textBlock10" TextWrapping="Wrap" Text="Cloud-Based" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0"/>
+        				<TextBlock x:Name="textBlock10" TextWrapping="Wrap" Text="Cloud-Based" TextAlignment="Center" Style="{StaticResource LongListSelectorGroupHeaderLetterTileStyle}" Margin="12,50,12,0" Foreground="#FF339FFE"/>
         				<TextBlock x:Name="textBlock11" TextWrapping="Wrap" HorizontalAlignment="Left" TextAlignment="Center" Margin="0,20,0,0" Style="{StaticResource PhoneTextTitle3Style}">
         					<Run Text="Telegram lets you access your messages "/>
         					<LineBreak/>
