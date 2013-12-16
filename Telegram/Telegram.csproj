@@ -103,8 +103,22 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MTProto\NetworkGateway.cs" />
+    <Compile Include="MTProto\Authenticator.cs" />
+    <Compile Include="MTProto\Crypto\AES.cs" />
+    <Compile Include="MTProto\Crypto\AuthKey.cs" />
+    <Compile Include="MTProto\Crypto\BigInteger.cs" />
+    <Compile Include="MTProto\Crypto\Crc32.cs" />
+    <Compile Include="MTProto\Crypto\Factorizator.cs" />
+    <Compile Include="MTProto\Crypto\RSA.cs" />
+    <Compile Include="MTProto\MTProtoPlainClient.cs" />
+    <Compile Include="MTProto\MTProtoSession.cs" />
+    <Compile Include="MTProto\Serializers.cs" />
+    <Compile Include="MTProto\TL.cs" />
+    <Compile Include="MTProto\TL2.cs" />
+    <Compile Include="MTProto\TransportGateway.cs" />
     <Compile Include="MTProto\NetworkTest.cs" />
+    <Compile Include="MTProto\TelegramSettings.cs" />
+    <Compile Include="MTProto\TelegramStore.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">

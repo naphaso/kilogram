@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Windows.Networking.Sockets;
 using Telegram.Core.Logging;
+using SocketError = System.Net.Sockets.SocketError;
 
 namespace Telegram.mtproto {
     class NetworkTest /*: IDisposable*/ {
         private static Logger logger = LoggerFactory.getLogger(typeof (NetworkTest));
-       
+
         public static void start() {
             logger.debug("start network test");
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
