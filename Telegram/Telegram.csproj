@@ -123,6 +123,9 @@
     <Compile Include="MTProto\NetworkTest.cs" />
     <Compile Include="MTProto\TelegramSettings.cs" />
     <Compile Include="MTProto\TelegramStore.cs" />
+    <Compile Include="PhoneButtonUserControl.xaml.cs">
+      <DependentUpon>PhoneButtonUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
@@ -191,6 +194,10 @@
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PhoneButtonUserControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="SignupCode_Control.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>

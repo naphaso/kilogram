@@ -75,7 +75,7 @@ namespace Telegram.UI
         }
 
         private void Search_Click(object sender, EventArgs e) {
-            throw new NotImplementedException();
+            NavigationService.Navigate(new Uri("/UI/UserProfile.xaml", UriKind.Relative));
         }
 
         private void Settings_Click(object sender, EventArgs e) {

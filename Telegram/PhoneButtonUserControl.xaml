@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="Telegram.PhoneButtonUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}" d:DesignWidth="456" Height="100">
+    
+    <StackPanel x:Name="LayoutRoot" Margin="0,15,0,0">
+		<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="call mobile" VerticalAlignment="Top" FontSize="37.333" FontFamily="Segoe WP SemiLight" Margin="12,0,0,0"/>
+		<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="+7 000 000 00 00" VerticalAlignment="Top" Margin="12,0,0,0">
+			<TextBlock.Foreground>
+				<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+			</TextBlock.Foreground>
+		</TextBlock>
+
+	</StackPanel>
+</UserControl>
