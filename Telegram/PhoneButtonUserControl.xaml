@@ -9,8 +9,8 @@
     Foreground="{StaticResource PhoneForegroundBrush}" d:DesignWidth="456" Height="100">
     
     <StackPanel x:Name="LayoutRoot" Margin="0,15,0,0">
-		<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="call mobile" VerticalAlignment="Top" FontSize="37.333" FontFamily="Segoe WP SemiLight" Margin="12,0,0,0"/>
-		<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="+7 000 000 00 00" VerticalAlignment="Top" Margin="12,0,0,0">
+		<TextBlock Name="Header" HorizontalAlignment="Left" TextWrapping="Wrap" Text="call mobile" VerticalAlignment="Top" FontSize="37.333" FontFamily="Segoe WP SemiLight" Margin="12,0,0,0"/>
+		<TextBlock Name="Content" HorizontalAlignment="Left" TextWrapping="Wrap" Text="+7 000 000 00 00" VerticalAlignment="Top" Margin="12,0,0,0">
 			<TextBlock.Foreground>
 				<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
 			</TextBlock.Foreground>

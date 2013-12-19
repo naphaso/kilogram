@@ -8,14 +8,10 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-namespace Telegram
-{
-    public partial class PhoneButtonUserControl : UserControl
-    {
-        public PhoneButtonUserControl()
-        {
+namespace Telegram.UI {
+    public partial class EditNamePage : PhoneApplicationPage {
+        public EditNamePage() {
             InitializeComponent();
         }
-
     }
 }

@@ -10,12 +10,11 @@ using Microsoft.Phone.Shell;
 
 namespace Telegram
 {
-    public partial class PhoneButtonUserControl : UserControl
+    public partial class AddPhoneUserControl : UserControl
     {
-        public PhoneButtonUserControl()
+        public AddPhoneUserControl()
         {
             InitializeComponent();
         }
-
     }
 }

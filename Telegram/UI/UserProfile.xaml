@@ -25,10 +25,10 @@
 		<phone:Pivot Grid.Row="1" Title="USER NAME">
 			<phone:PivotItem CacheMode="{x:Null}" Header="profile">
 				<ScrollViewer>
-					<Grid Height="603" Width="456">
+					<Grid Width="456" Height="836">
 						<Image Margin="10,10,0,0" Source="/Assets/UI/placeholder.user.orange-WXGA.png" Stretch="Fill" Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 						<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="last seen today at 12:43p" VerticalAlignment="Top" Margin="158,10,0,0" Style="{StaticResource TextBlockFieldHint}" FontSize="21.333"/>
-						<StackPanel Margin="0,156,0,-103" Height="550" VerticalAlignment="Top">
+						<StackPanel Margin="0,156,0,-103" VerticalAlignment="Top">
 							<Button Content="send message" BorderThickness="0" FontSize="40" HorizontalContentAlignment="Left" FontFamily="Segoe WP SemiLight" Padding="0,5,10,6"/>
 							<Button Content="create secret chat" BorderThickness="0" FontSize="40" HorizontalContentAlignment="Left" FontFamily="Segoe WP SemiLight" Padding="0,5,10,6"/>
 							<Telegram:PhoneButtonUserControl Padding="0"/>
@@ -46,5 +46,16 @@
 		</phone:Pivot>
 
 	</Grid>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
 
+            <shell:ApplicationBarIconButton Click="Share_Click" IconUri="/Assets/UI/appbar.share.png" Text="new dialog" />
+            <shell:ApplicationBarIconButton Click="Edit_Click" IconUri="/Assets/UI/appbar.edit.png" Text="search" />
+
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Click="Block_Click" Text="block" />
+            </shell:ApplicationBar.MenuItems>
+
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

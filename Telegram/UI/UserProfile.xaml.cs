@@ -13,5 +13,17 @@ namespace Telegram.UI {
         public UserProfile() {
             InitializeComponent();
         }
+
+        private void Share_Click(object sender, EventArgs e) {
+            throw new NotImplementedException();
+        }
+
+        private void Edit_Click(object sender, EventArgs e) {
+            NavigationService.Navigate(new Uri("/UI/EditUserProfile.xaml", UriKind.Relative));
+        }
+
+        private void Block_Click(object sender, EventArgs e) {
+            throw new NotImplementedException();
+        }
     }
 }

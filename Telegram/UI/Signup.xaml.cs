@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media;
 using Microsoft.Phone.Controls;
 
 namespace Telegram.UI {
@@ -26,25 +27,35 @@ namespace Telegram.UI {
                     break;
             }
 
-            _screenState++;
         }
 
         private void ShowPhoneScene() {
             phoneControl.Visibility = System.Windows.Visibility.Visible;
             codeControl.Visibility = System.Windows.Visibility.Collapsed;
             nameControl.Visibility = System.Windows.Visibility.Collapsed;
+
         }
 
         private void ShowCodeScene() {
+            if (!phoneControl.FormValid()) {
+                phoneControl.PhoneNumberHinTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+
+                return;
+            }
+
             phoneControl.Visibility = System.Windows.Visibility.Collapsed;
             codeControl.Visibility = System.Windows.Visibility.Visible;
             nameControl.Visibility = System.Windows.Visibility.Collapsed;
+
+            _screenState++;
         }
 
         private void ShowNameScene() {
             phoneControl.Visibility = System.Windows.Visibility.Collapsed;
             codeControl.Visibility = System.Windows.Visibility.Collapsed;
             nameControl.Visibility = System.Windows.Visibility.Visible;
+
+            _screenState++;
         }
     }
 }
