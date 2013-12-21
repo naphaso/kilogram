@@ -29,7 +29,18 @@
 		</StackPanel>
 
         <!--ContentPanel - place additional content here-->
-		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0"/>
+		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+			<Grid HorizontalAlignment="Left" Height="102" VerticalAlignment="Top" Width="102" Margin="24,40,0,0">
+				<Image HorizontalAlignment="Left" Height="102" Margin="0,0,0,0" VerticalAlignment="Top" Width="102" Source="/Assets/UI/placeholder.group.orange-720p.png"/>
+				<TextBlock Margin="23,71,22,0" TextWrapping="Wrap" Text="14:88" VerticalAlignment="Top"/>
+				<es:RegularPolygon Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="10" InnerRadius="1" Margin="4.999,80.336,0,0" PointCount="3" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.5,0.5">
+					<es:RegularPolygon.RenderTransform>
+						<CompositeTransform Rotation="90"/>
+					</es:RegularPolygon.RenderTransform>
+				</es:RegularPolygon>
+			</Grid>
+			<MultiScaleImage HorizontalAlignment="Left" Height="191" Margin="150,47,0,0" VerticalAlignment="Top" Width="187"/>
+		</Grid>
 	</Grid>
 
 </phone:PhoneApplicationPage>

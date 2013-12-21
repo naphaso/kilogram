@@ -33,7 +33,6 @@ namespace Telegram.UI {
             phoneControl.Visibility = System.Windows.Visibility.Visible;
             codeControl.Visibility = System.Windows.Visibility.Collapsed;
             nameControl.Visibility = System.Windows.Visibility.Collapsed;
-
         }
 
         private void ShowCodeScene() {

@@ -7,6 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Telegram="clr-namespace:Telegram"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:model="clr-namespace:Telegram.Model"
+    xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing"
     x:Class="Telegram.UI.UserProfile"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -14,7 +16,30 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="PhotoThumbTemplate">
+            <Image Source="{Binding Thumb}" HorizontalAlignment="Left" Height="102" Margin="4,4,4,4" VerticalAlignment="Top" Width="102"/>
+        </DataTemplate>
+        <DataTemplate x:Key="VideoThumbTemplate">
+            <Grid HorizontalAlignment="Left" Height="102" VerticalAlignment="Top" Width="102" Margin="4,4,4,4">
+                <Image HorizontalAlignment="Left" Height="102" Margin="0,0,0,0" VerticalAlignment="Top" Width="102" Source="{Binding Thumb}"/>
+                <TextBlock Margin="23,66,22,5" TextWrapping="Wrap" Text="14:88" VerticalAlignment="Top"/>
+                <es:RegularPolygon Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="10" InnerRadius="1" Margin="5,75,0,5" PointCount="3" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.5,0.5">
+                    <es:RegularPolygon.RenderTransform>
+                        <CompositeTransform Rotation="90"/>
+                    </es:RegularPolygon.RenderTransform>
+                </es:RegularPolygon>
+            </Grid>
+        </DataTemplate>
 
+        <!-- USER TEMPLATE SELECTOR -->
+        <DataTemplate x:Key="ThumbSelectingTemplate">
+            <model:ThumbTemplateSelector Content="{Binding}"
+        		VideoThumbTemplate="{StaticResource VideoThumbTemplate}"
+        		PhotoThumbTemplate="{StaticResource PhotoThumbTemplate}"/>
+        </DataTemplate>
+
+    </phone:PhoneApplicationPage.Resources>
     <!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent">
 		<Grid.RowDefinitions>
@@ -22,8 +47,8 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
-		<phone:Pivot Grid.Row="1" Title="USER NAME">
-			<phone:PivotItem CacheMode="{x:Null}" Header="profile">
+		<phone:Pivot Name="UserProfilePivot" SelectionChanged="Pivot_OnSelectionChanged" Grid.Row="1" Title="USER NAME">
+			<phone:PivotItem  CacheMode="{x:Null}" Header="profile">
 				<ScrollViewer>
 					<Grid Width="456" Height="836">
 						<Image Margin="10,10,0,0" Source="/Assets/UI/placeholder.user.orange-WXGA.png" Stretch="Fill" Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -41,7 +66,9 @@
 				</ScrollViewer>
 			</phone:PivotItem>
 			<phone:PivotItem CacheMode="{x:Null}" Header="media">
-				<Grid/>
+				<Grid Margin="8,0" HorizontalAlignment="Center">
+                    <phone:LongListSelector Name="GalleryListSelector" ItemTemplate="{StaticResource ThumbSelectingTemplate}" ItemsSource="{Binding}"  LayoutMode="Grid" GridCellSize="102,102" Width="432"/>
+				</Grid>
 			</phone:PivotItem>
 		</phone:Pivot>
 

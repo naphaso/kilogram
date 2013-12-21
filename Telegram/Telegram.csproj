@@ -106,6 +106,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\GalleryItemModel.cs" />
+    <Compile Include="Model\ThumbTemplateSelector.cs" />
     <Compile Include="MTProto\Authenticator.cs" />
     <Compile Include="MTProto\Crypto\AES.cs" />
     <Compile Include="MTProto\Crypto\AuthKey.cs" />
@@ -145,6 +147,9 @@
     <Compile Include="SignupPhone_Control.xaml.cs">
       <DependentUpon>SignupPhone_Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ThreeDotUserControl.xaml.cs">
+      <DependentUpon>ThreeDotUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Dialog.xaml.cs">
       <DependentUpon>Dialog.xaml</DependentUpon>
     </Compile>
@@ -156,6 +161,9 @@
     </Compile>
     <Compile Include="UI\Intro.xaml.cs">
       <DependentUpon>Intro.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MediaViewPage.xaml.cs">
+      <DependentUpon>MediaViewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Models\AlphaKeyGroup.cs" />
     <Compile Include="UI\Models\MessageBubbleTemplateSelector.cs" />
@@ -224,6 +232,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ThreeDotUserControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Dialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -241,6 +253,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Intro.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MediaViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -286,6 +302,7 @@
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\elk.jpg" />
     <Content Include="Assets\Tiles\FlipCycleTileLarge.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -301,6 +318,7 @@
     <Content Include="Assets\Tiles\IconicTileSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\train.jpg" />
     <Content Include="Assets\UI\appbar.attach.png" />
     <Content Include="Assets\UI\appbar.cancel.png" />
     <Content Include="Assets\UI\appbar.check.png" />
