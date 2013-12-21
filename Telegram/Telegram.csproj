@@ -162,6 +162,9 @@
     <Compile Include="UI\Intro.xaml.cs">
       <DependentUpon>Intro.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\MapViewPage.xaml.cs">
+      <DependentUpon>MapViewPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\MediaViewPage.xaml.cs">
       <DependentUpon>MediaViewPage.xaml</DependentUpon>
     </Compile>
@@ -253,6 +256,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Intro.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MapViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
