@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Telegram.Core.Logging;
 using Telegram.mtproto.Crypto;
 using Telegram.MTProto.Crypto;
 using Logger = Telegram.Core.Logging.Logger;
+using RSA = Telegram.MTProto.Crypto.RSA;
 
 namespace Telegram.MTProto {
     internal class Authenticator : MTProtoPlainClient {
@@ -22,8 +24,13 @@ namespace Telegram.MTProto {
         private byte[] newNonce = new byte[32];
         private Random random = new Random();
 
-        public async Task<AuthKey> Generate() {
-            await ConnectAsync("173.240.5.253", 443);
+        private int timeOffset;
+
+        public async Task<AuthKey> Generate(TelegramDC dc, int maxRetries) {    
+            ConnectedEvent += delegate {};
+            await ConnectAsync(dc, maxRetries);
+
+            
 
             random.NextBytes(nonce);
 
@@ -35,7 +42,6 @@ namespace Telegram.MTProto {
                 }
             }
 
-            //await Task.Run(() => pendingEvent.WaitOne());
             completionSource = new TaskCompletionSource<byte[]>();
             byte[] response = await completionSource.Task;
 
@@ -132,7 +138,6 @@ namespace Telegram.MTProto {
                 }
             }
 
-            //await Task.Run(() => pendingEvent.WaitOne());
             completionSource = new TaskCompletionSource<byte[]>();
             Send(reqDhParamsBytes);
             response = await completionSource.Task;
@@ -214,6 +219,9 @@ namespace Telegram.MTProto {
                     dhPrime = new BigInteger(1, Serializers.Bytes.read(dhInnerDataReader));
                     ga = new BigInteger(1, Serializers.Bytes.read(dhInnerDataReader));
 
+                    int serverTime = dhInnerDataReader.ReadInt32();
+                    timeOffset = serverTime - (int)(Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) / 1000);
+
                     logger.debug("g: {0}, dhprime: {1}, ga: {2}", g, dhPrime, ga);
                 }
             }
@@ -234,14 +242,24 @@ namespace Telegram.MTProto {
                     clientDhInnerDataWriter.Write((long) 0); // TODO: retry_id
                     Serializers.Bytes.write(clientDhInnerDataWriter, gb.ToByteArrayUnsigned());
 
-                    clientDHInnerDataBytes = clientDhInnerData.ToArray();
+                    using(MemoryStream clientDhInnerDataWithHash = new MemoryStream()) {
+                        using(BinaryWriter clientDhInnerDataWithHashWriter = new BinaryWriter(clientDhInnerDataWithHash)) {
+                            using(SHA1 sha1 = new SHA1Managed()) {
+                                clientDhInnerDataWithHashWriter.Write(sha1.ComputeHash(clientDhInnerData.GetBuffer(), 0, (int)clientDhInnerData.Position));
+                                clientDhInnerDataWithHashWriter.Write(clientDhInnerData.GetBuffer(), 0, (int)clientDhInnerData.Position);
+                                clientDHInnerDataBytes = clientDhInnerDataWithHash.ToArray();
+                            }
+                        }
+                    }
                 }
             }
 
-            logger.debug("client dh inner data papared: {0}", BitConverter.ToString(clientDHInnerDataBytes));
+            logger.debug("client dh inner data papared len {0}: {1}", clientDHInnerDataBytes.Length, BitConverter.ToString(clientDHInnerDataBytes).Replace("-",""));
 
             // encryption
             byte[] clientDhInnerDataEncryptedBytes = AES.EncryptAES(key, clientDHInnerDataBytes);
+
+            logger.debug("inner data encrypted {0}: {1}", clientDhInnerDataEncryptedBytes.Length, BitConverter.ToString(clientDhInnerDataEncryptedBytes).Replace("-",""));
 
             // prepare set_client_dh_params
             byte[] setclientDhParamsBytes;
@@ -258,9 +276,7 @@ namespace Telegram.MTProto {
 
             logger.debug("set client dh params prepared: {0}", BitConverter.ToString(setclientDhParamsBytes));
 
-            
 
-            //await Task.Run(() => pendingEvent.WaitOne());
             completionSource = new TaskCompletionSource<byte[]>();
             Send(setclientDhParamsBytes);
             response = await completionSource.Task;
@@ -297,6 +313,8 @@ namespace Telegram.MTProto {
                         }
 
                         logger.info("generated new auth key: {0}", gab);
+                        logger.info("saving time offset: {0}", timeOffset);
+                        TelegramSettings.Instance.TimeOffset = timeOffset;
                         return authKey;
                     }
                     else if(code == 0x46dc1fb9) { // dh_gen_retry
@@ -316,20 +334,7 @@ namespace Telegram.MTProto {
         }
 
         protected override void OnMTProtoReceive(byte[] response) {
-            //this.response = response;
-
             completionSource.SetResult(response);
-            //pendingEvent.Set();
-        }
-
-
-        public void test() {
-            using(MemoryStream memoryStream = new MemoryStream()) {
-                using(BinaryWriter binaryWriter = new BinaryWriter(memoryStream)) {
-                    binaryWriter.Write((long) 0);
-                    binaryWriter.Write((long) 123);
-                }
-            }
         }
     }
 }

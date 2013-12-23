@@ -1345,307 +1345,307 @@ namespace Telegram.MTProto {
     }
 
     // abstract types
-    public abstract class InputPeerNotifyEvents : TLObject {
-
-    }
-    public abstract class InputMedia : TLObject {
-
-    }
-    public abstract class messages_Messages : TLObject {
-
-    }
-    public abstract class updates_Difference : TLObject {
-
-    }
-    public abstract class messages_StatedMessages : TLObject {
-
-    }
-    public abstract class auth_Authorization : TLObject {
-
-    }
-    public abstract class messages_DhConfig : TLObject {
-
-    }
-    public abstract class GeoChatMessage : TLObject {
-
-    }
-    public abstract class auth_SentCode : TLObject {
-
-    }
-    public abstract class MessagesFilter : TLObject {
-
-    }
-    public abstract class UserProfilePhoto : TLObject {
-
-    }
-    public abstract class photos_Photo : TLObject {
-
-    }
-    public abstract class UserFull : TLObject {
-
-    }
-    public abstract class InputGeoPoint : TLObject {
-
-    }
-    public abstract class InputEncryptedChat : TLObject {
-
-    }
-    public abstract class PhotoSize : TLObject {
-
-    }
-    public abstract class DcOption : TLObject {
-
-    }
-    public abstract class ContactSuggested : TLObject {
-
-    }
-    public abstract class InputNotifyPeer : TLObject {
-
-    }
-    public abstract class ChatParticipant : TLObject {
-
-    }
-    public abstract class InputPeerNotifySettings : TLObject {
-
-    }
-    public abstract class MessageAction : TLObject {
-
-    }
-    public abstract class messages_Chats : TLObject {
-
-    }
-    public abstract class Video : TLObject {
-
-    }
-    public abstract class DecryptedMessageLayer : TLObject {
-
-    }
-    public abstract class FileLocation : TLObject {
-
-    }
-    public abstract class messages_AffectedHistory : TLObject {
-
-    }
-    public abstract class updates_State : TLObject {
-
-    }
-    public abstract class contacts_Found : TLObject {
-
-    }
-    public abstract class InputDocument : TLObject {
-
-    }
-    public abstract class InputFile : TLObject {
-
-    }
-    public abstract class messages_SentEncryptedMessage : TLObject {
-
-    }
-    public abstract class Update : TLObject {
-
-    }
-    public abstract class Photo : TLObject {
-
-    }
     public abstract class MessageMedia : TLObject {
-
-    }
-    public abstract class upload_File : TLObject {
-
-    }
-    public abstract class InputEncryptedFile : TLObject {
-
-    }
-    public abstract class Config : TLObject {
-
-    }
-    public abstract class InputFileLocation : TLObject {
-
-    }
-    public abstract class contacts_MyLink : TLObject {
-
-    }
-    public abstract class messages_SentMessage : TLObject {
-
-    }
-    public abstract class Contact : TLObject {
-
-    }
-    public abstract class WallPaper : TLObject {
-
-    }
-    public abstract class help_InviteText : TLObject {
-
-    }
-    public abstract class InputPhotoCrop : TLObject {
 
     }
     public abstract class ContactBlocked : TLObject {
 
     }
-    public abstract class contacts_Link : TLObject {
+    public abstract class auth_Authorization : TLObject {
 
     }
-    public abstract class Audio : TLObject {
+    public abstract class messages_SentMessage : TLObject {
 
     }
-    public abstract class Peer : TLObject {
+    public abstract class UserFull : TLObject {
 
     }
-    public abstract class ChatLocated : TLObject {
-
-    }
-    public abstract class InputAudio : TLObject {
-
-    }
-    public abstract class geochats_Located : TLObject {
+    public abstract class DcOption : TLObject {
 
     }
     public abstract class Updates : TLObject {
 
     }
-    public abstract class messages_Message : TLObject {
-
-    }
     public abstract class PeerNotifySettings : TLObject {
-
-    }
-    public abstract class InputVideo : TLObject {
-
-    }
-    public abstract class InputGeoChat : TLObject {
-
-    }
-    public abstract class contacts_ForeignLink : TLObject {
-
-    }
-    public abstract class messages_Chat : TLObject {
-
-    }
-    public abstract class DecryptedMessageAction : TLObject {
-
-    }
-    public abstract class PeerNotifyEvents : TLObject {
-
-    }
-    public abstract class messages_StatedMessage : TLObject {
-
-    }
-    public abstract class InputPeer : TLObject {
-
-    }
-    public abstract class InputChatPhoto : TLObject {
-
-    }
-    public abstract class ImportedContact : TLObject {
-
-    }
-    public abstract class contacts_Suggested : TLObject {
-
-    }
-    public abstract class contacts_ImportedContacts : TLObject {
-
-    }
-    public abstract class ContactFound : TLObject {
 
     }
     public abstract class storage_FileType : TLObject {
 
     }
+    public abstract class Audio : TLObject {
+
+    }
+    public abstract class FileLocation : TLObject {
+
+    }
+    public abstract class InputDocument : TLObject {
+
+    }
     public abstract class InputUser : TLObject {
 
     }
-    public abstract class photos_Photos : TLObject {
+    public abstract class geochats_Located : TLObject {
 
     }
-    public abstract class Dialog : TLObject {
+    public abstract class contacts_Link : TLObject {
 
     }
-    public abstract class geochats_StatedMessage : TLObject {
+    public abstract class messages_SentEncryptedMessage : TLObject {
 
     }
-    public abstract class GeoPoint : TLObject {
+    public abstract class ChatLocated : TLObject {
+
+    }
+    public abstract class InputFileLocation : TLObject {
 
     }
     public abstract class UserStatus : TLObject {
 
     }
-    public abstract class NearestDc : TLObject {
+    public abstract class Update : TLObject {
 
     }
-    public abstract class InputContact : TLObject {
+    public abstract class help_InviteText : TLObject {
 
     }
-    public abstract class EncryptedMessage : TLObject {
+    public abstract class InputGeoChat : TLObject {
 
     }
-    public abstract class User : TLObject {
+    public abstract class InputPeerNotifyEvents : TLObject {
 
     }
-    public abstract class InputPhoto : TLObject {
+    public abstract class InputGeoPoint : TLObject {
 
     }
-    public abstract class DecryptedMessage : TLObject {
+    public abstract class MessageAction : TLObject {
 
     }
-    public abstract class help_AppUpdate : TLObject {
-
-    }
-    public abstract class InputAppEvent : TLObject {
-
-    }
-    public abstract class messages_ChatFull : TLObject {
-
-    }
-    public abstract class Error : TLObject {
-
-    }
-    public abstract class Document : TLObject {
-
-    }
-    public abstract class EncryptedFile : TLObject {
-
-    }
-    public abstract class auth_ExportedAuthorization : TLObject {
-
-    }
-    public abstract class Message : TLObject {
-
-    }
-    public abstract class ContactStatus : TLObject {
-
-    }
-    public abstract class contacts_Blocked : TLObject {
-
-    }
-    public abstract class geochats_Messages : TLObject {
-
-    }
-    public abstract class Chat : TLObject {
+    public abstract class ContactSuggested : TLObject {
 
     }
     public abstract class ChatPhoto : TLObject {
 
     }
-    public abstract class ChatParticipants : TLObject {
+    public abstract class contacts_Suggested : TLObject {
+
+    }
+    public abstract class Contact : TLObject {
+
+    }
+    public abstract class auth_SentCode : TLObject {
+
+    }
+    public abstract class InputPhotoCrop : TLObject {
+
+    }
+    public abstract class messages_StatedMessages : TLObject {
+
+    }
+    public abstract class ChatFull : TLObject {
+
+    }
+    public abstract class messages_Chats : TLObject {
+
+    }
+    public abstract class updates_Difference : TLObject {
+
+    }
+    public abstract class WallPaper : TLObject {
+
+    }
+    public abstract class Peer : TLObject {
+
+    }
+    public abstract class upload_File : TLObject {
+
+    }
+    public abstract class PeerNotifyEvents : TLObject {
+
+    }
+    public abstract class photos_Photo : TLObject {
+
+    }
+    public abstract class DecryptedMessage : TLObject {
+
+    }
+    public abstract class geochats_StatedMessage : TLObject {
+
+    }
+    public abstract class InputPeerNotifySettings : TLObject {
 
     }
     public abstract class contacts_Contacts : TLObject {
 
     }
-    public abstract class messages_Dialogs : TLObject {
+    public abstract class geochats_Messages : TLObject {
 
     }
-    public abstract class auth_CheckedPhone : TLObject {
+    public abstract class GeoChatMessage : TLObject {
+
+    }
+    public abstract class ImportedContact : TLObject {
+
+    }
+    public abstract class InputAppEvent : TLObject {
+
+    }
+    public abstract class messages_AffectedHistory : TLObject {
+
+    }
+    public abstract class messages_ChatFull : TLObject {
+
+    }
+    public abstract class messages_Chat : TLObject {
+
+    }
+    public abstract class Dialog : TLObject {
+
+    }
+    public abstract class Photo : TLObject {
+
+    }
+    public abstract class MessagesFilter : TLObject {
+
+    }
+    public abstract class User : TLObject {
+
+    }
+    public abstract class InputChatPhoto : TLObject {
+
+    }
+    public abstract class InputContact : TLObject {
+
+    }
+    public abstract class PhotoSize : TLObject {
+
+    }
+    public abstract class EncryptedFile : TLObject {
 
     }
     public abstract class DecryptedMessageMedia : TLObject {
 
     }
+    public abstract class InputPhoto : TLObject {
+
+    }
+    public abstract class contacts_Found : TLObject {
+
+    }
+    public abstract class NearestDc : TLObject {
+
+    }
+    public abstract class InputFile : TLObject {
+
+    }
+    public abstract class Config : TLObject {
+
+    }
+    public abstract class contacts_Blocked : TLObject {
+
+    }
+    public abstract class auth_CheckedPhone : TLObject {
+
+    }
+    public abstract class contacts_ImportedContacts : TLObject {
+
+    }
+    public abstract class ChatParticipant : TLObject {
+
+    }
+    public abstract class InputPeer : TLObject {
+
+    }
+    public abstract class auth_ExportedAuthorization : TLObject {
+
+    }
+    public abstract class InputEncryptedFile : TLObject {
+
+    }
+    public abstract class InputVideo : TLObject {
+
+    }
+    public abstract class ContactFound : TLObject {
+
+    }
+    public abstract class DecryptedMessageAction : TLObject {
+
+    }
+    public abstract class Message : TLObject {
+
+    }
+    public abstract class UserProfilePhoto : TLObject {
+
+    }
+    public abstract class ChatParticipants : TLObject {
+
+    }
+    public abstract class updates_State : TLObject {
+
+    }
+    public abstract class messages_StatedMessage : TLObject {
+
+    }
+    public abstract class Document : TLObject {
+
+    }
+    public abstract class InputAudio : TLObject {
+
+    }
+    public abstract class Video : TLObject {
+
+    }
+    public abstract class InputNotifyPeer : TLObject {
+
+    }
+    public abstract class ContactStatus : TLObject {
+
+    }
+    public abstract class help_AppUpdate : TLObject {
+
+    }
+    public abstract class messages_Dialogs : TLObject {
+
+    }
+    public abstract class contacts_MyLink : TLObject {
+
+    }
+    public abstract class messages_DhConfig : TLObject {
+
+    }
+    public abstract class EncryptedMessage : TLObject {
+
+    }
+    public abstract class messages_Messages : TLObject {
+
+    }
+    public abstract class InputMedia : TLObject {
+
+    }
     public abstract class EncryptedChat : TLObject {
 
     }
-    public abstract class ChatFull : TLObject {
+    public abstract class photos_Photos : TLObject {
+
+    }
+    public abstract class GeoPoint : TLObject {
+
+    }
+    public abstract class InputEncryptedChat : TLObject {
+
+    }
+    public abstract class DecryptedMessageLayer : TLObject {
+
+    }
+    public abstract class contacts_ForeignLink : TLObject {
+
+    }
+    public abstract class Chat : TLObject {
+
+    }
+    public abstract class Error : TLObject {
+
+    }
+    public abstract class messages_Message : TLObject {
 
     }
 
@@ -12478,10 +12478,10 @@ namespace Telegram.MTProto {
 
 
     class TLApi {
-        private MTProtoSession session;
+        private MTProtoGateway _gateway;
 
-        public TLApi(MTProtoSession session) {
-            this.session = session;
+        public TLApi(MTProtoGateway gateway) {
+        this._gateway = gateway;
         }
 
         public async Task<auth_CheckedPhone> auth_checkPhone(string phone_number) {
@@ -12493,7 +12493,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<auth_CheckedPhone>(request);
+            return await _gateway.Call<auth_CheckedPhone>(request);
         }
         public async Task<auth_SentCode> auth_sendCode(string phone_number, int sms_type, int api_id, string api_hash, string lang_code) {
             byte[] request;
@@ -12508,7 +12508,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<auth_SentCode>(request);
+            return await _gateway.Call<auth_SentCode>(request);
         }
         public async Task<bool> auth_sendCall(string phone_number, string phone_code_hash) {
             byte[] request;
@@ -12520,7 +12520,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<auth_Authorization> auth_signUp(string phone_number, string phone_code_hash, string phone_code, string first_name, string last_name) {
             byte[] request;
@@ -12535,7 +12535,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<auth_Authorization>(request);
+            return await _gateway.Call<auth_Authorization>(request);
         }
         public async Task<auth_Authorization> auth_signIn(string phone_number, string phone_code_hash, string phone_code) {
             byte[] request;
@@ -12548,7 +12548,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<auth_Authorization>(request);
+            return await _gateway.Call<auth_Authorization>(request);
         }
         public async Task<bool> auth_logOut() {
             byte[] request;
@@ -12558,7 +12558,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<bool> auth_resetAuthorizations() {
             byte[] request;
@@ -12568,7 +12568,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<bool> auth_sendInvites(List<string> phone_numbers, string message) {
             byte[] request;
@@ -12584,7 +12584,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<auth_ExportedAuthorization> auth_exportAuthorization(int dc_id) {
             byte[] request;
@@ -12595,7 +12595,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<auth_ExportedAuthorization>(request);
+            return await _gateway.Call<auth_ExportedAuthorization>(request);
         }
         public async Task<auth_Authorization> auth_importAuthorization(int id, byte[] bytes) {
             byte[] request;
@@ -12607,7 +12607,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<auth_Authorization>(request);
+            return await _gateway.Call<auth_Authorization>(request);
         }
         public async Task<bool> account_registerDevice(int token_type, string token, string device_model, string system_version, string app_version, bool app_sandbox, string lang_code) {
             byte[] request;
@@ -12624,7 +12624,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<bool> account_unregisterDevice(int token_type, string token) {
             byte[] request;
@@ -12636,7 +12636,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<bool> account_updateNotifySettings(InputNotifyPeer peer, InputPeerNotifySettings settings) {
             byte[] request;
@@ -12648,7 +12648,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<PeerNotifySettings> account_getNotifySettings(InputNotifyPeer peer) {
             byte[] request;
@@ -12659,7 +12659,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<PeerNotifySettings>(request);
+            return await _gateway.Call<PeerNotifySettings>(request);
         }
         public async Task<bool> account_resetNotifySettings() {
             byte[] request;
@@ -12669,7 +12669,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<User> account_updateProfile(string first_name, string last_name) {
             byte[] request;
@@ -12681,7 +12681,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<User>(request);
+            return await _gateway.Call<User>(request);
         }
         public async Task<bool> account_updateStatus(bool offline) {
             byte[] request;
@@ -12692,7 +12692,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<List<WallPaper>> account_getWallPapers() {
             byte[] request;
@@ -12702,7 +12702,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<List<WallPaper>>(request);
+            return await _gateway.Call<List<WallPaper>>(request);
         }
         public async Task<List<User>> users_getUsers(List<InputUser> id) {
             byte[] request;
@@ -12717,7 +12717,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<List<User>>(request);
+            return await _gateway.Call<List<User>>(request);
         }
         public async Task<UserFull> users_getFullUser(InputUser id) {
             byte[] request;
@@ -12728,7 +12728,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<UserFull>(request);
+            return await _gateway.Call<UserFull>(request);
         }
         public async Task<List<ContactStatus>> contacts_getStatuses() {
             byte[] request;
@@ -12738,7 +12738,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<List<ContactStatus>>(request);
+            return await _gateway.Call<List<ContactStatus>>(request);
         }
         public async Task<contacts_Contacts> contacts_getContacts(string hash) {
             byte[] request;
@@ -12749,7 +12749,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<contacts_Contacts>(request);
+            return await _gateway.Call<contacts_Contacts>(request);
         }
         public async Task<contacts_ImportedContacts> contacts_importContacts(List<InputContact> contacts, bool replace) {
             byte[] request;
@@ -12765,7 +12765,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<contacts_ImportedContacts>(request);
+            return await _gateway.Call<contacts_ImportedContacts>(request);
         }
         public async Task<contacts_Found> contacts_search(string q, int limit) {
             byte[] request;
@@ -12777,7 +12777,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<contacts_Found>(request);
+            return await _gateway.Call<contacts_Found>(request);
         }
         public async Task<contacts_Suggested> contacts_getSuggested(int limit) {
             byte[] request;
@@ -12788,7 +12788,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<contacts_Suggested>(request);
+            return await _gateway.Call<contacts_Suggested>(request);
         }
         public async Task<contacts_Link> contacts_deleteContact(InputUser id) {
             byte[] request;
@@ -12799,7 +12799,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<contacts_Link>(request);
+            return await _gateway.Call<contacts_Link>(request);
         }
         public async Task<bool> contacts_deleteContacts(List<InputUser> id) {
             byte[] request;
@@ -12814,7 +12814,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<bool> contacts_block(InputUser id) {
             byte[] request;
@@ -12825,7 +12825,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<bool> contacts_unblock(InputUser id) {
             byte[] request;
@@ -12836,7 +12836,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<contacts_Blocked> contacts_getBlocked(int offset, int limit) {
             byte[] request;
@@ -12848,7 +12848,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<contacts_Blocked>(request);
+            return await _gateway.Call<contacts_Blocked>(request);
         }
         public async Task<messages_Messages> messages_getMessages(List<int> id) {
             byte[] request;
@@ -12863,7 +12863,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_Messages>(request);
+            return await _gateway.Call<messages_Messages>(request);
         }
         public async Task<messages_Dialogs> messages_getDialogs(int offset, int max_id, int limit) {
             byte[] request;
@@ -12876,7 +12876,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_Dialogs>(request);
+            return await _gateway.Call<messages_Dialogs>(request);
         }
         public async Task<messages_Messages> messages_getHistory(InputPeer peer, int offset, int max_id, int limit) {
             byte[] request;
@@ -12890,7 +12890,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_Messages>(request);
+            return await _gateway.Call<messages_Messages>(request);
         }
         public async Task<messages_Messages> messages_search(InputPeer peer, string q, MessagesFilter filter, int min_date, int max_date, int offset, int max_id, int limit) {
             byte[] request;
@@ -12908,7 +12908,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_Messages>(request);
+            return await _gateway.Call<messages_Messages>(request);
         }
         public async Task<messages_AffectedHistory> messages_readHistory(InputPeer peer, int max_id, int offset) {
             byte[] request;
@@ -12921,7 +12921,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_AffectedHistory>(request);
+            return await _gateway.Call<messages_AffectedHistory>(request);
         }
         public async Task<messages_AffectedHistory> messages_deleteHistory(InputPeer peer, int offset) {
             byte[] request;
@@ -12933,7 +12933,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_AffectedHistory>(request);
+            return await _gateway.Call<messages_AffectedHistory>(request);
         }
         public async Task<List<int>> messages_deleteMessages(List<int> id) {
             byte[] request;
@@ -12948,7 +12948,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<List<int>>(request);
+            return await _gateway.Call<List<int>>(request);
         }
         public async Task<List<int>> messages_restoreMessages(List<int> id) {
             byte[] request;
@@ -12963,7 +12963,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<List<int>>(request);
+            return await _gateway.Call<List<int>>(request);
         }
         public async Task<List<int>> messages_receivedMessages(int max_id) {
             byte[] request;
@@ -12974,7 +12974,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<List<int>>(request);
+            return await _gateway.Call<List<int>>(request);
         }
         public async Task<bool> messages_setTyping(InputPeer peer, bool typing) {
             byte[] request;
@@ -12986,7 +12986,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<messages_SentMessage> messages_sendMessage(InputPeer peer, string message, long random_id) {
             byte[] request;
@@ -12999,7 +12999,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_SentMessage>(request);
+            return await _gateway.Call<messages_SentMessage>(request);
         }
         public async Task<messages_StatedMessage> messages_sendMedia(InputPeer peer, InputMedia media, long random_id) {
             byte[] request;
@@ -13012,7 +13012,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_StatedMessage>(request);
+            return await _gateway.Call<messages_StatedMessage>(request);
         }
         public async Task<messages_StatedMessages> messages_forwardMessages(InputPeer peer, List<int> id) {
             byte[] request;
@@ -13028,7 +13028,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_StatedMessages>(request);
+            return await _gateway.Call<messages_StatedMessages>(request);
         }
         public async Task<messages_Chats> messages_getChats(List<int> id) {
             byte[] request;
@@ -13043,7 +13043,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_Chats>(request);
+            return await _gateway.Call<messages_Chats>(request);
         }
         public async Task<messages_ChatFull> messages_getFullChat(int chat_id) {
             byte[] request;
@@ -13054,7 +13054,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_ChatFull>(request);
+            return await _gateway.Call<messages_ChatFull>(request);
         }
         public async Task<messages_StatedMessage> messages_editChatTitle(int chat_id, string title) {
             byte[] request;
@@ -13066,7 +13066,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_StatedMessage>(request);
+            return await _gateway.Call<messages_StatedMessage>(request);
         }
         public async Task<messages_StatedMessage> messages_editChatPhoto(int chat_id, InputChatPhoto photo) {
             byte[] request;
@@ -13078,7 +13078,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_StatedMessage>(request);
+            return await _gateway.Call<messages_StatedMessage>(request);
         }
         public async Task<messages_StatedMessage> messages_addChatUser(int chat_id, InputUser user_id, int fwd_limit) {
             byte[] request;
@@ -13091,7 +13091,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_StatedMessage>(request);
+            return await _gateway.Call<messages_StatedMessage>(request);
         }
         public async Task<messages_StatedMessage> messages_deleteChatUser(int chat_id, InputUser user_id) {
             byte[] request;
@@ -13103,7 +13103,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_StatedMessage>(request);
+            return await _gateway.Call<messages_StatedMessage>(request);
         }
         public async Task<messages_StatedMessage> messages_createChat(List<InputUser> users, string title) {
             byte[] request;
@@ -13119,7 +13119,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_StatedMessage>(request);
+            return await _gateway.Call<messages_StatedMessage>(request);
         }
         public async Task<updates_State> updates_getState() {
             byte[] request;
@@ -13129,7 +13129,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<updates_State>(request);
+            return await _gateway.Call<updates_State>(request);
         }
         public async Task<updates_Difference> updates_getDifference(int pts, int date, int qts) {
             byte[] request;
@@ -13142,7 +13142,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<updates_Difference>(request);
+            return await _gateway.Call<updates_Difference>(request);
         }
         public async Task<UserProfilePhoto> photos_updateProfilePhoto(InputPhoto id, InputPhotoCrop crop) {
             byte[] request;
@@ -13154,7 +13154,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<UserProfilePhoto>(request);
+            return await _gateway.Call<UserProfilePhoto>(request);
         }
         public async Task<photos_Photo> photos_uploadProfilePhoto(InputFile file, string caption, InputGeoPoint geo_point, InputPhotoCrop crop) {
             byte[] request;
@@ -13168,7 +13168,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<photos_Photo>(request);
+            return await _gateway.Call<photos_Photo>(request);
         }
         public async Task<bool> upload_saveFilePart(long file_id, int file_part, byte[] bytes) {
             byte[] request;
@@ -13181,7 +13181,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<upload_File> upload_getFile(InputFileLocation location, int offset, int limit) {
             byte[] request;
@@ -13194,7 +13194,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<upload_File>(request);
+            return await _gateway.Call<upload_File>(request);
         }
         public async Task<Config> help_getConfig() {
             byte[] request;
@@ -13204,7 +13204,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<Config>(request);
+            return await _gateway.Call<Config>(request);
         }
         public async Task<NearestDc> help_getNearestDc() {
             byte[] request;
@@ -13214,7 +13214,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<NearestDc>(request);
+            return await _gateway.Call<NearestDc>(request);
         }
         public async Task<help_AppUpdate> help_getAppUpdate(string device_model, string system_version, string app_version, string lang_code) {
             byte[] request;
@@ -13228,7 +13228,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<help_AppUpdate>(request);
+            return await _gateway.Call<help_AppUpdate>(request);
         }
         public async Task<bool> help_saveAppLog(List<InputAppEvent> events) {
             byte[] request;
@@ -13243,7 +13243,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<help_InviteText> help_getInviteText(string lang_code) {
             byte[] request;
@@ -13254,7 +13254,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<help_InviteText>(request);
+            return await _gateway.Call<help_InviteText>(request);
         }
         public async Task<photos_Photos> photos_getUserPhotos(InputUser user_id, int offset, int max_id, int limit) {
             byte[] request;
@@ -13268,7 +13268,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<photos_Photos>(request);
+            return await _gateway.Call<photos_Photos>(request);
         }
         public async Task<messages_StatedMessage> messages_forwardMessage(InputPeer peer, int id, long random_id) {
             byte[] request;
@@ -13281,7 +13281,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_StatedMessage>(request);
+            return await _gateway.Call<messages_StatedMessage>(request);
         }
         public async Task<messages_StatedMessages> messages_sendBroadcast(List<InputUser> contacts, string message, InputMedia media) {
             byte[] request;
@@ -13298,7 +13298,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_StatedMessages>(request);
+            return await _gateway.Call<messages_StatedMessages>(request);
         }
         public async Task<geochats_Located> geochats_getLocated(InputGeoPoint geo_point, int radius, int limit) {
             byte[] request;
@@ -13311,7 +13311,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_Located>(request);
+            return await _gateway.Call<geochats_Located>(request);
         }
         public async Task<geochats_Messages> geochats_getRecents(int offset, int limit) {
             byte[] request;
@@ -13323,7 +13323,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_Messages>(request);
+            return await _gateway.Call<geochats_Messages>(request);
         }
         public async Task<geochats_StatedMessage> geochats_checkin(InputGeoChat peer) {
             byte[] request;
@@ -13334,7 +13334,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_StatedMessage>(request);
+            return await _gateway.Call<geochats_StatedMessage>(request);
         }
         public async Task<messages_ChatFull> geochats_getFullChat(InputGeoChat peer) {
             byte[] request;
@@ -13345,7 +13345,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_ChatFull>(request);
+            return await _gateway.Call<messages_ChatFull>(request);
         }
         public async Task<geochats_StatedMessage> geochats_editChatTitle(InputGeoChat peer, string title, string address) {
             byte[] request;
@@ -13358,7 +13358,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_StatedMessage>(request);
+            return await _gateway.Call<geochats_StatedMessage>(request);
         }
         public async Task<geochats_StatedMessage> geochats_editChatPhoto(InputGeoChat peer, InputChatPhoto photo) {
             byte[] request;
@@ -13370,7 +13370,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_StatedMessage>(request);
+            return await _gateway.Call<geochats_StatedMessage>(request);
         }
         public async Task<geochats_Messages> geochats_search(InputGeoChat peer, string q, MessagesFilter filter, int min_date, int max_date, int offset, int max_id, int limit) {
             byte[] request;
@@ -13388,7 +13388,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_Messages>(request);
+            return await _gateway.Call<geochats_Messages>(request);
         }
         public async Task<geochats_Messages> geochats_getHistory(InputGeoChat peer, int offset, int max_id, int limit) {
             byte[] request;
@@ -13402,7 +13402,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_Messages>(request);
+            return await _gateway.Call<geochats_Messages>(request);
         }
         public async Task<bool> geochats_setTyping(InputGeoChat peer, bool typing) {
             byte[] request;
@@ -13414,7 +13414,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<geochats_StatedMessage> geochats_sendMessage(InputGeoChat peer, string message, long random_id) {
             byte[] request;
@@ -13427,7 +13427,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_StatedMessage>(request);
+            return await _gateway.Call<geochats_StatedMessage>(request);
         }
         public async Task<geochats_StatedMessage> geochats_sendMedia(InputGeoChat peer, InputMedia media, long random_id) {
             byte[] request;
@@ -13440,7 +13440,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_StatedMessage>(request);
+            return await _gateway.Call<geochats_StatedMessage>(request);
         }
         public async Task<geochats_StatedMessage> geochats_createGeoChat(string title, InputGeoPoint geo_point, string address, string venue) {
             byte[] request;
@@ -13454,7 +13454,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<geochats_StatedMessage>(request);
+            return await _gateway.Call<geochats_StatedMessage>(request);
         }
         public async Task<messages_DhConfig> messages_getDhConfig(int version, int random_length) {
             byte[] request;
@@ -13466,7 +13466,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_DhConfig>(request);
+            return await _gateway.Call<messages_DhConfig>(request);
         }
         public async Task<EncryptedChat> messages_requestEncryption(InputUser user_id, int random_id, byte[] g_a) {
             byte[] request;
@@ -13479,7 +13479,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<EncryptedChat>(request);
+            return await _gateway.Call<EncryptedChat>(request);
         }
         public async Task<EncryptedChat> messages_acceptEncryption(InputEncryptedChat peer, byte[] g_b, long key_fingerprint) {
             byte[] request;
@@ -13492,7 +13492,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<EncryptedChat>(request);
+            return await _gateway.Call<EncryptedChat>(request);
         }
         public async Task<bool> messages_discardEncryption(int chat_id) {
             byte[] request;
@@ -13503,7 +13503,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<bool> messages_setEncryptedTyping(InputEncryptedChat peer, bool typing) {
             byte[] request;
@@ -13515,7 +13515,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<bool> messages_readEncryptedHistory(InputEncryptedChat peer, int max_date) {
             byte[] request;
@@ -13527,7 +13527,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
         public async Task<messages_SentEncryptedMessage> messages_sendEncrypted(InputEncryptedChat peer, long random_id, byte[] data) {
             byte[] request;
@@ -13540,7 +13540,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_SentEncryptedMessage>(request);
+            return await _gateway.Call<messages_SentEncryptedMessage>(request);
         }
         public async Task<messages_SentEncryptedMessage> messages_sendEncryptedFile(InputEncryptedChat peer, long random_id, byte[] data, InputEncryptedFile file) {
             byte[] request;
@@ -13554,7 +13554,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_SentEncryptedMessage>(request);
+            return await _gateway.Call<messages_SentEncryptedMessage>(request);
         }
         public async Task<messages_SentEncryptedMessage> messages_sendEncryptedService(InputEncryptedChat peer, long random_id, byte[] data) {
             byte[] request;
@@ -13567,7 +13567,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<messages_SentEncryptedMessage>(request);
+            return await _gateway.Call<messages_SentEncryptedMessage>(request);
         }
         public async Task<List<long>> messages_receivedQueue(int max_qts) {
             byte[] request;
@@ -13578,7 +13578,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<List<long>>(request);
+            return await _gateway.Call<List<long>>(request);
         }
         public async Task<bool> upload_saveBigFilePart(long file_id, int file_part, int file_total_parts, byte[] bytes) {
             byte[] request;
@@ -13592,7 +13592,7 @@ namespace Telegram.MTProto {
                 request = memory.ToArray();
             }
 
-            return await session.Call<bool>(request);
+            return await _gateway.Call<bool>(request);
         }
     }
 }

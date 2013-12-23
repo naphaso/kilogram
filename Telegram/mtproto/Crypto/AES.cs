@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using Windows.Storage.Streams;
+using Telegram.Core.Logging;
 
 namespace Telegram.MTProto.Crypto {
     class AESKeyData {
@@ -22,6 +23,7 @@ namespace Telegram.MTProto.Crypto {
         }
     }
     internal class AES {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(AES));
         public static byte[] DecryptWithNonces(byte[] data, byte[] serverNonce, byte[] newNonce) {
             using(SHA1 hash = new SHA1Managed()) {
                 var nonces = new byte[48];
@@ -128,11 +130,12 @@ namespace Telegram.MTProto.Crypto {
         }
 
         public static byte[] EncryptIGE(byte[] originPlaintext, byte[] key, byte[] iv) {
+            
             byte[] plaintext;
-            using(MemoryStream plaintextBuffer = new MemoryStream(originPlaintext.Length + 40))
-            using(SHA1 hash = new SHA1Managed()) {
-                byte[] hashsum = hash.ComputeHash(originPlaintext);
-                plaintextBuffer.Write(hashsum, 0, hashsum.Length);
+            using (MemoryStream plaintextBuffer = new MemoryStream(originPlaintext.Length + 40)) { 
+            //using(SHA1 hash = new SHA1Managed()) {
+                //byte[] hashsum = hash.ComputeHash(originPlaintext);
+                //plaintextBuffer.Write(hashsum, 0, hashsum.Length);
                 plaintextBuffer.Write(originPlaintext, 0, originPlaintext.Length);
                 while(plaintextBuffer.Position%16 != 0) {
                     plaintextBuffer.WriteByte(0); // TODO: random padding
@@ -156,16 +159,24 @@ namespace Telegram.MTProto.Crypto {
             byte[] plaintextBlock = new byte[16];
             for(int blockIndex = 0; blockIndex < blocksCount; blockIndex++) {
                 Array.Copy(plaintext, 16*blockIndex, plaintextBlock, 0, 16);
-                
+
+                //logger.info("plaintext block: {0} xor {1}", BitConverter.ToString(plaintextBlock).Replace("-", ""), BitConverter.ToString(iv1).Replace("-", ""));
+
                 for(int i = 0; i < 16; i++) {
                         plaintextBlock[i] ^= iv1[i];
                 }
 
+                //logger.info("xored plaintext: {0}", BitConverter.ToString(plaintextBlock).Replace("-", ""));
+
                 aes.ProcessBlock(plaintextBlock, 0, ciphertextBlock, 0);
+
+                //logger.info("encrypted plaintext: {0} xor {1}", BitConverter.ToString(ciphertextBlock).Replace("-", ""), BitConverter.ToString(iv2).Replace("-", ""));
 
                 for(int i = 0; i < 16; i++) {
                     ciphertextBlock[i] ^= iv2[i];
                 }
+
+                //logger.info("xored ciphertext: {0}", BitConverter.ToString(ciphertextBlock).Replace("-", ""));
 
                 Array.Copy(ciphertextBlock, 0, iv1, 0, 16);
                 Array.Copy(plaintext, 16*blockIndex, iv2, 0, 16);
