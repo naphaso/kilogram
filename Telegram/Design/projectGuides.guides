@@ -30,8 +30,9 @@
       <GuideModels>
         <GuideModel>
           <Guides>
-            <Guide Alignment="Left" Position="130" />
             <Guide Alignment="Left" Position="469" />
+            <Guide Alignment="Left" Position="122" />
+            <Guide Alignment="Left" Position="116" />
           </Guides>
         </GuideModel>
       </GuideModels>

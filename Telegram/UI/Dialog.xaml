@@ -8,6 +8,7 @@
     xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing"
     xmlns:models="clr-namespace:Telegram.UI.Models"
     xmlns:Controls="clr-namespace:Coding4Fun.Toolkit.Controls;assembly=Coding4Fun.Toolkit.Controls"
+    xmlns:Telegram="clr-namespace:Telegram"
     x:Class="Telegram.UI.Dialog"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
@@ -24,10 +25,10 @@
         				</es:RegularPolygon.RenderTransform>
         			</es:RegularPolygon>
         			<StackPanel Margin="10,19,10,10">
-                        <TextBlock Text="{Binding Sender}" Visibility="{Binding SenderVisibility}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding ForwardedFrom}" Visibility="{Binding ForwardedVisibility}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        				<TextBlock Text="{Binding Sender}" Visibility="{Binding SenderVisibility}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        				<TextBlock Text="{Binding ForwardedFrom}" Visibility="{Binding ForwardedVisibility}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
 
-                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        				<TextBlock Text="{Binding Text}" TextWrapping="Wrap"  VerticalAlignment="Top"/>
         				<TextBlock HorizontalAlignment="Right" Text="{Binding Time}" TextWrapping="Wrap"  VerticalAlignment="Top" Opacity="0.6"/>
         			</StackPanel>
         		</Grid>
@@ -44,10 +45,10 @@
         					</es:RegularPolygon.RenderTransform>
         				</es:RegularPolygon>
         			</Grid>
-                    <StackPanel Margin="10,19,10,10">
-                        <TextBlock Text="{Binding ForwardedFrom}" Visibility="{Binding ForwardedVisibility}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+        			<StackPanel Margin="10,19,10,10">
+        				<TextBlock Text="{Binding ForwardedFrom}" Visibility="{Binding ForwardedVisibility}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
 
-                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        				<TextBlock Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top"/>
         				<TextBlock HorizontalAlignment="Right" Text="{Binding Time}" TextWrapping="Wrap" Margin="24,0" VerticalAlignment="Top" Opacity="0.6"/>
         				<Image Height="16" Margin="5,-20,0,5" VerticalAlignment="Bottom" Source="/Assets/UI/message.state.read-WVGA.png" HorizontalAlignment="Right" />
         			</StackPanel>
@@ -99,32 +100,33 @@
 		</StackPanel>
 
         <!--ContentPanel - place additional content here-->
-		<Grid x:Name="ContentPanel"  Grid.Row="1" Margin="12,0,0,0">
+		<Grid x:Name="ContentPanel"  Grid.Row="1" Margin="0">
 
 			<phone:LongListSelector
 				ItemTemplate="{StaticResource UserSelectingTemplate}"
 				ItemsSource="{Binding Items}" 
 				x:Name="dialogList" LayoutMode="List" 
 				IsGroupingEnabled="False" 
-				VerticalAlignment="Bottom" BorderThickness="0" Margin="0,0,0,80"/>
+				VerticalAlignment="Bottom" BorderThickness="0" Margin="12,0,12,80"/>
 			<Grid Height="81" VerticalAlignment="Bottom" Margin="0,0,12,0">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="44*"/>
 					<ColumnDefinition Width="13*"/>
 				</Grid.ColumnDefinitions>
-                <Controls:ChatBubbleTextBox 
-                    Name="messageEditor" 
-                    TextWrapping="Wrap" 
-                    Margin="119,0,1,10" 
-                    Hint="type your message" 
-                    ChatBubbleDirection="LowerRight" 
-                    SelectionBackground="#00E51400" 
-                    BorderThickness="0,2" 
-                    Height="60"
-                    TextChanged="Dialog_Message_Change"
-                    VerticalAlignment="Bottom" 
-                    Grid.ColumnSpan="2"/>
-            </Grid>
+				<Controls:ChatBubbleTextBox 
+					x:Name="messageEditor" 
+					TextWrapping="Wrap" 
+					Margin="119,0,1,10" 
+					Hint="type your message" 
+					ChatBubbleDirection="LowerRight" 
+					SelectionBackground="#00E51400" 
+					BorderThickness="0,2" 
+					Height="60"
+					TextChanged="Dialog_Message_Change"
+					VerticalAlignment="Bottom" 
+					Grid.ColumnSpan="2"/>
+			</Grid>
+			<Telegram:EmojiPhoneControl Margin="0,128,0,86" Width="480"/>
 
 		</Grid>
 	</Grid>
