@@ -90,6 +90,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AddPhoneUserControl.xaml.cs">
+      <DependentUpon>AddPhoneUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -103,6 +106,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\GalleryItemModel.cs" />
+    <Compile Include="Model\ThumbTemplateSelector.cs" />
     <Compile Include="MTProto\Authenticator.cs" />
     <Compile Include="MTProto\Crypto\AES.cs" />
     <Compile Include="MTProto\Crypto\AuthKey.cs" />
@@ -129,6 +134,9 @@
     <Compile Include="MTProto\NetworkTest.cs" />
     <Compile Include="MTProto\TelegramSettings.cs" />
     <Compile Include="MTProto\TelegramStore.cs" />
+    <Compile Include="PhoneButtonUserControl.xaml.cs">
+      <DependentUpon>PhoneButtonUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
@@ -145,11 +153,26 @@
     <Compile Include="SignupPhone_Control.xaml.cs">
       <DependentUpon>SignupPhone_Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ThreeDotUserControl.xaml.cs">
+      <DependentUpon>ThreeDotUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Dialog.xaml.cs">
       <DependentUpon>Dialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\EditNamePage.xaml.cs">
+      <DependentUpon>EditNamePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\EditUserProfile.xaml.cs">
+      <DependentUpon>EditUserProfile.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Intro.xaml.cs">
       <DependentUpon>Intro.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MapViewPage.xaml.cs">
+      <DependentUpon>MapViewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MediaViewPage.xaml.cs">
+      <DependentUpon>MediaViewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Models\AlphaKeyGroup.cs" />
     <Compile Include="UI\Models\MessageBubbleTemplateSelector.cs" />
@@ -177,12 +200,19 @@
       <DependentUpon>test.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Toaster.cs" />
+    <Compile Include="UI\UserProfile.xaml.cs">
+      <DependentUpon>UserProfile.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="AddPhoneUserControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="AvatarPlaceholder_Control.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -194,6 +224,10 @@
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PhoneButtonUserControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="SignupCode_Control.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
@@ -207,6 +241,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ThreeDotUserControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Dialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -215,7 +253,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\EditNamePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\EditUserProfile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Intro.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MapViewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MediaViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -243,6 +297,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UI\UserProfile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="Design\projectGuides.guides" />
@@ -257,6 +315,7 @@
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\elk.jpg" />
     <Content Include="Assets\Tiles\FlipCycleTileLarge.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -272,6 +331,7 @@
     <Content Include="Assets\Tiles\IconicTileSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\train.jpg" />
     <Content Include="Assets\UI\appbar.attach.png" />
     <Content Include="Assets\UI\appbar.cancel.png" />
     <Content Include="Assets\UI\appbar.check.png" />
