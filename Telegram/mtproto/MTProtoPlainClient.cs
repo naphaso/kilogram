@@ -14,8 +14,8 @@ namespace Telegram.MTProto {
 
         protected abstract void OnMTProtoReceive(byte[] response);
 
-        public async Task ConnectAsync(string host, int port) {
-            await base.ConnectAsync(host, port);
+        public async Task ConnectAsync(TelegramDC dc, int maxRetries) {
+            await base.ConnectAsync(dc, maxRetries);
         }
 
         private long GetNewMessageId() {
@@ -69,30 +69,6 @@ namespace Telegram.MTProto {
                     OnMTProtoReceive(response);
                 }
             }
-        }
-
-
-        public async Task Test() {
-            logger.info("test started");
-            await ConnectAsync("173.240.5.253", 443);
-            logger.info("connect success");
-            using(var memoryStream = new MemoryStream()) {
-                using(var binaryWriter = new BinaryWriter(memoryStream)) {
-                    binaryWriter.Write((long)0);
-                    binaryWriter.Write(GetNewMessageId());
-                    binaryWriter.Write(20);
-                    binaryWriter.Write(new byte[] {0x78, 0x97, 0x46, 0x60});
-                    byte[] nonce = new byte[16];
-                    random.NextBytes(nonce);
-                    binaryWriter.Write(nonce);
-
-                    byte[] packet = memoryStream.ToArray();
-
-                    logger.info("sending packet: {0}", BitConverter.ToString(packet));
-                    TransportSend(packet);
-                }
-            }
-
         }
     }
 }

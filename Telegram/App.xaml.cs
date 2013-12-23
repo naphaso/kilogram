@@ -6,12 +6,14 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Telegram.Core.Logging;
 using Telegram.Model;
 using Telegram.Resources;
 
 namespace Telegram
 {
     public partial class App : Application {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(App));
         public static MainSettingsModel SettingsModel = null;
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
@@ -95,6 +97,7 @@ namespace Telegram
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            logger.error("UNHANDLED EXCEPTION: {0}", e.ExceptionObject);
             if (Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger

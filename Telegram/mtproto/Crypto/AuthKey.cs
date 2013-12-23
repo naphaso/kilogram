@@ -26,6 +26,19 @@ namespace Telegram.MTProto.Crypto {
             }
         }
 
+        public AuthKey(byte[] data) {
+            key = data;
+            using (SHA1 hash = new SHA1Managed()) {
+                using (MemoryStream hashStream = new MemoryStream(hash.ComputeHash(key), false)) {
+                    using (BinaryReader hashReader = new BinaryReader(hashStream)) {
+                        auxHash = hashReader.ReadUInt64();
+                        hashReader.ReadBytes(4);
+                        keyId = hashReader.ReadUInt64();
+                    }
+                }
+            }
+        }
+
         public byte[] CalcNewNonceHash(byte[] newNonce, int number) {
             using(MemoryStream buffer = new MemoryStream(100)) {
                 using(BinaryWriter bufferWriter = new BinaryWriter(buffer)) {
@@ -40,6 +53,22 @@ namespace Telegram.MTProto.Crypto {
                     }
                 }
             }
+        }
+
+        public byte[] Data {
+            get {
+                return key;
+            }
+        }
+
+        public ulong Id {
+            get {
+                return keyId;
+            }
+        }
+
+        public override string ToString() {
+            return string.Format("(Key: {0}, KeyId: {1}, AuxHash: {2})", key, keyId, auxHash);
         }
     }
 }

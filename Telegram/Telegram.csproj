@@ -110,11 +110,17 @@
     <Compile Include="MTProto\Crypto\Crc32.cs" />
     <Compile Include="MTProto\Crypto\Factorizator.cs" />
     <Compile Include="MTProto\Crypto\RSA.cs" />
+    <Compile Include="MTProto\Crypto\Salt.cs" />
+    <Compile Include="MTProto\Exceptions\MTProtoBadServerSaltException.cs" />
+    <Compile Include="MTProto\Exceptions\MTProtoErrorException.cs" />
+    <Compile Include="MTProto\Exceptions\MTProtoException.cs" />
+    <Compile Include="MTProto\Exceptions\TransportConnectException.cs" />
     <Compile Include="MTProto\MTProtoPlainClient.cs" />
-    <Compile Include="MTProto\MTProtoSession.cs" />
+    <Compile Include="MTProto\Network\MTProtoGateway.cs" />
     <Compile Include="MTProto\Serializers.cs" />
+    <Compile Include="MTProto\TelegramSession.cs" />
     <Compile Include="MTProto\TL.cs" />
-    <Compile Include="MTProto\TransportGateway.cs" />
+    <Compile Include="MTProto\Network\TransportGateway.cs" />
     <Compile Include="Model\CountryModel.cs" />
     <Compile Include="Model\DialogMessageItem.cs" />
     <Compile Include="Model\DialogMessageModel.cs" />
@@ -429,6 +435,9 @@
     </Reference>
     <Reference Include="WatermarkTextbox">
       <HintPath>..\packages\WatermarkTextbox.1.0.2\lib\WatermarkTextbox.dll</HintPath>
+    </Reference>
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

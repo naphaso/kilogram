@@ -11,31 +11,43 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using Telegram.Core.Logging;
 using Telegram.MTProto.Crypto;
+using Telegram.MTProto.Exceptions;
 
 namespace Telegram.MTProto {
 
     public delegate void MTProtoInputHandler(object sender, byte[] data);
 
-    class TransportGateway {
+    public delegate void MTProtoConnectedHandler();
+
+    class TransportGateway : IDisposable {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof (TransportGateway));
-        private AutoResetEvent pendingEvent = new AutoResetEvent(false);
+        //private AutoResetEvent pendingEvent = new AutoResetEvent(false);
+        //private CancellationToken connectCancellationToken = new CancellationToken(false);
+        private int connectRetries;
+
+        private TaskCompletionSource<object> connectTaskCompletionSource;
+
         private Socket socket;
         private MemoryStream inputStream;
-        private string host;
-        private int port;
+        private TelegramDC dc;
+        private int endpointIndex;
+        
 
-        public event MTProtoInputHandler Input;
+
+        public event MTProtoInputHandler InputEvent;
+        public event MTProtoConnectedHandler ConnectedEvent;
 
         enum NetworkGatewayState {
             INIT,
             CONNECTING,
-            ESTABLISHED
+            ESTABLISHED,
+            DISPOSED
         }
 
         private NetworkGatewayState state;
 
         protected virtual void OnReceive(byte[] packet) {
-            Input(this, packet);
+            InputEvent(this, packet);
         }
 
         public TransportGateway() {
@@ -44,14 +56,31 @@ namespace Telegram.MTProto {
             inputStream = new MemoryStream(4096);
         }
 
+        private void TryReconnect() {
+            if(state == NetworkGatewayState.DISPOSED) {
+                connectTaskCompletionSource.SetResult(null);
+                return;
+            }
 
-        private bool Connect(string host, int port) {
+            if(connectRetries != 0) {
+                logger.info("reconnect, remaining retries: {0}", connectRetries);
+                state = NetworkGatewayState.INIT;
+                connectRetries--;
+                endpointIndex = (endpointIndex + 1)%dc.Endpoints.Count;
+                Task.Delay(3000).ContinueWith(delegate { Connect(dc); });
+            } else {
+                logger.info("connect failed");
+                connectTaskCompletionSource.SetException(new TransportConnectException());
+            }
+        }
+
+
+        private bool Connect(TelegramDC dc) {
             if (state == NetworkGatewayState.INIT) {
-                logger.info("connecing to {0}:{1}", host, port);
-                this.port = port;
-                this.host = host;
+                logger.info("connecing to {0}:{1}", dc.Endpoints[endpointIndex].Host, dc.Endpoints[endpointIndex].Port);
+                this.dc = dc;
                 var args = new SocketAsyncEventArgs();
-                args.RemoteEndPoint = new DnsEndPoint(host, port);
+                args.RemoteEndPoint = new DnsEndPoint(dc.Endpoints[endpointIndex].Host, dc.Endpoints[endpointIndex].Port);
                 args.Completed += OnConnected;
                 socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 state = NetworkGatewayState.CONNECTING;
@@ -62,15 +91,21 @@ namespace Telegram.MTProto {
 
                 return true;
             }
-            else {
-                throw new InvalidOperationException("connect in not INIT state");
-            }
+
+            throw new InvalidOperationException("connect in not INIT state");
         }
 
-        public async Task ConnectAsync(string host, int port) {
-            if (Connect(host, port)) {
-                await Wait();
+        public async Task ConnectAsync(TelegramDC dc, int maxRetries) {
+            logger.info("transport gateway connect async...");
+            connectRetries = maxRetries;
+            endpointIndex = 0;
+            connectTaskCompletionSource = new TaskCompletionSource<object>();
+            if(Connect(dc)) {
+                await connectTaskCompletionSource.Task;
+            } else {
+                throw new TransportConnectException();
             }
+            logger.info("transport gateway connected");
         }
 
         private void OnConnected(object sender, SocketAsyncEventArgs args) {
@@ -79,13 +114,12 @@ namespace Telegram.MTProto {
                     logger.info("connection successfully");
                     state = NetworkGatewayState.ESTABLISHED;
                     sendCounter = 0;
-                    Continue();
+                    connectTaskCompletionSource.SetResult(null);
+                    ConnectedEvent();
                     ReadAsync();
                 } else {
-                    logger.info("connection error {0}, sleep and reconnecting", args.SocketError);
-                    state = NetworkGatewayState.INIT;
-                    Thread.Sleep(3000);
-                    Connect(host, port);
+                    logger.info("connection error: {0}", args.SocketError);
+                    TryReconnect();
                 }
             } else {
                 throw new InvalidOperationException("onConnected in not-INIT state");
@@ -108,10 +142,10 @@ namespace Telegram.MTProto {
                         OnRead(this, args);
                     }
                 } catch (Exception e) {
-                    logger.error("exception on read: " + e);
-                    state = NetworkGatewayState.INIT;
-                    Thread.Sleep(3000);
-                    Connect(host, port);
+                    if(state != NetworkGatewayState.DISPOSED) {
+                        logger.error("exception on read: {0}", e);
+                        TryReconnect();
+                    }
                 }
             } else {
                 throw new InvalidOperationException("state is non-ESTABLISHED for read");
@@ -121,15 +155,13 @@ namespace Telegram.MTProto {
         private void OnRead(object sender, SocketAsyncEventArgs args) {
             if (state == NetworkGatewayState.ESTABLISHED) {
                 if (args.SocketError == SocketError.Success && socket.Connected && args.BytesTransferred > 0) {
-                    logger.debug("input transport data: {0}", BitConverter.ToString(args.Buffer, 0, args.BytesTransferred));
+                    //logger.debug("input transport data: {0}", BitConverter.ToString(args.Buffer, 0, args.BytesTransferred));
                     inputStream.Write(args.Buffer, 0, args.BytesTransferred);
                     CheckInput();
                     ReadAsync(args.Buffer);
-                } else {
+                } else if(state != NetworkGatewayState.DISPOSED) {
                     logger.info("read error {0}, reconnecting", args.SocketError);
-                    state = NetworkGatewayState.INIT;
-                    Thread.Sleep(3000);
-                    Connect(host, port);
+                    TryReconnect();
                 }
             } else {
                 throw new InvalidOperationException("state is non-ESTABLISHED");
@@ -141,9 +173,9 @@ namespace Telegram.MTProto {
         }
 
         private void CheckInput() {
-            logger.debug("check input started");
+            //logger.debug("check input started");
             if (inputStream.Length < 12) {
-                logger.debug("input too short");
+                //logger.debug("input too short");
                 return;
             }
 
@@ -152,17 +184,24 @@ namespace Telegram.MTProto {
             byte[] buffer = inputStream.GetBuffer();
 
             int packetLength = ReadInt(buffer, inputStream.Position);
-            logger.debug("readed packet length: {0}, buffer size: {1}", packetLength, inputStream.Length - inputStream.Position);
+            //logger.debug("readed packet length: {0}, buffer size: {1}", packetLength, inputStream.Length - inputStream.Position);
 
             while (inputStream.Length - inputStream.Position >= packetLength) {
-                logger.info("new packet success");
+                //logger.info("new packet success");
                 int len = binaryReader.ReadInt32();
                 int seq = binaryReader.ReadInt32();
                 byte[] packet = binaryReader.ReadBytes(packetLength - 12);
-                int checksum = binaryReader.ReadInt32();
+                byte[] checksum = binaryReader.ReadBytes(4);
 
-                logger.debug("readed new network packet: len {0}, seq {1}, packet data size {2}, checksum {3}", len, seq, packet.Length, checksum);
-                logger.debug("response data: {0}", BitConverter.ToString(packet));
+                Crc32 crc32 = new Crc32();
+                byte[] validChecksum = crc32.ComputeHash(inputStream.GetBuffer(), (int)inputStream.Position - 4 - packet.Length - 8, 8 + packet.Length).Reverse().ToArray();
+
+                //logger.debug("readed new network packet: len {0}, seq {1}, packet data size {2}, checksum {3}, valid checksum: {4}", len, seq, packet.Length, BitConverter.ToString(checksum).Replace("-",""), BitConverter.ToString(validChecksum).Replace("-",""));
+                //logger.debug("response data: {0}", BitConverter.ToString(packet));
+
+                if(!checksum.SequenceEqual(validChecksum)) {
+                    logger.warning("invalid checksum!");
+                }
 
                 OnReceive(packet);
 
@@ -191,7 +230,7 @@ namespace Telegram.MTProto {
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public bool TransportSend(byte[] packet) {
-            logger.debug("network send packet");
+            //logger.debug("network send packet");
 
             if (state != NetworkGatewayState.ESTABLISHED) {
                 logger.warning("send error, state not established");
@@ -208,7 +247,7 @@ namespace Telegram.MTProto {
 
                     byte[] transportPacket = memoryStream.ToArray();
 
-                    logger.info("send transport packet: {0}", BitConverter.ToString(transportPacket));
+                    //logger.info("send transport packet: {0}", BitConverter.ToString(transportPacket).Replace("-",""));
 
                     var args = new SocketAsyncEventArgs();
                     args.SetBuffer(transportPacket, 0, transportPacket.Length);
@@ -216,8 +255,13 @@ namespace Telegram.MTProto {
                     try {
                         socket.SendAsync(args);
                     } catch (Exception e) {
-                        state = NetworkGatewayState.INIT;
-                        Connect(host, port);
+                        logger.warning("transport packet send error: {0}", e);
+                        /*
+                        if(state != NetworkGatewayState.DISPOSED) {
+                            state = NetworkGatewayState.INIT;
+                            Connect(host, port);
+                        }*/
+                        TryReconnect();
                         return false;
                     }
 
@@ -227,12 +271,20 @@ namespace Telegram.MTProto {
             }
         }
 
-        private Task Wait() {
-            return Task.Run(() => pendingEvent.WaitOne());
+        public void Dispose() {
+            logger.info("transport connection closed");
+            state = NetworkGatewayState.DISPOSED;
+            try {
+                socket.Close();
+            } catch(Exception e) {
+
+            }
         }
 
-        private void Continue() {
-            pendingEvent.Set();
+        public bool Connected {
+            get {
+                return state == NetworkGatewayState.ESTABLISHED;
+            }
         }
     }
 }
