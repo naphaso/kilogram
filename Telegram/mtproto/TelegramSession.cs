@@ -107,7 +107,7 @@ namespace Telegram.MTProto {
             return string.Format("(Endpoints: [{0}], AuthKey: {1})", endpointsStr, authKey != null ? authKey.ToString() : "null");
         }
     }    
-    class TelegramSession : ISession {
+    public class TelegramSession : ISession {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(TelegramSession));
         private ulong id;
         private int sequence;

@@ -1345,307 +1345,307 @@ namespace Telegram.MTProto {
     }
 
     // abstract types
-    public abstract class MessageMedia : TLObject {
-
-    }
-    public abstract class ContactBlocked : TLObject {
-
-    }
-    public abstract class auth_Authorization : TLObject {
-
-    }
-    public abstract class messages_SentMessage : TLObject {
-
-    }
-    public abstract class UserFull : TLObject {
-
-    }
-    public abstract class DcOption : TLObject {
-
-    }
-    public abstract class Updates : TLObject {
-
-    }
-    public abstract class PeerNotifySettings : TLObject {
-
-    }
-    public abstract class storage_FileType : TLObject {
-
-    }
-    public abstract class Audio : TLObject {
-
-    }
-    public abstract class FileLocation : TLObject {
-
-    }
-    public abstract class InputDocument : TLObject {
-
-    }
-    public abstract class InputUser : TLObject {
-
-    }
-    public abstract class geochats_Located : TLObject {
-
-    }
-    public abstract class contacts_Link : TLObject {
-
-    }
-    public abstract class messages_SentEncryptedMessage : TLObject {
-
-    }
-    public abstract class ChatLocated : TLObject {
-
-    }
-    public abstract class InputFileLocation : TLObject {
-
-    }
-    public abstract class UserStatus : TLObject {
-
-    }
-    public abstract class Update : TLObject {
-
-    }
-    public abstract class help_InviteText : TLObject {
-
-    }
-    public abstract class InputGeoChat : TLObject {
-
-    }
-    public abstract class InputPeerNotifyEvents : TLObject {
-
-    }
-    public abstract class InputGeoPoint : TLObject {
-
-    }
-    public abstract class MessageAction : TLObject {
-
-    }
-    public abstract class ContactSuggested : TLObject {
-
-    }
-    public abstract class ChatPhoto : TLObject {
-
-    }
-    public abstract class contacts_Suggested : TLObject {
-
-    }
-    public abstract class Contact : TLObject {
-
-    }
-    public abstract class auth_SentCode : TLObject {
-
-    }
-    public abstract class InputPhotoCrop : TLObject {
-
-    }
-    public abstract class messages_StatedMessages : TLObject {
-
-    }
-    public abstract class ChatFull : TLObject {
-
-    }
-    public abstract class messages_Chats : TLObject {
-
-    }
-    public abstract class updates_Difference : TLObject {
+    public abstract class contacts_Blocked : TLObject {
 
     }
     public abstract class WallPaper : TLObject {
 
     }
-    public abstract class Peer : TLObject {
+    public abstract class Message : TLObject {
 
     }
-    public abstract class upload_File : TLObject {
+    public abstract class MessageAction : TLObject {
 
     }
-    public abstract class PeerNotifyEvents : TLObject {
-
-    }
-    public abstract class photos_Photo : TLObject {
-
-    }
-    public abstract class DecryptedMessage : TLObject {
-
-    }
-    public abstract class geochats_StatedMessage : TLObject {
-
-    }
-    public abstract class InputPeerNotifySettings : TLObject {
-
-    }
-    public abstract class contacts_Contacts : TLObject {
-
-    }
-    public abstract class geochats_Messages : TLObject {
-
-    }
-    public abstract class GeoChatMessage : TLObject {
-
-    }
-    public abstract class ImportedContact : TLObject {
-
-    }
-    public abstract class InputAppEvent : TLObject {
-
-    }
-    public abstract class messages_AffectedHistory : TLObject {
-
-    }
-    public abstract class messages_ChatFull : TLObject {
-
-    }
-    public abstract class messages_Chat : TLObject {
-
-    }
-    public abstract class Dialog : TLObject {
-
-    }
-    public abstract class Photo : TLObject {
-
-    }
-    public abstract class MessagesFilter : TLObject {
-
-    }
-    public abstract class User : TLObject {
-
-    }
-    public abstract class InputChatPhoto : TLObject {
-
-    }
-    public abstract class InputContact : TLObject {
-
-    }
-    public abstract class PhotoSize : TLObject {
-
-    }
-    public abstract class EncryptedFile : TLObject {
-
-    }
-    public abstract class DecryptedMessageMedia : TLObject {
-
-    }
-    public abstract class InputPhoto : TLObject {
-
-    }
-    public abstract class contacts_Found : TLObject {
-
-    }
-    public abstract class NearestDc : TLObject {
-
-    }
-    public abstract class InputFile : TLObject {
-
-    }
-    public abstract class Config : TLObject {
-
-    }
-    public abstract class contacts_Blocked : TLObject {
+    public abstract class messages_Chats : TLObject {
 
     }
     public abstract class auth_CheckedPhone : TLObject {
 
     }
-    public abstract class contacts_ImportedContacts : TLObject {
+    public abstract class UserStatus : TLObject {
 
     }
-    public abstract class ChatParticipant : TLObject {
+    public abstract class InputChatPhoto : TLObject {
 
     }
-    public abstract class InputPeer : TLObject {
+    public abstract class Photo : TLObject {
 
     }
-    public abstract class auth_ExportedAuthorization : TLObject {
+    public abstract class Audio : TLObject {
 
     }
-    public abstract class InputEncryptedFile : TLObject {
+    public abstract class messages_Chat : TLObject {
 
     }
-    public abstract class InputVideo : TLObject {
+    public abstract class PhotoSize : TLObject {
 
     }
-    public abstract class ContactFound : TLObject {
-
-    }
-    public abstract class DecryptedMessageAction : TLObject {
-
-    }
-    public abstract class Message : TLObject {
-
-    }
-    public abstract class UserProfilePhoto : TLObject {
-
-    }
-    public abstract class ChatParticipants : TLObject {
-
-    }
-    public abstract class updates_State : TLObject {
-
-    }
-    public abstract class messages_StatedMessage : TLObject {
-
-    }
-    public abstract class Document : TLObject {
-
-    }
-    public abstract class InputAudio : TLObject {
-
-    }
-    public abstract class Video : TLObject {
-
-    }
-    public abstract class InputNotifyPeer : TLObject {
-
-    }
-    public abstract class ContactStatus : TLObject {
+    public abstract class ChatLocated : TLObject {
 
     }
     public abstract class help_AppUpdate : TLObject {
 
     }
-    public abstract class messages_Dialogs : TLObject {
+    public abstract class InputFile : TLObject {
 
     }
-    public abstract class contacts_MyLink : TLObject {
-
-    }
-    public abstract class messages_DhConfig : TLObject {
-
-    }
-    public abstract class EncryptedMessage : TLObject {
-
-    }
-    public abstract class messages_Messages : TLObject {
-
-    }
-    public abstract class InputMedia : TLObject {
-
-    }
-    public abstract class EncryptedChat : TLObject {
-
-    }
-    public abstract class photos_Photos : TLObject {
-
-    }
-    public abstract class GeoPoint : TLObject {
-
-    }
-    public abstract class InputEncryptedChat : TLObject {
-
-    }
-    public abstract class DecryptedMessageLayer : TLObject {
-
-    }
-    public abstract class contacts_ForeignLink : TLObject {
+    public abstract class InputDocument : TLObject {
 
     }
     public abstract class Chat : TLObject {
 
     }
-    public abstract class Error : TLObject {
+    public abstract class InputFileLocation : TLObject {
+
+    }
+    public abstract class Peer : TLObject {
+
+    }
+    public abstract class MessageMedia : TLObject {
+
+    }
+    public abstract class InputContact : TLObject {
+
+    }
+    public abstract class auth_SentCode : TLObject {
+
+    }
+    public abstract class messages_DhConfig : TLObject {
+
+    }
+    public abstract class contacts_ForeignLink : TLObject {
+
+    }
+    public abstract class InputGeoChat : TLObject {
+
+    }
+    public abstract class updates_Difference : TLObject {
+
+    }
+    public abstract class InputAppEvent : TLObject {
+
+    }
+    public abstract class InputPeerNotifySettings : TLObject {
+
+    }
+    public abstract class geochats_Located : TLObject {
+
+    }
+    public abstract class photos_Photo : TLObject {
+
+    }
+    public abstract class Config : TLObject {
+
+    }
+    public abstract class InputEncryptedChat : TLObject {
+
+    }
+    public abstract class EncryptedChat : TLObject {
+
+    }
+    public abstract class UserProfilePhoto : TLObject {
+
+    }
+    public abstract class ChatParticipant : TLObject {
+
+    }
+    public abstract class ContactSuggested : TLObject {
+
+    }
+    public abstract class photos_Photos : TLObject {
+
+    }
+    public abstract class DcOption : TLObject {
+
+    }
+    public abstract class Contact : TLObject {
+
+    }
+    public abstract class geochats_Messages : TLObject {
+
+    }
+    public abstract class InputGeoPoint : TLObject {
+
+    }
+    public abstract class auth_ExportedAuthorization : TLObject {
+
+    }
+    public abstract class InputUser : TLObject {
+
+    }
+    public abstract class InputPeer : TLObject {
+
+    }
+    public abstract class UserFull : TLObject {
+
+    }
+    public abstract class InputNotifyPeer : TLObject {
+
+    }
+    public abstract class EncryptedFile : TLObject {
+
+    }
+    public abstract class contacts_Contacts : TLObject {
+
+    }
+    public abstract class User : TLObject {
+
+    }
+    public abstract class auth_Authorization : TLObject {
+
+    }
+    public abstract class PeerNotifySettings : TLObject {
+
+    }
+    public abstract class InputMedia : TLObject {
+
+    }
+    public abstract class contacts_Found : TLObject {
+
+    }
+    public abstract class GeoPoint : TLObject {
+
+    }
+    public abstract class ContactBlocked : TLObject {
+
+    }
+    public abstract class InputAudio : TLObject {
+
+    }
+    public abstract class help_InviteText : TLObject {
+
+    }
+    public abstract class PeerNotifyEvents : TLObject {
+
+    }
+    public abstract class messages_StatedMessages : TLObject {
+
+    }
+    public abstract class InputVideo : TLObject {
+
+    }
+    public abstract class FileLocation : TLObject {
+
+    }
+    public abstract class InputEncryptedFile : TLObject {
+
+    }
+    public abstract class InputPeerNotifyEvents : TLObject {
+
+    }
+    public abstract class messages_AffectedHistory : TLObject {
+
+    }
+    public abstract class EncryptedMessage : TLObject {
+
+    }
+    public abstract class Video : TLObject {
+
+    }
+    public abstract class ImportedContact : TLObject {
+
+    }
+    public abstract class contacts_Link : TLObject {
+
+    }
+    public abstract class DecryptedMessageMedia : TLObject {
+
+    }
+    public abstract class MessagesFilter : TLObject {
+
+    }
+    public abstract class upload_File : TLObject {
+
+    }
+    public abstract class ChatPhoto : TLObject {
+
+    }
+    public abstract class messages_SentEncryptedMessage : TLObject {
+
+    }
+    public abstract class Updates : TLObject {
+
+    }
+    public abstract class ChatParticipants : TLObject {
+
+    }
+    public abstract class storage_FileType : TLObject {
+
+    }
+    public abstract class ContactFound : TLObject {
+
+    }
+    public abstract class contacts_ImportedContacts : TLObject {
+
+    }
+    public abstract class messages_SentMessage : TLObject {
+
+    }
+    public abstract class updates_State : TLObject {
+
+    }
+    public abstract class contacts_Suggested : TLObject {
+
+    }
+    public abstract class ChatFull : TLObject {
+
+    }
+    public abstract class geochats_StatedMessage : TLObject {
+
+    }
+    public abstract class Document : TLObject {
+
+    }
+    public abstract class GeoChatMessage : TLObject {
+
+    }
+    public abstract class DecryptedMessageAction : TLObject {
+
+    }
+    public abstract class Update : TLObject {
 
     }
     public abstract class messages_Message : TLObject {
+
+    }
+    public abstract class messages_Dialogs : TLObject {
+
+    }
+    public abstract class messages_ChatFull : TLObject {
+
+    }
+    public abstract class InputPhoto : TLObject {
+
+    }
+    public abstract class DecryptedMessage : TLObject {
+
+    }
+    public abstract class DecryptedMessageLayer : TLObject {
+
+    }
+    public abstract class ContactStatus : TLObject {
+
+    }
+    public abstract class messages_StatedMessage : TLObject {
+
+    }
+    public abstract class InputPhotoCrop : TLObject {
+
+    }
+    public abstract class Dialog : TLObject {
+
+    }
+    public abstract class Error : TLObject {
+
+    }
+    public abstract class messages_Messages : TLObject {
+
+    }
+    public abstract class contacts_MyLink : TLObject {
+
+    }
+    public abstract class NearestDc : TLObject {
 
     }
 
@@ -1653,8 +1653,8 @@ namespace Telegram.MTProto {
 
 
     public class ErrorConstructor : Error {
-        private int code;
-        private string text;
+        public int code;
+        public string text;
 
         public ErrorConstructor() {
 
@@ -1744,7 +1744,7 @@ namespace Telegram.MTProto {
 
 
     public class InputPeerContactConstructor : InputPeer {
-        private int user_id;
+        public int user_id;
 
         public InputPeerContactConstructor() {
 
@@ -1777,8 +1777,8 @@ namespace Telegram.MTProto {
 
 
     public class InputPeerForeignConstructor : InputPeer {
-        private int user_id;
-        private long access_hash;
+        public int user_id;
+        public long access_hash;
 
         public InputPeerForeignConstructor() {
 
@@ -1814,7 +1814,7 @@ namespace Telegram.MTProto {
 
 
     public class InputPeerChatConstructor : InputPeer {
-        private int chat_id;
+        public int chat_id;
 
         public InputPeerChatConstructor() {
 
@@ -1901,7 +1901,7 @@ namespace Telegram.MTProto {
 
 
     public class InputUserContactConstructor : InputUser {
-        private int user_id;
+        public int user_id;
 
         public InputUserContactConstructor() {
 
@@ -1934,8 +1934,8 @@ namespace Telegram.MTProto {
 
 
     public class InputUserForeignConstructor : InputUser {
-        private int user_id;
-        private long access_hash;
+        public int user_id;
+        public long access_hash;
 
         public InputUserForeignConstructor() {
 
@@ -1971,10 +1971,10 @@ namespace Telegram.MTProto {
 
 
     public class InputPhoneContactConstructor : InputContact {
-        private long client_id;
-        private string phone;
-        private string first_name;
-        private string last_name;
+        public long client_id;
+        public string phone;
+        public string first_name;
+        public string last_name;
 
         public InputPhoneContactConstructor() {
 
@@ -2016,10 +2016,10 @@ namespace Telegram.MTProto {
 
 
     public class InputFileConstructor : InputFile {
-        private long id;
-        private int parts;
-        private string name;
-        private string md5_checksum;
+        public long id;
+        public int parts;
+        public string name;
+        public string md5_checksum;
 
         public InputFileConstructor() {
 
@@ -2088,7 +2088,7 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaUploadedPhotoConstructor : InputMedia {
-        private InputFile file;
+        public InputFile file;
 
         public InputMediaUploadedPhotoConstructor() {
 
@@ -2121,7 +2121,7 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaPhotoConstructor : InputMedia {
-        private InputPhoto id;
+        public InputPhoto id;
 
         public InputMediaPhotoConstructor() {
 
@@ -2154,7 +2154,7 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaGeoPointConstructor : InputMedia {
-        private InputGeoPoint geo_point;
+        public InputGeoPoint geo_point;
 
         public InputMediaGeoPointConstructor() {
 
@@ -2187,9 +2187,9 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaContactConstructor : InputMedia {
-        private string phone_number;
-        private string first_name;
-        private string last_name;
+        public string phone_number;
+        public string first_name;
+        public string last_name;
 
         public InputMediaContactConstructor() {
 
@@ -2228,10 +2228,10 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaUploadedVideoConstructor : InputMedia {
-        private InputFile file;
-        private int duration;
-        private int w;
-        private int h;
+        public InputFile file;
+        public int duration;
+        public int w;
+        public int h;
 
         public InputMediaUploadedVideoConstructor() {
 
@@ -2273,11 +2273,11 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaUploadedThumbVideoConstructor : InputMedia {
-        private InputFile file;
-        private InputFile thumb;
-        private int duration;
-        private int w;
-        private int h;
+        public InputFile file;
+        public InputFile thumb;
+        public int duration;
+        public int w;
+        public int h;
 
         public InputMediaUploadedThumbVideoConstructor() {
 
@@ -2322,7 +2322,7 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaVideoConstructor : InputMedia {
-        private InputVideo id;
+        public InputVideo id;
 
         public InputMediaVideoConstructor() {
 
@@ -2382,8 +2382,8 @@ namespace Telegram.MTProto {
 
 
     public class InputChatUploadedPhotoConstructor : InputChatPhoto {
-        private InputFile file;
-        private InputPhotoCrop crop;
+        public InputFile file;
+        public InputPhotoCrop crop;
 
         public InputChatUploadedPhotoConstructor() {
 
@@ -2419,8 +2419,8 @@ namespace Telegram.MTProto {
 
 
     public class InputChatPhotoConstructor : InputChatPhoto {
-        private InputPhoto id;
-        private InputPhotoCrop crop;
+        public InputPhoto id;
+        public InputPhotoCrop crop;
 
         public InputChatPhotoConstructor() {
 
@@ -2483,8 +2483,8 @@ namespace Telegram.MTProto {
 
 
     public class InputGeoPointConstructor : InputGeoPoint {
-        private double lat;
-        private double lng;
+        public double lat;
+        public double lng;
 
         public InputGeoPointConstructor() {
 
@@ -2547,8 +2547,8 @@ namespace Telegram.MTProto {
 
 
     public class InputPhotoConstructor : InputPhoto {
-        private long id;
-        private long access_hash;
+        public long id;
+        public long access_hash;
 
         public InputPhotoConstructor() {
 
@@ -2611,8 +2611,8 @@ namespace Telegram.MTProto {
 
 
     public class InputVideoConstructor : InputVideo {
-        private long id;
-        private long access_hash;
+        public long id;
+        public long access_hash;
 
         public InputVideoConstructor() {
 
@@ -2648,9 +2648,9 @@ namespace Telegram.MTProto {
 
 
     public class InputFileLocationConstructor : InputFileLocation {
-        private long volume_id;
-        private int local_id;
-        private long secret;
+        public long volume_id;
+        public int local_id;
+        public long secret;
 
         public InputFileLocationConstructor() {
 
@@ -2689,8 +2689,8 @@ namespace Telegram.MTProto {
 
 
     public class InputVideoFileLocationConstructor : InputFileLocation {
-        private long id;
-        private long access_hash;
+        public long id;
+        public long access_hash;
 
         public InputVideoFileLocationConstructor() {
 
@@ -2753,9 +2753,9 @@ namespace Telegram.MTProto {
 
 
     public class InputPhotoCropConstructor : InputPhotoCrop {
-        private double crop_left;
-        private double crop_top;
-        private double crop_width;
+        public double crop_left;
+        public double crop_top;
+        public double crop_width;
 
         public InputPhotoCropConstructor() {
 
@@ -2794,10 +2794,10 @@ namespace Telegram.MTProto {
 
 
     public class InputAppEventConstructor : InputAppEvent {
-        private double time;
-        private string type;
-        private long peer;
-        private string data;
+        public double time;
+        public string type;
+        public long peer;
+        public string data;
 
         public InputAppEventConstructor() {
 
@@ -2839,7 +2839,7 @@ namespace Telegram.MTProto {
 
 
     public class PeerUserConstructor : Peer {
-        private int user_id;
+        public int user_id;
 
         public PeerUserConstructor() {
 
@@ -2872,7 +2872,7 @@ namespace Telegram.MTProto {
 
 
     public class PeerChatConstructor : Peer {
-        private int chat_id;
+        public int chat_id;
 
         public PeerChatConstructor() {
 
@@ -3148,9 +3148,9 @@ namespace Telegram.MTProto {
 
 
     public class FileLocationUnavailableConstructor : FileLocation {
-        private long volume_id;
-        private int local_id;
-        private long secret;
+        public long volume_id;
+        public int local_id;
+        public long secret;
 
         public FileLocationUnavailableConstructor() {
 
@@ -3189,10 +3189,10 @@ namespace Telegram.MTProto {
 
 
     public class FileLocationConstructor : FileLocation {
-        private int dc_id;
-        private long volume_id;
-        private int local_id;
-        private long secret;
+        public int dc_id;
+        public long volume_id;
+        public int local_id;
+        public long secret;
 
         public FileLocationConstructor() {
 
@@ -3234,7 +3234,7 @@ namespace Telegram.MTProto {
 
 
     public class UserEmptyConstructor : User {
-        private int id;
+        public int id;
 
         public UserEmptyConstructor() {
 
@@ -3267,13 +3267,13 @@ namespace Telegram.MTProto {
 
 
     public class UserSelfConstructor : User {
-        private int id;
-        private string first_name;
-        private string last_name;
-        private string phone;
-        private UserProfilePhoto photo;
-        private UserStatus status;
-        private bool inactive;
+        public int id;
+        public string first_name;
+        public string last_name;
+        public string phone;
+        public UserProfilePhoto photo;
+        public UserStatus status;
+        public bool inactive;
 
         public UserSelfConstructor() {
 
@@ -3324,13 +3324,13 @@ namespace Telegram.MTProto {
 
 
     public class UserContactConstructor : User {
-        private int id;
-        private string first_name;
-        private string last_name;
-        private long access_hash;
-        private string phone;
-        private UserProfilePhoto photo;
-        private UserStatus status;
+        public int id;
+        public string first_name;
+        public string last_name;
+        public long access_hash;
+        public string phone;
+        public UserProfilePhoto photo;
+        public UserStatus status;
 
         public UserContactConstructor() {
 
@@ -3381,13 +3381,13 @@ namespace Telegram.MTProto {
 
 
     public class UserRequestConstructor : User {
-        private int id;
-        private string first_name;
-        private string last_name;
-        private long access_hash;
-        private string phone;
-        private UserProfilePhoto photo;
-        private UserStatus status;
+        public int id;
+        public string first_name;
+        public string last_name;
+        public long access_hash;
+        public string phone;
+        public UserProfilePhoto photo;
+        public UserStatus status;
 
         public UserRequestConstructor() {
 
@@ -3438,12 +3438,12 @@ namespace Telegram.MTProto {
 
 
     public class UserForeignConstructor : User {
-        private int id;
-        private string first_name;
-        private string last_name;
-        private long access_hash;
-        private UserProfilePhoto photo;
-        private UserStatus status;
+        public int id;
+        public string first_name;
+        public string last_name;
+        public long access_hash;
+        public UserProfilePhoto photo;
+        public UserStatus status;
 
         public UserForeignConstructor() {
 
@@ -3491,9 +3491,9 @@ namespace Telegram.MTProto {
 
 
     public class UserDeletedConstructor : User {
-        private int id;
-        private string first_name;
-        private string last_name;
+        public int id;
+        public string first_name;
+        public string last_name;
 
         public UserDeletedConstructor() {
 
@@ -3559,9 +3559,9 @@ namespace Telegram.MTProto {
 
 
     public class UserProfilePhotoConstructor : UserProfilePhoto {
-        private long photo_id;
-        private FileLocation photo_small;
-        private FileLocation photo_big;
+        public long photo_id;
+        public FileLocation photo_small;
+        public FileLocation photo_big;
 
         public UserProfilePhotoConstructor() {
 
@@ -3627,7 +3627,7 @@ namespace Telegram.MTProto {
 
 
     public class UserStatusOnlineConstructor : UserStatus {
-        private int expires;
+        public int expires;
 
         public UserStatusOnlineConstructor() {
 
@@ -3660,7 +3660,7 @@ namespace Telegram.MTProto {
 
 
     public class UserStatusOfflineConstructor : UserStatus {
-        private int was_online;
+        public int was_online;
 
         public UserStatusOfflineConstructor() {
 
@@ -3693,7 +3693,7 @@ namespace Telegram.MTProto {
 
 
     public class ChatEmptyConstructor : Chat {
-        private int id;
+        public int id;
 
         public ChatEmptyConstructor() {
 
@@ -3726,13 +3726,13 @@ namespace Telegram.MTProto {
 
 
     public class ChatConstructor : Chat {
-        private int id;
-        private string title;
-        private ChatPhoto photo;
-        private int participants_count;
-        private int date;
-        private bool left;
-        private int version;
+        public int id;
+        public string title;
+        public ChatPhoto photo;
+        public int participants_count;
+        public int date;
+        public bool left;
+        public int version;
 
         public ChatConstructor() {
 
@@ -3783,9 +3783,9 @@ namespace Telegram.MTProto {
 
 
     public class ChatForbiddenConstructor : Chat {
-        private int id;
-        private string title;
-        private int date;
+        public int id;
+        public string title;
+        public int date;
 
         public ChatForbiddenConstructor() {
 
@@ -3824,10 +3824,10 @@ namespace Telegram.MTProto {
 
 
     public class ChatFullConstructor : ChatFull {
-        private int id;
-        private ChatParticipants participants;
-        private Photo chat_photo;
-        private PeerNotifySettings notify_settings;
+        public int id;
+        public ChatParticipants participants;
+        public Photo chat_photo;
+        public PeerNotifySettings notify_settings;
 
         public ChatFullConstructor() {
 
@@ -3869,9 +3869,9 @@ namespace Telegram.MTProto {
 
 
     public class ChatParticipantConstructor : ChatParticipant {
-        private int user_id;
-        private int inviter_id;
-        private int date;
+        public int user_id;
+        public int inviter_id;
+        public int date;
 
         public ChatParticipantConstructor() {
 
@@ -3910,7 +3910,7 @@ namespace Telegram.MTProto {
 
 
     public class ChatParticipantsForbiddenConstructor : ChatParticipants {
-        private int chat_id;
+        public int chat_id;
 
         public ChatParticipantsForbiddenConstructor() {
 
@@ -3943,10 +3943,10 @@ namespace Telegram.MTProto {
 
 
     public class ChatParticipantsConstructor : ChatParticipants {
-        private int chat_id;
-        private int admin_id;
-        private List<ChatParticipant> participants;
-        private int version;
+        public int chat_id;
+        public int admin_id;
+        public List<ChatParticipant> participants;
+        public int version;
 
         public ChatParticipantsConstructor() {
 
@@ -4026,8 +4026,8 @@ namespace Telegram.MTProto {
 
 
     public class ChatPhotoConstructor : ChatPhoto {
-        private FileLocation photo_small;
-        private FileLocation photo_big;
+        public FileLocation photo_small;
+        public FileLocation photo_big;
 
         public ChatPhotoConstructor() {
 
@@ -4063,7 +4063,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageEmptyConstructor : Message {
-        private int id;
+        public int id;
 
         public MessageEmptyConstructor() {
 
@@ -4096,14 +4096,14 @@ namespace Telegram.MTProto {
 
 
     public class MessageConstructor : Message {
-        private int id;
-        private int from_id;
-        private Peer to_id;
-        private bool output;
-        private bool unread;
-        private int date;
-        private string message;
-        private MessageMedia media;
+        public int id;
+        public int from_id;
+        public Peer to_id;
+        public bool output;
+        public bool unread;
+        public int date;
+        public string message;
+        public MessageMedia media;
 
         public MessageConstructor() {
 
@@ -4157,16 +4157,16 @@ namespace Telegram.MTProto {
 
 
     public class MessageForwardedConstructor : Message {
-        private int id;
-        private int fwd_from_id;
-        private int fwd_date;
-        private int from_id;
-        private Peer to_id;
-        private bool output;
-        private bool unread;
-        private int date;
-        private string message;
-        private MessageMedia media;
+        public int id;
+        public int fwd_from_id;
+        public int fwd_date;
+        public int from_id;
+        public Peer to_id;
+        public bool output;
+        public bool unread;
+        public int date;
+        public string message;
+        public MessageMedia media;
 
         public MessageForwardedConstructor() {
 
@@ -4226,13 +4226,13 @@ namespace Telegram.MTProto {
 
 
     public class MessageServiceConstructor : Message {
-        private int id;
-        private int from_id;
-        private Peer to_id;
-        private bool output;
-        private bool unread;
-        private int date;
-        private MessageAction action;
+        public int id;
+        public int from_id;
+        public Peer to_id;
+        public bool output;
+        public bool unread;
+        public int date;
+        public MessageAction action;
 
         public MessageServiceConstructor() {
 
@@ -4310,7 +4310,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageMediaPhotoConstructor : MessageMedia {
-        private Photo photo;
+        public Photo photo;
 
         public MessageMediaPhotoConstructor() {
 
@@ -4343,7 +4343,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageMediaVideoConstructor : MessageMedia {
-        private Video video;
+        public Video video;
 
         public MessageMediaVideoConstructor() {
 
@@ -4376,7 +4376,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageMediaGeoConstructor : MessageMedia {
-        private GeoPoint geo;
+        public GeoPoint geo;
 
         public MessageMediaGeoConstructor() {
 
@@ -4409,10 +4409,10 @@ namespace Telegram.MTProto {
 
 
     public class MessageMediaContactConstructor : MessageMedia {
-        private string phone_number;
-        private string first_name;
-        private string last_name;
-        private int user_id;
+        public string phone_number;
+        public string first_name;
+        public string last_name;
+        public int user_id;
 
         public MessageMediaContactConstructor() {
 
@@ -4454,7 +4454,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageMediaUnsupportedConstructor : MessageMedia {
-        private byte[] bytes;
+        public byte[] bytes;
 
         public MessageMediaUnsupportedConstructor() {
 
@@ -4514,8 +4514,8 @@ namespace Telegram.MTProto {
 
 
     public class MessageActionChatCreateConstructor : MessageAction {
-        private string title;
-        private List<int> users;
+        public string title;
+        public List<int> users;
 
         public MessageActionChatCreateConstructor() {
 
@@ -4562,7 +4562,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageActionChatEditTitleConstructor : MessageAction {
-        private string title;
+        public string title;
 
         public MessageActionChatEditTitleConstructor() {
 
@@ -4595,7 +4595,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageActionChatEditPhotoConstructor : MessageAction {
-        private Photo photo;
+        public Photo photo;
 
         public MessageActionChatEditPhotoConstructor() {
 
@@ -4655,7 +4655,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageActionChatAddUserConstructor : MessageAction {
-        private int user_id;
+        public int user_id;
 
         public MessageActionChatAddUserConstructor() {
 
@@ -4688,7 +4688,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageActionChatDeleteUserConstructor : MessageAction {
-        private int user_id;
+        public int user_id;
 
         public MessageActionChatDeleteUserConstructor() {
 
@@ -4721,9 +4721,9 @@ namespace Telegram.MTProto {
 
 
     public class DialogConstructor : Dialog {
-        private Peer peer;
-        private int top_message;
-        private int unread_count;
+        public Peer peer;
+        public int top_message;
+        public int unread_count;
 
         public DialogConstructor() {
 
@@ -4762,7 +4762,7 @@ namespace Telegram.MTProto {
 
 
     public class PhotoEmptyConstructor : Photo {
-        private long id;
+        public long id;
 
         public PhotoEmptyConstructor() {
 
@@ -4795,13 +4795,13 @@ namespace Telegram.MTProto {
 
 
     public class PhotoConstructor : Photo {
-        private long id;
-        private long access_hash;
-        private int user_id;
-        private int date;
-        private string caption;
-        private GeoPoint geo;
-        private List<PhotoSize> sizes;
+        public long id;
+        public long access_hash;
+        public int user_id;
+        public int date;
+        public string caption;
+        public GeoPoint geo;
+        public List<PhotoSize> sizes;
 
         public PhotoConstructor() {
 
@@ -4863,7 +4863,7 @@ namespace Telegram.MTProto {
 
 
     public class PhotoSizeEmptyConstructor : PhotoSize {
-        private string type;
+        public string type;
 
         public PhotoSizeEmptyConstructor() {
 
@@ -4896,11 +4896,11 @@ namespace Telegram.MTProto {
 
 
     public class PhotoSizeConstructor : PhotoSize {
-        private string type;
-        private FileLocation location;
-        private int w;
-        private int h;
-        private int size;
+        public string type;
+        public FileLocation location;
+        public int w;
+        public int h;
+        public int size;
 
         public PhotoSizeConstructor() {
 
@@ -4945,11 +4945,11 @@ namespace Telegram.MTProto {
 
 
     public class PhotoCachedSizeConstructor : PhotoSize {
-        private string type;
-        private FileLocation location;
-        private int w;
-        private int h;
-        private byte[] bytes;
+        public string type;
+        public FileLocation location;
+        public int w;
+        public int h;
+        public byte[] bytes;
 
         public PhotoCachedSizeConstructor() {
 
@@ -4994,7 +4994,7 @@ namespace Telegram.MTProto {
 
 
     public class VideoEmptyConstructor : Video {
-        private long id;
+        public long id;
 
         public VideoEmptyConstructor() {
 
@@ -5027,17 +5027,17 @@ namespace Telegram.MTProto {
 
 
     public class VideoConstructor : Video {
-        private long id;
-        private long access_hash;
-        private int user_id;
-        private int date;
-        private string caption;
-        private int duration;
-        private int size;
-        private PhotoSize thumb;
-        private int dc_id;
-        private int w;
-        private int h;
+        public long id;
+        public long access_hash;
+        public int user_id;
+        public int date;
+        public string caption;
+        public int duration;
+        public int size;
+        public PhotoSize thumb;
+        public int dc_id;
+        public int w;
+        public int h;
 
         public VideoConstructor() {
 
@@ -5127,8 +5127,8 @@ namespace Telegram.MTProto {
 
 
     public class GeoPointConstructor : GeoPoint {
-        private double lng;
-        private double lat;
+        public double lng;
+        public double lat;
 
         public GeoPointConstructor() {
 
@@ -5164,8 +5164,8 @@ namespace Telegram.MTProto {
 
 
     public class Auth_checkedPhoneConstructor : auth_CheckedPhone {
-        private bool phone_registered;
-        private bool phone_invited;
+        public bool phone_registered;
+        public bool phone_invited;
 
         public Auth_checkedPhoneConstructor() {
 
@@ -5201,8 +5201,8 @@ namespace Telegram.MTProto {
 
 
     public class Auth_sentCodeConstructor : auth_SentCode {
-        private bool phone_registered;
-        private string phone_code_hash;
+        public bool phone_registered;
+        public string phone_code_hash;
 
         public Auth_sentCodeConstructor() {
 
@@ -5238,8 +5238,8 @@ namespace Telegram.MTProto {
 
 
     public class Auth_authorizationConstructor : auth_Authorization {
-        private int expires;
-        private User user;
+        public int expires;
+        public User user;
 
         public Auth_authorizationConstructor() {
 
@@ -5275,8 +5275,8 @@ namespace Telegram.MTProto {
 
 
     public class Auth_exportedAuthorizationConstructor : auth_ExportedAuthorization {
-        private int id;
-        private byte[] bytes;
+        public int id;
+        public byte[] bytes;
 
         public Auth_exportedAuthorizationConstructor() {
 
@@ -5312,7 +5312,7 @@ namespace Telegram.MTProto {
 
 
     public class InputNotifyPeerConstructor : InputNotifyPeer {
-        private InputPeer peer;
+        public InputPeer peer;
 
         public InputNotifyPeerConstructor() {
 
@@ -5480,10 +5480,10 @@ namespace Telegram.MTProto {
 
 
     public class InputPeerNotifySettingsConstructor : InputPeerNotifySettings {
-        private int mute_until;
-        private string sound;
-        private bool show_previews;
-        private int events_mask;
+        public int mute_until;
+        public string sound;
+        public bool show_previews;
+        public int events_mask;
 
         public InputPeerNotifySettingsConstructor() {
 
@@ -5606,10 +5606,10 @@ namespace Telegram.MTProto {
 
 
     public class PeerNotifySettingsConstructor : PeerNotifySettings {
-        private int mute_until;
-        private string sound;
-        private bool show_previews;
-        private int events_mask;
+        public int mute_until;
+        public string sound;
+        public bool show_previews;
+        public int events_mask;
 
         public PeerNotifySettingsConstructor() {
 
@@ -5651,10 +5651,10 @@ namespace Telegram.MTProto {
 
 
     public class WallPaperConstructor : WallPaper {
-        private int id;
-        private string title;
-        private List<PhotoSize> sizes;
-        private int color;
+        public int id;
+        public string title;
+        public List<PhotoSize> sizes;
+        public int color;
 
         public WallPaperConstructor() {
 
@@ -5707,13 +5707,13 @@ namespace Telegram.MTProto {
 
 
     public class UserFullConstructor : UserFull {
-        private User user;
-        private contacts_Link link;
-        private Photo profile_photo;
-        private PeerNotifySettings notify_settings;
-        private bool blocked;
-        private string real_first_name;
-        private string real_last_name;
+        public User user;
+        public contacts_Link link;
+        public Photo profile_photo;
+        public PeerNotifySettings notify_settings;
+        public bool blocked;
+        public string real_first_name;
+        public string real_last_name;
 
         public UserFullConstructor() {
 
@@ -5764,8 +5764,8 @@ namespace Telegram.MTProto {
 
 
     public class ContactConstructor : Contact {
-        private int user_id;
-        private bool mutual;
+        public int user_id;
+        public bool mutual;
 
         public ContactConstructor() {
 
@@ -5801,8 +5801,8 @@ namespace Telegram.MTProto {
 
 
     public class ImportedContactConstructor : ImportedContact {
-        private int user_id;
-        private long client_id;
+        public int user_id;
+        public long client_id;
 
         public ImportedContactConstructor() {
 
@@ -5838,8 +5838,8 @@ namespace Telegram.MTProto {
 
 
     public class ContactBlockedConstructor : ContactBlocked {
-        private int user_id;
-        private int date;
+        public int user_id;
+        public int date;
 
         public ContactBlockedConstructor() {
 
@@ -5875,7 +5875,7 @@ namespace Telegram.MTProto {
 
 
     public class ContactFoundConstructor : ContactFound {
-        private int user_id;
+        public int user_id;
 
         public ContactFoundConstructor() {
 
@@ -5908,8 +5908,8 @@ namespace Telegram.MTProto {
 
 
     public class ContactSuggestedConstructor : ContactSuggested {
-        private int user_id;
-        private int mutual_contacts;
+        public int user_id;
+        public int mutual_contacts;
 
         public ContactSuggestedConstructor() {
 
@@ -5945,8 +5945,8 @@ namespace Telegram.MTProto {
 
 
     public class ContactStatusConstructor : ContactStatus {
-        private int user_id;
-        private int expires;
+        public int user_id;
+        public int expires;
 
         public ContactStatusConstructor() {
 
@@ -5982,8 +5982,8 @@ namespace Telegram.MTProto {
 
 
     public class ChatLocatedConstructor : ChatLocated {
-        private int chat_id;
-        private int distance;
+        public int chat_id;
+        public int distance;
 
         public ChatLocatedConstructor() {
 
@@ -6046,7 +6046,7 @@ namespace Telegram.MTProto {
 
 
     public class Contacts_foreignLinkRequestedConstructor : contacts_ForeignLink {
-        private bool has_phone;
+        public bool has_phone;
 
         public Contacts_foreignLinkRequestedConstructor() {
 
@@ -6133,7 +6133,7 @@ namespace Telegram.MTProto {
 
 
     public class Contacts_myLinkRequestedConstructor : contacts_MyLink {
-        private bool contact;
+        public bool contact;
 
         public Contacts_myLinkRequestedConstructor() {
 
@@ -6193,9 +6193,9 @@ namespace Telegram.MTProto {
 
 
     public class Contacts_linkConstructor : contacts_Link {
-        private contacts_MyLink my_link;
-        private contacts_ForeignLink foreign_link;
-        private User user;
+        public contacts_MyLink my_link;
+        public contacts_ForeignLink foreign_link;
+        public User user;
 
         public Contacts_linkConstructor() {
 
@@ -6234,8 +6234,8 @@ namespace Telegram.MTProto {
 
 
     public class Contacts_contactsConstructor : contacts_Contacts {
-        private List<Contact> contacts;
-        private List<User> users;
+        public List<Contact> contacts;
+        public List<User> users;
 
         public Contacts_contactsConstructor() {
 
@@ -6320,8 +6320,8 @@ namespace Telegram.MTProto {
 
 
     public class Contacts_importedContactsConstructor : contacts_ImportedContacts {
-        private List<ImportedContact> imported;
-        private List<User> users;
+        public List<ImportedContact> imported;
+        public List<User> users;
 
         public Contacts_importedContactsConstructor() {
 
@@ -6379,8 +6379,8 @@ namespace Telegram.MTProto {
 
 
     public class Contacts_blockedConstructor : contacts_Blocked {
-        private List<ContactBlocked> blocked;
-        private List<User> users;
+        public List<ContactBlocked> blocked;
+        public List<User> users;
 
         public Contacts_blockedConstructor() {
 
@@ -6438,9 +6438,9 @@ namespace Telegram.MTProto {
 
 
     public class Contacts_blockedSliceConstructor : contacts_Blocked {
-        private int count;
-        private List<ContactBlocked> blocked;
-        private List<User> users;
+        public int count;
+        public List<ContactBlocked> blocked;
+        public List<User> users;
 
         public Contacts_blockedSliceConstructor() {
 
@@ -6501,8 +6501,8 @@ namespace Telegram.MTProto {
 
 
     public class Contacts_foundConstructor : contacts_Found {
-        private List<ContactFound> results;
-        private List<User> users;
+        public List<ContactFound> results;
+        public List<User> users;
 
         public Contacts_foundConstructor() {
 
@@ -6560,8 +6560,8 @@ namespace Telegram.MTProto {
 
 
     public class Contacts_suggestedConstructor : contacts_Suggested {
-        private List<ContactSuggested> results;
-        private List<User> users;
+        public List<ContactSuggested> results;
+        public List<User> users;
 
         public Contacts_suggestedConstructor() {
 
@@ -6619,10 +6619,10 @@ namespace Telegram.MTProto {
 
 
     public class Messages_dialogsConstructor : messages_Dialogs {
-        private List<Dialog> dialogs;
-        private List<Message> messages;
-        private List<Chat> chats;
-        private List<User> users;
+        public List<Dialog> dialogs;
+        public List<Message> messages;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Messages_dialogsConstructor() {
 
@@ -6708,11 +6708,11 @@ namespace Telegram.MTProto {
 
 
     public class Messages_dialogsSliceConstructor : messages_Dialogs {
-        private int count;
-        private List<Dialog> dialogs;
-        private List<Message> messages;
-        private List<Chat> chats;
-        private List<User> users;
+        public int count;
+        public List<Dialog> dialogs;
+        public List<Message> messages;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Messages_dialogsSliceConstructor() {
 
@@ -6801,9 +6801,9 @@ namespace Telegram.MTProto {
 
 
     public class Messages_messagesConstructor : messages_Messages {
-        private List<Message> messages;
-        private List<Chat> chats;
-        private List<User> users;
+        public List<Message> messages;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Messages_messagesConstructor() {
 
@@ -6875,10 +6875,10 @@ namespace Telegram.MTProto {
 
 
     public class Messages_messagesSliceConstructor : messages_Messages {
-        private int count;
-        private List<Message> messages;
-        private List<Chat> chats;
-        private List<User> users;
+        public int count;
+        public List<Message> messages;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Messages_messagesSliceConstructor() {
 
@@ -6980,9 +6980,9 @@ namespace Telegram.MTProto {
 
 
     public class Messages_messageConstructor : messages_Message {
-        private Message message;
-        private List<Chat> chats;
-        private List<User> users;
+        public Message message;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Messages_messageConstructor() {
 
@@ -7043,11 +7043,11 @@ namespace Telegram.MTProto {
 
 
     public class Messages_statedMessagesConstructor : messages_StatedMessages {
-        private List<Message> messages;
-        private List<Chat> chats;
-        private List<User> users;
-        private int pts;
-        private int seq;
+        public List<Message> messages;
+        public List<Chat> chats;
+        public List<User> users;
+        public int pts;
+        public int seq;
 
         public Messages_statedMessagesConstructor() {
 
@@ -7125,11 +7125,11 @@ namespace Telegram.MTProto {
 
 
     public class Messages_statedMessageConstructor : messages_StatedMessage {
-        private Message message;
-        private List<Chat> chats;
-        private List<User> users;
-        private int pts;
-        private int seq;
+        public Message message;
+        public List<Chat> chats;
+        public List<User> users;
+        public int pts;
+        public int seq;
 
         public Messages_statedMessageConstructor() {
 
@@ -7196,10 +7196,10 @@ namespace Telegram.MTProto {
 
 
     public class Messages_sentMessageConstructor : messages_SentMessage {
-        private int id;
-        private int date;
-        private int pts;
-        private int seq;
+        public int id;
+        public int date;
+        public int pts;
+        public int seq;
 
         public Messages_sentMessageConstructor() {
 
@@ -7241,8 +7241,8 @@ namespace Telegram.MTProto {
 
 
     public class Messages_chatConstructor : messages_Chat {
-        private Chat chat;
-        private List<User> users;
+        public Chat chat;
+        public List<User> users;
 
         public Messages_chatConstructor() {
 
@@ -7289,8 +7289,8 @@ namespace Telegram.MTProto {
 
 
     public class Messages_chatsConstructor : messages_Chats {
-        private List<Chat> chats;
-        private List<User> users;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Messages_chatsConstructor() {
 
@@ -7348,9 +7348,9 @@ namespace Telegram.MTProto {
 
 
     public class Messages_chatFullConstructor : messages_ChatFull {
-        private ChatFull full_chat;
-        private List<Chat> chats;
-        private List<User> users;
+        public ChatFull full_chat;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Messages_chatFullConstructor() {
 
@@ -7411,9 +7411,9 @@ namespace Telegram.MTProto {
 
 
     public class Messages_affectedHistoryConstructor : messages_AffectedHistory {
-        private int pts;
-        private int seq;
-        private int offset;
+        public int pts;
+        public int seq;
+        public int offset;
 
         public Messages_affectedHistoryConstructor() {
 
@@ -7560,8 +7560,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateNewMessageConstructor : Update {
-        private Message message;
-        private int pts;
+        public Message message;
+        public int pts;
 
         public UpdateNewMessageConstructor() {
 
@@ -7597,8 +7597,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateMessageIDConstructor : Update {
-        private int id;
-        private long random_id;
+        public int id;
+        public long random_id;
 
         public UpdateMessageIDConstructor() {
 
@@ -7634,8 +7634,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateReadMessagesConstructor : Update {
-        private List<int> messages;
-        private int pts;
+        public List<int> messages;
+        public int pts;
 
         public UpdateReadMessagesConstructor() {
 
@@ -7682,8 +7682,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateDeleteMessagesConstructor : Update {
-        private List<int> messages;
-        private int pts;
+        public List<int> messages;
+        public int pts;
 
         public UpdateDeleteMessagesConstructor() {
 
@@ -7730,8 +7730,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateRestoreMessagesConstructor : Update {
-        private List<int> messages;
-        private int pts;
+        public List<int> messages;
+        public int pts;
 
         public UpdateRestoreMessagesConstructor() {
 
@@ -7778,7 +7778,7 @@ namespace Telegram.MTProto {
 
 
     public class UpdateUserTypingConstructor : Update {
-        private int user_id;
+        public int user_id;
 
         public UpdateUserTypingConstructor() {
 
@@ -7811,8 +7811,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateChatUserTypingConstructor : Update {
-        private int chat_id;
-        private int user_id;
+        public int chat_id;
+        public int user_id;
 
         public UpdateChatUserTypingConstructor() {
 
@@ -7848,7 +7848,7 @@ namespace Telegram.MTProto {
 
 
     public class UpdateChatParticipantsConstructor : Update {
-        private ChatParticipants participants;
+        public ChatParticipants participants;
 
         public UpdateChatParticipantsConstructor() {
 
@@ -7881,8 +7881,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateUserStatusConstructor : Update {
-        private int user_id;
-        private UserStatus status;
+        public int user_id;
+        public UserStatus status;
 
         public UpdateUserStatusConstructor() {
 
@@ -7918,9 +7918,9 @@ namespace Telegram.MTProto {
 
 
     public class UpdateUserNameConstructor : Update {
-        private int user_id;
-        private string first_name;
-        private string last_name;
+        public int user_id;
+        public string first_name;
+        public string last_name;
 
         public UpdateUserNameConstructor() {
 
@@ -7959,10 +7959,10 @@ namespace Telegram.MTProto {
 
 
     public class UpdateUserPhotoConstructor : Update {
-        private int user_id;
-        private int date;
-        private UserProfilePhoto photo;
-        private bool previous;
+        public int user_id;
+        public int date;
+        public UserProfilePhoto photo;
+        public bool previous;
 
         public UpdateUserPhotoConstructor() {
 
@@ -8004,8 +8004,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateContactRegisteredConstructor : Update {
-        private int user_id;
-        private int date;
+        public int user_id;
+        public int date;
 
         public UpdateContactRegisteredConstructor() {
 
@@ -8041,9 +8041,9 @@ namespace Telegram.MTProto {
 
 
     public class UpdateContactLinkConstructor : Update {
-        private int user_id;
-        private contacts_MyLink my_link;
-        private contacts_ForeignLink foreign_link;
+        public int user_id;
+        public contacts_MyLink my_link;
+        public contacts_ForeignLink foreign_link;
 
         public UpdateContactLinkConstructor() {
 
@@ -8082,7 +8082,7 @@ namespace Telegram.MTProto {
 
 
     public class UpdateActivationConstructor : Update {
-        private int user_id;
+        public int user_id;
 
         public UpdateActivationConstructor() {
 
@@ -8115,10 +8115,10 @@ namespace Telegram.MTProto {
 
 
     public class UpdateNewAuthorizationConstructor : Update {
-        private long auth_key_id;
-        private int date;
-        private string device;
-        private string location;
+        public long auth_key_id;
+        public int date;
+        public string device;
+        public string location;
 
         public UpdateNewAuthorizationConstructor() {
 
@@ -8160,11 +8160,11 @@ namespace Telegram.MTProto {
 
 
     public class Updates_stateConstructor : updates_State {
-        private int pts;
-        private int qts;
-        private int date;
-        private int seq;
-        private int unread_count;
+        public int pts;
+        public int qts;
+        public int date;
+        public int seq;
+        public int unread_count;
 
         public Updates_stateConstructor() {
 
@@ -8209,8 +8209,8 @@ namespace Telegram.MTProto {
 
 
     public class Updates_differenceEmptyConstructor : updates_Difference {
-        private int date;
-        private int seq;
+        public int date;
+        public int seq;
 
         public Updates_differenceEmptyConstructor() {
 
@@ -8246,12 +8246,12 @@ namespace Telegram.MTProto {
 
 
     public class Updates_differenceConstructor : updates_Difference {
-        private List<Message> new_messages;
-        private List<EncryptedMessage> new_encrypted_messages;
-        private List<Update> other_updates;
-        private List<Chat> chats;
-        private List<User> users;
-        private updates_State state;
+        public List<Message> new_messages;
+        public List<EncryptedMessage> new_encrypted_messages;
+        public List<Update> other_updates;
+        public List<Chat> chats;
+        public List<User> users;
+        public updates_State state;
 
         public Updates_differenceConstructor() {
 
@@ -8354,12 +8354,12 @@ namespace Telegram.MTProto {
 
 
     public class Updates_differenceSliceConstructor : updates_Difference {
-        private List<Message> new_messages;
-        private List<EncryptedMessage> new_encrypted_messages;
-        private List<Update> other_updates;
-        private List<Chat> chats;
-        private List<User> users;
-        private updates_State intermediate_state;
+        public List<Message> new_messages;
+        public List<EncryptedMessage> new_encrypted_messages;
+        public List<Update> other_updates;
+        public List<Chat> chats;
+        public List<User> users;
+        public updates_State intermediate_state;
 
         public Updates_differenceSliceConstructor() {
 
@@ -8489,12 +8489,12 @@ namespace Telegram.MTProto {
 
 
     public class UpdateShortMessageConstructor : Updates {
-        private int id;
-        private int from_id;
-        private string message;
-        private int pts;
-        private int date;
-        private int seq;
+        public int id;
+        public int from_id;
+        public string message;
+        public int pts;
+        public int date;
+        public int seq;
 
         public UpdateShortMessageConstructor() {
 
@@ -8542,13 +8542,13 @@ namespace Telegram.MTProto {
 
 
     public class UpdateShortChatMessageConstructor : Updates {
-        private int id;
-        private int from_id;
-        private int chat_id;
-        private string message;
-        private int pts;
-        private int date;
-        private int seq;
+        public int id;
+        public int from_id;
+        public int chat_id;
+        public string message;
+        public int pts;
+        public int date;
+        public int seq;
 
         public UpdateShortChatMessageConstructor() {
 
@@ -8599,8 +8599,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateShortConstructor : Updates {
-        private Update update;
-        private int date;
+        public Update update;
+        public int date;
 
         public UpdateShortConstructor() {
 
@@ -8636,12 +8636,12 @@ namespace Telegram.MTProto {
 
 
     public class UpdatesCombinedConstructor : Updates {
-        private List<Update> updates;
-        private List<User> users;
-        private List<Chat> chats;
-        private int date;
-        private int seq_start;
-        private int seq;
+        public List<Update> updates;
+        public List<User> users;
+        public List<Chat> chats;
+        public int date;
+        public int seq_start;
+        public int seq;
 
         public UpdatesCombinedConstructor() {
 
@@ -8722,11 +8722,11 @@ namespace Telegram.MTProto {
 
 
     public class UpdatesConstructor : Updates {
-        private List<Update> updates;
-        private List<User> users;
-        private List<Chat> chats;
-        private int date;
-        private int seq;
+        public List<Update> updates;
+        public List<User> users;
+        public List<Chat> chats;
+        public int date;
+        public int seq;
 
         public UpdatesConstructor() {
 
@@ -8804,8 +8804,8 @@ namespace Telegram.MTProto {
 
 
     public class Photos_photosConstructor : photos_Photos {
-        private List<Photo> photos;
-        private List<User> users;
+        public List<Photo> photos;
+        public List<User> users;
 
         public Photos_photosConstructor() {
 
@@ -8863,9 +8863,9 @@ namespace Telegram.MTProto {
 
 
     public class Photos_photosSliceConstructor : photos_Photos {
-        private int count;
-        private List<Photo> photos;
-        private List<User> users;
+        public int count;
+        public List<Photo> photos;
+        public List<User> users;
 
         public Photos_photosSliceConstructor() {
 
@@ -8926,8 +8926,8 @@ namespace Telegram.MTProto {
 
 
     public class Photos_photoConstructor : photos_Photo {
-        private Photo photo;
-        private List<User> users;
+        public Photo photo;
+        public List<User> users;
 
         public Photos_photoConstructor() {
 
@@ -8974,9 +8974,9 @@ namespace Telegram.MTProto {
 
 
     public class Upload_fileConstructor : upload_File {
-        private storage_FileType type;
-        private int mtime;
-        private byte[] bytes;
+        public storage_FileType type;
+        public int mtime;
+        public byte[] bytes;
 
         public Upload_fileConstructor() {
 
@@ -9015,10 +9015,10 @@ namespace Telegram.MTProto {
 
 
     public class DcOptionConstructor : DcOption {
-        private int id;
-        private string hostname;
-        private string ip_address;
-        private int port;
+        public int id;
+        public string hostname;
+        public string ip_address;
+        public int port;
 
         public DcOptionConstructor() {
 
@@ -9060,11 +9060,11 @@ namespace Telegram.MTProto {
 
 
     public class ConfigConstructor : Config {
-        private int date;
-        private bool test_mode;
-        private int this_dc;
-        private List<DcOption> dc_options;
-        private int chat_size_max;
+        public int date;
+        public bool test_mode;
+        public int this_dc;
+        public List<DcOption> dc_options;
+        public int chat_size_max;
 
         public ConfigConstructor() {
 
@@ -9120,9 +9120,9 @@ namespace Telegram.MTProto {
 
 
     public class NearestDcConstructor : NearestDc {
-        private string country;
-        private int this_dc;
-        private int nearest_dc;
+        public string country;
+        public int this_dc;
+        public int nearest_dc;
 
         public NearestDcConstructor() {
 
@@ -9161,10 +9161,10 @@ namespace Telegram.MTProto {
 
 
     public class Help_appUpdateConstructor : help_AppUpdate {
-        private int id;
-        private bool critical;
-        private string url;
-        private string text;
+        public int id;
+        public bool critical;
+        public string url;
+        public string text;
 
         public Help_appUpdateConstructor() {
 
@@ -9233,7 +9233,7 @@ namespace Telegram.MTProto {
 
 
     public class Help_inviteTextConstructor : help_InviteText {
-        private string message;
+        public string message;
 
         public Help_inviteTextConstructor() {
 
@@ -9266,12 +9266,12 @@ namespace Telegram.MTProto {
 
 
     public class Messages_statedMessagesLinksConstructor : messages_StatedMessages {
-        private List<Message> messages;
-        private List<Chat> chats;
-        private List<User> users;
-        private List<contacts_Link> links;
-        private int pts;
-        private int seq;
+        public List<Message> messages;
+        public List<Chat> chats;
+        public List<User> users;
+        public List<contacts_Link> links;
+        public int pts;
+        public int seq;
 
         public Messages_statedMessagesLinksConstructor() {
 
@@ -9363,12 +9363,12 @@ namespace Telegram.MTProto {
 
 
     public class Messages_statedMessageLinkConstructor : messages_StatedMessage {
-        private Message message;
-        private List<Chat> chats;
-        private List<User> users;
-        private List<contacts_Link> links;
-        private int pts;
-        private int seq;
+        public Message message;
+        public List<Chat> chats;
+        public List<User> users;
+        public List<contacts_Link> links;
+        public int pts;
+        public int seq;
 
         public Messages_statedMessageLinkConstructor() {
 
@@ -9449,11 +9449,11 @@ namespace Telegram.MTProto {
 
 
     public class Messages_sentMessageLinkConstructor : messages_SentMessage {
-        private int id;
-        private int date;
-        private int pts;
-        private int seq;
-        private List<contacts_Link> links;
+        public int id;
+        public int date;
+        public int pts;
+        public int seq;
+        public List<contacts_Link> links;
 
         public Messages_sentMessageLinkConstructor() {
 
@@ -9509,8 +9509,8 @@ namespace Telegram.MTProto {
 
 
     public class InputGeoChatConstructor : InputGeoChat {
-        private int chat_id;
-        private long access_hash;
+        public int chat_id;
+        public long access_hash;
 
         public InputGeoChatConstructor() {
 
@@ -9546,7 +9546,7 @@ namespace Telegram.MTProto {
 
 
     public class InputNotifyGeoChatPeerConstructor : InputNotifyPeer {
-        private InputGeoChat peer;
+        public InputGeoChat peer;
 
         public InputNotifyGeoChatPeerConstructor() {
 
@@ -9579,17 +9579,17 @@ namespace Telegram.MTProto {
 
 
     public class GeoChatConstructor : Chat {
-        private int id;
-        private long access_hash;
-        private string title;
-        private string address;
-        private string venue;
-        private GeoPoint geo;
-        private ChatPhoto photo;
-        private int participants_count;
-        private int date;
-        private bool checked_in;
-        private int version;
+        public int id;
+        public long access_hash;
+        public string title;
+        public string address;
+        public string venue;
+        public GeoPoint geo;
+        public ChatPhoto photo;
+        public int participants_count;
+        public int date;
+        public bool checked_in;
+        public int version;
 
         public GeoChatConstructor() {
 
@@ -9652,8 +9652,8 @@ namespace Telegram.MTProto {
 
 
     public class GeoChatMessageEmptyConstructor : GeoChatMessage {
-        private int chat_id;
-        private int id;
+        public int chat_id;
+        public int id;
 
         public GeoChatMessageEmptyConstructor() {
 
@@ -9689,12 +9689,12 @@ namespace Telegram.MTProto {
 
 
     public class GeoChatMessageConstructor : GeoChatMessage {
-        private int chat_id;
-        private int id;
-        private int from_id;
-        private int date;
-        private string message;
-        private MessageMedia media;
+        public int chat_id;
+        public int id;
+        public int from_id;
+        public int date;
+        public string message;
+        public MessageMedia media;
 
         public GeoChatMessageConstructor() {
 
@@ -9742,11 +9742,11 @@ namespace Telegram.MTProto {
 
 
     public class GeoChatMessageServiceConstructor : GeoChatMessage {
-        private int chat_id;
-        private int id;
-        private int from_id;
-        private int date;
-        private MessageAction action;
+        public int chat_id;
+        public int id;
+        public int from_id;
+        public int date;
+        public MessageAction action;
 
         public GeoChatMessageServiceConstructor() {
 
@@ -9791,10 +9791,10 @@ namespace Telegram.MTProto {
 
 
     public class Geochats_statedMessageConstructor : geochats_StatedMessage {
-        private GeoChatMessage message;
-        private List<Chat> chats;
-        private List<User> users;
-        private int seq;
+        public GeoChatMessage message;
+        public List<Chat> chats;
+        public List<User> users;
+        public int seq;
 
         public Geochats_statedMessageConstructor() {
 
@@ -9858,10 +9858,10 @@ namespace Telegram.MTProto {
 
 
     public class Geochats_locatedConstructor : geochats_Located {
-        private List<ChatLocated> results;
-        private List<GeoChatMessage> messages;
-        private List<Chat> chats;
-        private List<User> users;
+        public List<ChatLocated> results;
+        public List<GeoChatMessage> messages;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Geochats_locatedConstructor() {
 
@@ -9947,9 +9947,9 @@ namespace Telegram.MTProto {
 
 
     public class Geochats_messagesConstructor : geochats_Messages {
-        private List<GeoChatMessage> messages;
-        private List<Chat> chats;
-        private List<User> users;
+        public List<GeoChatMessage> messages;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Geochats_messagesConstructor() {
 
@@ -10021,10 +10021,10 @@ namespace Telegram.MTProto {
 
 
     public class Geochats_messagesSliceConstructor : geochats_Messages {
-        private int count;
-        private List<GeoChatMessage> messages;
-        private List<Chat> chats;
-        private List<User> users;
+        public int count;
+        public List<GeoChatMessage> messages;
+        public List<Chat> chats;
+        public List<User> users;
 
         public Geochats_messagesSliceConstructor() {
 
@@ -10099,8 +10099,8 @@ namespace Telegram.MTProto {
 
 
     public class MessageActionGeoChatCreateConstructor : MessageAction {
-        private string title;
-        private string address;
+        public string title;
+        public string address;
 
         public MessageActionGeoChatCreateConstructor() {
 
@@ -10163,7 +10163,7 @@ namespace Telegram.MTProto {
 
 
     public class UpdateNewGeoChatMessageConstructor : Update {
-        private GeoChatMessage message;
+        public GeoChatMessage message;
 
         public UpdateNewGeoChatMessageConstructor() {
 
@@ -10196,10 +10196,10 @@ namespace Telegram.MTProto {
 
 
     public class WallPaperSolidConstructor : WallPaper {
-        private int id;
-        private string title;
-        private int bg_color;
-        private int color;
+        public int id;
+        public string title;
+        public int bg_color;
+        public int color;
 
         public WallPaperSolidConstructor() {
 
@@ -10241,8 +10241,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateNewEncryptedMessageConstructor : Update {
-        private EncryptedMessage message;
-        private int qts;
+        public EncryptedMessage message;
+        public int qts;
 
         public UpdateNewEncryptedMessageConstructor() {
 
@@ -10278,7 +10278,7 @@ namespace Telegram.MTProto {
 
 
     public class UpdateEncryptedChatTypingConstructor : Update {
-        private int chat_id;
+        public int chat_id;
 
         public UpdateEncryptedChatTypingConstructor() {
 
@@ -10311,8 +10311,8 @@ namespace Telegram.MTProto {
 
 
     public class UpdateEncryptionConstructor : Update {
-        private EncryptedChat chat;
-        private int date;
+        public EncryptedChat chat;
+        public int date;
 
         public UpdateEncryptionConstructor() {
 
@@ -10348,9 +10348,9 @@ namespace Telegram.MTProto {
 
 
     public class UpdateEncryptedMessagesReadConstructor : Update {
-        private int chat_id;
-        private int max_date;
-        private int date;
+        public int chat_id;
+        public int max_date;
+        public int date;
 
         public UpdateEncryptedMessagesReadConstructor() {
 
@@ -10389,7 +10389,7 @@ namespace Telegram.MTProto {
 
 
     public class EncryptedChatEmptyConstructor : EncryptedChat {
-        private int id;
+        public int id;
 
         public EncryptedChatEmptyConstructor() {
 
@@ -10422,11 +10422,11 @@ namespace Telegram.MTProto {
 
 
     public class EncryptedChatWaitingConstructor : EncryptedChat {
-        private int id;
-        private long access_hash;
-        private int date;
-        private int admin_id;
-        private int participant_id;
+        public int id;
+        public long access_hash;
+        public int date;
+        public int admin_id;
+        public int participant_id;
 
         public EncryptedChatWaitingConstructor() {
 
@@ -10471,13 +10471,13 @@ namespace Telegram.MTProto {
 
 
     public class EncryptedChatRequestedConstructor : EncryptedChat {
-        private int id;
-        private long access_hash;
-        private int date;
-        private int admin_id;
-        private int participant_id;
-        private byte[] g_a;
-        private byte[] nonce;
+        public int id;
+        public long access_hash;
+        public int date;
+        public int admin_id;
+        public int participant_id;
+        public byte[] g_a;
+        public byte[] nonce;
 
         public EncryptedChatRequestedConstructor() {
 
@@ -10528,14 +10528,14 @@ namespace Telegram.MTProto {
 
 
     public class EncryptedChatConstructor : EncryptedChat {
-        private int id;
-        private long access_hash;
-        private int date;
-        private int admin_id;
-        private int participant_id;
-        private byte[] g_a_or_b;
-        private byte[] nonce;
-        private long key_fingerprint;
+        public int id;
+        public long access_hash;
+        public int date;
+        public int admin_id;
+        public int participant_id;
+        public byte[] g_a_or_b;
+        public byte[] nonce;
+        public long key_fingerprint;
 
         public EncryptedChatConstructor() {
 
@@ -10589,7 +10589,7 @@ namespace Telegram.MTProto {
 
 
     public class EncryptedChatDiscardedConstructor : EncryptedChat {
-        private int id;
+        public int id;
 
         public EncryptedChatDiscardedConstructor() {
 
@@ -10622,8 +10622,8 @@ namespace Telegram.MTProto {
 
 
     public class InputEncryptedChatConstructor : InputEncryptedChat {
-        private int chat_id;
-        private long access_hash;
+        public int chat_id;
+        public long access_hash;
 
         public InputEncryptedChatConstructor() {
 
@@ -10686,11 +10686,11 @@ namespace Telegram.MTProto {
 
 
     public class EncryptedFileConstructor : EncryptedFile {
-        private long id;
-        private long access_hash;
-        private int size;
-        private int dc_id;
-        private int key_fingerprint;
+        public long id;
+        public long access_hash;
+        public int size;
+        public int dc_id;
+        public int key_fingerprint;
 
         public EncryptedFileConstructor() {
 
@@ -10762,10 +10762,10 @@ namespace Telegram.MTProto {
 
 
     public class InputEncryptedFileUploadedConstructor : InputEncryptedFile {
-        private long id;
-        private int parts;
-        private string md5_checksum;
-        private int key_fingerprint;
+        public long id;
+        public int parts;
+        public string md5_checksum;
+        public int key_fingerprint;
 
         public InputEncryptedFileUploadedConstructor() {
 
@@ -10807,8 +10807,8 @@ namespace Telegram.MTProto {
 
 
     public class InputEncryptedFileConstructor : InputEncryptedFile {
-        private long id;
-        private long access_hash;
+        public long id;
+        public long access_hash;
 
         public InputEncryptedFileConstructor() {
 
@@ -10844,8 +10844,8 @@ namespace Telegram.MTProto {
 
 
     public class InputEncryptedFileLocationConstructor : InputFileLocation {
-        private long id;
-        private long access_hash;
+        public long id;
+        public long access_hash;
 
         public InputEncryptedFileLocationConstructor() {
 
@@ -10881,11 +10881,11 @@ namespace Telegram.MTProto {
 
 
     public class EncryptedMessageConstructor : EncryptedMessage {
-        private long random_id;
-        private int chat_id;
-        private int date;
-        private byte[] bytes;
-        private EncryptedFile file;
+        public long random_id;
+        public int chat_id;
+        public int date;
+        public byte[] bytes;
+        public EncryptedFile file;
 
         public EncryptedMessageConstructor() {
 
@@ -10930,10 +10930,10 @@ namespace Telegram.MTProto {
 
 
     public class EncryptedMessageServiceConstructor : EncryptedMessage {
-        private long random_id;
-        private int chat_id;
-        private int date;
-        private byte[] bytes;
+        public long random_id;
+        public int chat_id;
+        public int date;
+        public byte[] bytes;
 
         public EncryptedMessageServiceConstructor() {
 
@@ -10975,8 +10975,8 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageLayerConstructor : DecryptedMessageLayer {
-        private int layer;
-        private DecryptedMessage message;
+        public int layer;
+        public DecryptedMessage message;
 
         public DecryptedMessageLayerConstructor() {
 
@@ -11012,10 +11012,10 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageConstructor : DecryptedMessage {
-        private long random_id;
-        private byte[] random_bytes;
-        private string message;
-        private DecryptedMessageMedia media;
+        public long random_id;
+        public byte[] random_bytes;
+        public string message;
+        public DecryptedMessageMedia media;
 
         public DecryptedMessageConstructor() {
 
@@ -11057,9 +11057,9 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageServiceConstructor : DecryptedMessage {
-        private long random_id;
-        private byte[] random_bytes;
-        private DecryptedMessageAction action;
+        public long random_id;
+        public byte[] random_bytes;
+        public DecryptedMessageAction action;
 
         public DecryptedMessageServiceConstructor() {
 
@@ -11125,14 +11125,14 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageMediaPhotoConstructor : DecryptedMessageMedia {
-        private byte[] thumb;
-        private int thumb_w;
-        private int thumb_h;
-        private int w;
-        private int h;
-        private int size;
-        private byte[] key;
-        private byte[] iv;
+        public byte[] thumb;
+        public int thumb_w;
+        public int thumb_h;
+        public int w;
+        public int h;
+        public int size;
+        public byte[] key;
+        public byte[] iv;
 
         public DecryptedMessageMediaPhotoConstructor() {
 
@@ -11186,15 +11186,15 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageMediaVideoConstructor : DecryptedMessageMedia {
-        private byte[] thumb;
-        private int thumb_w;
-        private int thumb_h;
-        private int duration;
-        private int w;
-        private int h;
-        private int size;
-        private byte[] key;
-        private byte[] iv;
+        public byte[] thumb;
+        public int thumb_w;
+        public int thumb_h;
+        public int duration;
+        public int w;
+        public int h;
+        public int size;
+        public byte[] key;
+        public byte[] iv;
 
         public DecryptedMessageMediaVideoConstructor() {
 
@@ -11251,8 +11251,8 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageMediaGeoPointConstructor : DecryptedMessageMedia {
-        private double lat;
-        private double lng;
+        public double lat;
+        public double lng;
 
         public DecryptedMessageMediaGeoPointConstructor() {
 
@@ -11288,10 +11288,10 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageMediaContactConstructor : DecryptedMessageMedia {
-        private string phone_number;
-        private string first_name;
-        private string last_name;
-        private int user_id;
+        public string phone_number;
+        public string first_name;
+        public string last_name;
+        public int user_id;
 
         public DecryptedMessageMediaContactConstructor() {
 
@@ -11333,7 +11333,7 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageActionSetMessageTTLConstructor : DecryptedMessageAction {
-        private int ttl_seconds;
+        public int ttl_seconds;
 
         public DecryptedMessageActionSetMessageTTLConstructor() {
 
@@ -11366,7 +11366,7 @@ namespace Telegram.MTProto {
 
 
     public class Messages_dhConfigNotModifiedConstructor : messages_DhConfig {
-        private byte[] random;
+        public byte[] random;
 
         public Messages_dhConfigNotModifiedConstructor() {
 
@@ -11399,10 +11399,10 @@ namespace Telegram.MTProto {
 
 
     public class Messages_dhConfigConstructor : messages_DhConfig {
-        private int g;
-        private byte[] p;
-        private int version;
-        private byte[] random;
+        public int g;
+        public byte[] p;
+        public int version;
+        public byte[] random;
 
         public Messages_dhConfigConstructor() {
 
@@ -11444,7 +11444,7 @@ namespace Telegram.MTProto {
 
 
     public class Messages_sentEncryptedMessageConstructor : messages_SentEncryptedMessage {
-        private int date;
+        public int date;
 
         public Messages_sentEncryptedMessageConstructor() {
 
@@ -11477,8 +11477,8 @@ namespace Telegram.MTProto {
 
 
     public class Messages_sentEncryptedFileConstructor : messages_SentEncryptedMessage {
-        private int date;
-        private EncryptedFile file;
+        public int date;
+        public EncryptedFile file;
 
         public Messages_sentEncryptedFileConstructor() {
 
@@ -11514,9 +11514,9 @@ namespace Telegram.MTProto {
 
 
     public class InputFileBigConstructor : InputFile {
-        private long id;
-        private int parts;
-        private string name;
+        public long id;
+        public int parts;
+        public string name;
 
         public InputFileBigConstructor() {
 
@@ -11555,9 +11555,9 @@ namespace Telegram.MTProto {
 
 
     public class InputEncryptedFileBigUploadedConstructor : InputEncryptedFile {
-        private long id;
-        private int parts;
-        private int key_fingerprint;
+        public long id;
+        public int parts;
+        public int key_fingerprint;
 
         public InputEncryptedFileBigUploadedConstructor() {
 
@@ -11596,10 +11596,10 @@ namespace Telegram.MTProto {
 
 
     public class UpdateChatParticipantAddConstructor : Update {
-        private int chat_id;
-        private int user_id;
-        private int inviter_id;
-        private int version;
+        public int chat_id;
+        public int user_id;
+        public int inviter_id;
+        public int version;
 
         public UpdateChatParticipantAddConstructor() {
 
@@ -11641,9 +11641,9 @@ namespace Telegram.MTProto {
 
 
     public class UpdateChatParticipantDeleteConstructor : Update {
-        private int chat_id;
-        private int user_id;
-        private int version;
+        public int chat_id;
+        public int user_id;
+        public int version;
 
         public UpdateChatParticipantDeleteConstructor() {
 
@@ -11682,7 +11682,7 @@ namespace Telegram.MTProto {
 
 
     public class UpdateDcOptionsConstructor : Update {
-        private List<DcOption> dc_options;
+        public List<DcOption> dc_options;
 
         public UpdateDcOptionsConstructor() {
 
@@ -11726,8 +11726,8 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaUploadedAudioConstructor : InputMedia {
-        private InputFile file;
-        private int duration;
+        public InputFile file;
+        public int duration;
 
         public InputMediaUploadedAudioConstructor() {
 
@@ -11763,7 +11763,7 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaAudioConstructor : InputMedia {
-        private InputAudio id;
+        public InputAudio id;
 
         public InputMediaAudioConstructor() {
 
@@ -11796,9 +11796,9 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaUploadedDocumentConstructor : InputMedia {
-        private InputFile file;
-        private string file_name;
-        private string mime_type;
+        public InputFile file;
+        public string file_name;
+        public string mime_type;
 
         public InputMediaUploadedDocumentConstructor() {
 
@@ -11837,10 +11837,10 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaUploadedThumbDocumentConstructor : InputMedia {
-        private InputFile file;
-        private InputFile thumb;
-        private string file_name;
-        private string mime_type;
+        public InputFile file;
+        public InputFile thumb;
+        public string file_name;
+        public string mime_type;
 
         public InputMediaUploadedThumbDocumentConstructor() {
 
@@ -11882,7 +11882,7 @@ namespace Telegram.MTProto {
 
 
     public class InputMediaDocumentConstructor : InputMedia {
-        private InputDocument id;
+        public InputDocument id;
 
         public InputMediaDocumentConstructor() {
 
@@ -11915,7 +11915,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageMediaDocumentConstructor : MessageMedia {
-        private Document document;
+        public Document document;
 
         public MessageMediaDocumentConstructor() {
 
@@ -11948,7 +11948,7 @@ namespace Telegram.MTProto {
 
 
     public class MessageMediaAudioConstructor : MessageMedia {
-        private Audio audio;
+        public Audio audio;
 
         public MessageMediaAudioConstructor() {
 
@@ -12008,8 +12008,8 @@ namespace Telegram.MTProto {
 
 
     public class InputAudioConstructor : InputAudio {
-        private long id;
-        private long access_hash;
+        public long id;
+        public long access_hash;
 
         public InputAudioConstructor() {
 
@@ -12072,8 +12072,8 @@ namespace Telegram.MTProto {
 
 
     public class InputDocumentConstructor : InputDocument {
-        private long id;
-        private long access_hash;
+        public long id;
+        public long access_hash;
 
         public InputDocumentConstructor() {
 
@@ -12109,8 +12109,8 @@ namespace Telegram.MTProto {
 
 
     public class InputAudioFileLocationConstructor : InputFileLocation {
-        private long id;
-        private long access_hash;
+        public long id;
+        public long access_hash;
 
         public InputAudioFileLocationConstructor() {
 
@@ -12146,8 +12146,8 @@ namespace Telegram.MTProto {
 
 
     public class InputDocumentFileLocationConstructor : InputFileLocation {
-        private long id;
-        private long access_hash;
+        public long id;
+        public long access_hash;
 
         public InputDocumentFileLocationConstructor() {
 
@@ -12183,14 +12183,14 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageMediaDocumentConstructor : DecryptedMessageMedia {
-        private byte[] thumb;
-        private int thumb_w;
-        private int thumb_h;
-        private string file_name;
-        private string mime_type;
-        private int size;
-        private byte[] key;
-        private byte[] iv;
+        public byte[] thumb;
+        public int thumb_w;
+        public int thumb_h;
+        public string file_name;
+        public string mime_type;
+        public int size;
+        public byte[] key;
+        public byte[] iv;
 
         public DecryptedMessageMediaDocumentConstructor() {
 
@@ -12244,10 +12244,10 @@ namespace Telegram.MTProto {
 
 
     public class DecryptedMessageMediaAudioConstructor : DecryptedMessageMedia {
-        private int duration;
-        private int size;
-        private byte[] key;
-        private byte[] iv;
+        public int duration;
+        public int size;
+        public byte[] key;
+        public byte[] iv;
 
         public DecryptedMessageMediaAudioConstructor() {
 
@@ -12289,7 +12289,7 @@ namespace Telegram.MTProto {
 
 
     public class AudioEmptyConstructor : Audio {
-        private long id;
+        public long id;
 
         public AudioEmptyConstructor() {
 
@@ -12322,13 +12322,13 @@ namespace Telegram.MTProto {
 
 
     public class AudioConstructor : Audio {
-        private long id;
-        private long access_hash;
-        private int user_id;
-        private int date;
-        private int duration;
-        private int size;
-        private int dc_id;
+        public long id;
+        public long access_hash;
+        public int user_id;
+        public int date;
+        public int duration;
+        public int size;
+        public int dc_id;
 
         public AudioConstructor() {
 
@@ -12379,7 +12379,7 @@ namespace Telegram.MTProto {
 
 
     public class DocumentEmptyConstructor : Document {
-        private long id;
+        public long id;
 
         public DocumentEmptyConstructor() {
 
@@ -12412,15 +12412,15 @@ namespace Telegram.MTProto {
 
 
     public class DocumentConstructor : Document {
-        private long id;
-        private long access_hash;
-        private int user_id;
-        private int date;
-        private string file_name;
-        private string mime_type;
-        private int size;
-        private PhotoSize thumb;
-        private int dc_id;
+        public long id;
+        public long access_hash;
+        public int user_id;
+        public int date;
+        public string file_name;
+        public string mime_type;
+        public int size;
+        public PhotoSize thumb;
+        public int dc_id;
 
         public DocumentConstructor() {
 
