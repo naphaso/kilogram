@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -12,6 +13,7 @@ using Telegram.Model;
 namespace Telegram.UI {
     public partial class Dialog : PhoneApplicationPage {
         public static DialogMessageModel MessageModel = null; // FIXME testing purpose only
+        private bool keyboardWasShownBeforeEmojiPanelIsAppeared;
 
         public Dialog() {
             if (MessageModel == null)
@@ -23,6 +25,26 @@ namespace Telegram.UI {
 
             InitializeComponent();
             DisableEditBox();
+
+            messageEditor.GotFocus += delegate {
+                if (emojiPanelShowing == false)
+                    keyboardWasShownBeforeEmojiPanelIsAppeared = true;
+                else 
+                    HideEmojiPanel();
+
+            };
+            messageEditor.LostFocus += delegate {
+                if (emojiPanelShowing == false)
+                    keyboardWasShownBeforeEmojiPanelIsAppeared = false;
+            };
+
+            EmojiPanelControl.EmojiGridListSelector.SelectionChanged += EmojiGridListSelectorOnSelectionChanged;
+        }
+
+        private void EmojiGridListSelectorOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs) {
+            Debug.WriteLine("Emoji clicked");
+            EmojiItemModel emoji = (sender as LongListSelector).SelectedItem as EmojiItemModel;
+            messageEditor.Text += emoji.ToString();
         }
 
         private void Dialog_Message_Send(object sender, EventArgs e) {
@@ -39,12 +61,36 @@ namespace Telegram.UI {
             Toaster.Show("Igor Glotov", "Hello");
         }
 
+        private bool emojiPanelShowing = false;
         private void Dialog_Emoji(object sender, EventArgs e) {
-            throw new NotImplementedException();
+            if (emojiPanelShowing) {
+                if (keyboardWasShownBeforeEmojiPanelIsAppeared)
+                    messageEditor.Focus();
+                HideEmojiPanel();
+            }
+            else {
+                if (keyboardWasShownBeforeEmojiPanelIsAppeared)
+                    this.Focus();
+                ShowEmojiPanel();
+            }
+        }
+
+        private void HideEmojiPanel() {
+            dialogList.Height = ContentPanel.Height - GetEditorTotalHeight();
+            emojiPanelShowing = false;
+        }
+
+        private void ShowEmojiPanel() {
+            dialogList.Height = ContentPanel.Height - EditorEmojiPanel.Height;
+            emojiPanelShowing = true;
+        }
+
+        private int GetEditorTotalHeight() {
+            return (int) messageEditor.Height + (int) messageEditor.Margin.Top + (int) messageEditor.Margin.Bottom;
         }
 
         private void Dialog_Manage(object sender, EventArgs e) {
-            throw new NotImplementedException();
+            messageEditor.Text += "\uD83C\uDFAA";
         }
 
         private void Dialog_Message_Change(object sender, TextChangedEventArgs e) {

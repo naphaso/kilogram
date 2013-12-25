@@ -16,7 +16,7 @@
     shell:SystemTray.IsVisible="True">
     <phone:PhoneApplicationPage.Resources>
         <DataTemplate x:Key="TextInBubbleTemplate">
-        	<StackPanel Margin="0,6,0,6" HorizontalAlignment="Left">
+            <StackPanel Margin="0,6,0,6" HorizontalAlignment="Left">
         		<Grid Width="336" Height="Auto">
         			<Rectangle Fill="{StaticResource PhoneAccentBrush}" Margin="0,7,0,-1" />
         			<es:RegularPolygon Fill="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Left" InnerRadius="1" Margin="12,0,0,0" PointCount="3" Stretch="Fill" UseLayoutRounding="False" Width="28" RenderTransformOrigin="0.5,0.5" StrokeThickness="0" Height="16" VerticalAlignment="Top">
@@ -98,37 +98,29 @@
 		<StackPanel Grid.Row="0" Margin="12,17,0,28">
 			<TextBlock Text="TELEGRAM DIALOG DEMO" Style="{StaticResource PhoneTextNormalStyle}"/>
 		</StackPanel>
-
-        <!--ContentPanel - place additional content here-->
-		<Grid x:Name="ContentPanel"  Grid.Row="1" Margin="0">
+		<StackPanel x:Name="ContentPanel"  Grid.Row="1" Margin="0" Height="624">
 
 			<phone:LongListSelector
 				ItemTemplate="{StaticResource UserSelectingTemplate}"
 				ItemsSource="{Binding Items}" 
 				x:Name="dialogList" LayoutMode="List" 
-				IsGroupingEnabled="False" 
-				VerticalAlignment="Bottom" BorderThickness="0" Margin="12,0,12,80"/>
-			<Grid Height="81" VerticalAlignment="Bottom" Margin="0,0,12,0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="44*"/>
-					<ColumnDefinition Width="13*"/>
-				</Grid.ColumnDefinitions>
+				IsGroupingEnabled="False" BorderThickness="0" Margin="12,0" Height="540"/>
+			<StackPanel Name="EditorEmojiPanel" Margin="0" Height="485">
 				<Controls:ChatBubbleTextBox 
 					x:Name="messageEditor" 
 					TextWrapping="Wrap" 
-					Margin="119,0,1,10" 
 					Hint="type your message" 
 					ChatBubbleDirection="LowerRight" 
-					SelectionBackground="#00E51400" 
 					BorderThickness="0,2" 
 					Height="60"
 					TextChanged="Dialog_Message_Change"
 					VerticalAlignment="Bottom" 
-					Grid.ColumnSpan="2"/>
-			</Grid>
-			<Telegram:EmojiPhoneControl Margin="0,128,0,86" Width="480"/>
+					Margin="119,0,12,12" SelectionBackground="White"/>
+				<Telegram:EmojiPhoneControl Name="EmojiPanelControl" Width="489" />
 
-		</Grid>
+			</StackPanel>
+		</StackPanel>
+
 	</Grid>
 
 </phone:PhoneApplicationPage>
