@@ -102,6 +102,9 @@
     <Compile Include="Core\Logging\Logger.cs" />
     <Compile Include="Core\Logging\LoggerFactory.cs" />
     <Compile Include="DemoClass.cs" />
+    <Compile Include="UI\Emoji\EmojiPhoneControl.xaml.cs">
+      <DependentUpon>EmojiPhoneControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -223,6 +226,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </DesignData>
+    <Page Include="UI\Emoji\EmojiPhoneControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
