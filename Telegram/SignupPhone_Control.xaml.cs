@@ -319,6 +319,20 @@ namespace Telegram {
             return parsedPhone.Length != 0;
         }
 
+        public string GetPhone() {
+            string phone = PhoneNumberBox.Text;
+            string code = CountryCodeBox.Text;
+
+            if (!code.StartsWith("+")) {
+                code = "+" + code;
+            }
+
+            string parsedCode = code.Where(Char.IsNumber).Aggregate("", (current, t) => current + t);
+            string parsedPhone = phone.Where(Char.IsNumber).Aggregate("", (current, t) => current + t);
+
+            return parsedCode + parsedPhone;
+        }
+
         public bool FormValid() {
             return CodeValid() && PhoneValid();
         }

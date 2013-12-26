@@ -12477,7 +12477,7 @@ namespace Telegram.MTProto {
 
 
 
-    class TLApi {
+    public class TLApi {
         private MTProtoGateway _gateway;
 
         public TLApi(MTProtoGateway gateway) {

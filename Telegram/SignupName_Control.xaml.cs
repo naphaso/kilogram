@@ -41,5 +41,13 @@ namespace Telegram
             }
         }
 
+        public string GetFirstName() {
+            return FirstNameTextBox.Text;
+        }
+
+        public string GetLastName() {
+            return LastNameTextBox.Text;
+        }
+
     }
 }

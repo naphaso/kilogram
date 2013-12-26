@@ -16,7 +16,7 @@ using Telegram.MTProto.Exceptions;
 namespace Telegram.MTProto {
 
 
-    abstract class MTProtoRequest {
+    public abstract class MTProtoRequest {
         public abstract void OnSend(BinaryWriter writer);
         public abstract void OnResponse(BinaryReader reader);
         public abstract void OnException(Exception exception);
@@ -24,7 +24,7 @@ namespace Telegram.MTProto {
         public abstract bool Responded { get; }
     }
 
-    abstract class MTProtoRequestUnconfirmed : MTProtoRequest {
+    public abstract class MTProtoRequestUnconfirmed : MTProtoRequest {
 
         public override bool Confirmed {
             get { return false; }
@@ -145,7 +145,7 @@ namespace Telegram.MTProto {
         }
     }
 
-    class MTProtoGateway : IDisposable {
+    public class MTProtoGateway : IDisposable {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(MTProtoGateway));
         private TransportGateway gateway;
 

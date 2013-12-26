@@ -9,7 +9,7 @@ using Windows.Devices.Geolocation;
 using Telegram.mtproto.Crypto;
 
 namespace Telegram.MTProto.Crypto {
-    class AuthKey {
+    public class AuthKey {
         private byte[] key;
         private ulong keyId;
         private ulong auxHash;

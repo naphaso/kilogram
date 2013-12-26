@@ -16,5 +16,13 @@ namespace Telegram
         {
             InitializeComponent();
         }
+
+        public void SetCodeInvalid() {
+            CodeInvalidTextBlock.Visibility = Visibility.Visible;
+        }
+
+        public string GetCode() {
+            return Code.Text;
+        }
     }
 }

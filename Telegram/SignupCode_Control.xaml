@@ -8,11 +8,13 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="154" d:DesignWidth="456">
-    
-    <StackPanel x:Name="LayoutRoot">
-		<TextBlock TextWrapping="Wrap" Text="Code" Style="{StaticResource TextBlockFieldHint}" Margin="12,0,6,-5" Height="27"/>
-		<TextBox TextWrapping="Wrap" BorderThickness="3" HorizontalContentAlignment="Left" Height="72"/>
-		<TextBlock TextWrapping="Wrap" Text="We will call you in 0:59" Style="{StaticResource TextBlockFieldHint}" Margin="12,20,6,0" Height="27"/>
 
-	</StackPanel>
+    <StackPanel x:Name="LayoutRoot">
+        <TextBlock TextWrapping="Wrap" Text="Code" Style="{StaticResource TextBlockFieldHint}" Margin="12,0,6,-5" Height="27"/>
+
+        <TextBox Name="Code" TextWrapping="Wrap" BorderThickness="3" HorizontalContentAlignment="Left" Height="72"/>
+        <TextBlock Name="CodeInvalidTextBlock" Visibility="Collapsed" TextWrapping="Wrap" Text="Code is invalid" Foreground="Red" Style="{StaticResource TextBlockFieldHint}" Margin="12,0,6,-5" Height="27"/>
+        <TextBlock TextWrapping="Wrap" Text="We will call you in 0:59" Style="{StaticResource TextBlockFieldHint}" Margin="12,20,6,0" Height="27"/>
+
+    </StackPanel>
 </UserControl>

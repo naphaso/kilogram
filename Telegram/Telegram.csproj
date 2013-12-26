@@ -102,6 +102,7 @@
     <Compile Include="Core\Logging\Logger.cs" />
     <Compile Include="Core\Logging\LoggerFactory.cs" />
     <Compile Include="DemoClass.cs" />
+    <Compile Include="Model\EmojiItemModel.cs" />
     <Compile Include="UI\Emoji\EmojiPhoneControl.xaml.cs">
       <DependentUpon>EmojiPhoneControl.xaml</DependentUpon>
     </Compile>

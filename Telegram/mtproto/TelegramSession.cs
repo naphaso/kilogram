@@ -16,7 +16,7 @@ namespace Telegram.MTProto {
         int GenerateSequence(bool confirmed);
     }
     
-    class TelegramEndpoint {
+    public class TelegramEndpoint {
         private string host;
         private int port;
 
@@ -51,7 +51,7 @@ namespace Telegram.MTProto {
             return string.Format("(Host: {0}, Port: {1})", host, port);
         }
     }
-    class TelegramDC {
+    public class TelegramDC {
         private List<TelegramEndpoint> endpoints; 
         private AuthKey authKey;
 

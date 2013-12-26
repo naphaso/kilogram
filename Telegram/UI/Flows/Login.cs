@@ -43,7 +43,7 @@ namespace Telegram.UI.Flows {
                 NeedCodeEvent(this);
 
                 // wait 30 seconds and send phone call
-                if(await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(30))) == codeSource.Task) {
+                if(await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(60))) == codeSource.Task) {
                     code = codeSource.Task.Result;
                 } else {
                     session.Api.auth_sendCall(phone, sendCodeResponse.phone_code_hash);
@@ -63,8 +63,10 @@ namespace Telegram.UI.Flows {
 
             } else { // sign up
                 string code;
+                NeedCodeEvent(this);
+
                 // wait 30 seconds and send phone call
-                if (await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(30))) == codeSource.Task) {
+                if (await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(60))) == codeSource.Task) {
                     code = codeSource.Task.Result;
                 }
                 else {
