@@ -163,9 +163,10 @@ namespace Telegram.MTProto {
                     logger.info("read error {0}, reconnecting", args.SocketError);
                     TryReconnect();
                 }
-            } else {
-                throw new InvalidOperationException("state is non-ESTABLISHED");
             }
+            //else {
+                //throw new InvalidOperationException("state is non-ESTABLISHED");
+            //}
         }
 
         private int ReadInt(byte[] array, long position) {
