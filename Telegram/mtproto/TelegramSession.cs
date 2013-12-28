@@ -318,8 +318,8 @@ namespace Telegram.MTProto {
             mainDcId = dc;
 
             gateway.Dispose();
-            gateway = new MTProtoGateway(MainDc, this);
-            await gateway.ConnectAsync();
+            gateway = null;
+            await ConnectAsync();
         }
     }
 }
