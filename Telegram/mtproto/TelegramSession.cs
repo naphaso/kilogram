@@ -113,6 +113,7 @@ namespace Telegram.MTProto {
         private int sequence;
         private int mainDcId;
         private Dictionary<int, TelegramDC> dcs;
+        private auth_Authorization authorization = null;
         
         // transient
         private MTProtoGateway gateway = null;
@@ -163,6 +164,13 @@ namespace Telegram.MTProto {
                 writer.Write(telegramEndpoint.Key);
                 telegramEndpoint.Value.write(writer);
             }
+
+            if(authorization == null) {
+                writer.Write(0);
+            } else {
+                writer.Write(1);
+                authorization.Write(writer);
+            }
         }
 
         public void read(BinaryReader reader) {
@@ -174,6 +182,12 @@ namespace Telegram.MTProto {
             for(int i = 0; i < count; i++) {
                 int endpointId = reader.ReadInt32();
                 dcs.Add(endpointId, new TelegramDC(reader));
+            }
+
+            int authorizationExists = reader.ReadInt32();
+            if(authorizationExists != 0) {
+                authorization = new Auth_authorizationConstructor();
+                authorization.Read(reader);
             }
         }
 
@@ -260,7 +274,15 @@ namespace Telegram.MTProto {
             }
         }
 
-        
+
+        public void SaveAuthorization(auth_Authorization authorization) {
+            this.authorization = authorization;
+            save();
+        }
+
+        public bool AuthorizationExists() {
+            return authorization != null;
+        }
         
         public TLApi Api {
             get { return api; }

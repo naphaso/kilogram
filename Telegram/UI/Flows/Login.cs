@@ -53,7 +53,7 @@ namespace Telegram.UI.Flows {
                 while(true) {
                     try {
                         Auth_authorizationConstructor authorization = (Auth_authorizationConstructor)await session.Api.auth_signIn(phone, sendCodeResponse.phone_code_hash, code);
-                        // TODO: save authorization
+                        session.SaveAuthorization(authorization);
                         LoginSuccessEvent(this);
                     } catch(MTProtoErrorException e) {
                         codeSource = new TaskCompletionSource<string>();
@@ -99,8 +99,8 @@ namespace Telegram.UI.Flows {
 
                 while(true) {
                     try {
-                        Auth_authorizationConstructor auth = (Auth_authorizationConstructor) await session.Api.auth_signUp(phone, sendCodeResponse.phone_code_hash, code, signUpData.firstname, signUpData.lastname);
-                        // TODO: save authorization
+                        Auth_authorizationConstructor authorization = (Auth_authorizationConstructor) await session.Api.auth_signUp(phone, sendCodeResponse.phone_code_hash, code, signUpData.firstname, signUpData.lastname);
+                        session.SaveAuthorization(authorization);
 
                         LoginSuccessEvent(this);
                         break;
