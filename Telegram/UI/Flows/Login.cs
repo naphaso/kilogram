@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Core.Logging;
 using Telegram.MTProto;
 using Telegram.MTProto.Exceptions;
 
@@ -17,6 +18,8 @@ namespace Telegram.UI.Flows {
     public delegate void LoginLoginSuccess(Login login);
 
     public class Login {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(Login));
+
         private TelegramSession session;
         private string langCode;
         private TaskCompletionSource<string> phoneSource = new TaskCompletionSource<string>();
@@ -33,9 +36,38 @@ namespace Telegram.UI.Flows {
         public event LoginLoginSuccess LoginSuccessEvent;
 
         public async Task Start() {
+            await session.ConnectAsync();
+
             string phone = await phoneSource.Task;
 
-            Auth_sentCodeConstructor sendCodeResponse = (Auth_sentCodeConstructor)await session.Api.auth_sendCode(phone, 0, 1097, "712986b054dc1311bec3c2dd92e843e7", "en");
+            Auth_sentCodeConstructor sendCodeResponse = null;
+
+            for(int i = 0; i < 5; i++) {
+                // 5 migration tries
+                bool sendCodeSuccess;
+                int migrateDc = -1;
+                try {
+                    sendCodeResponse = (Auth_sentCodeConstructor) await session.Api.auth_sendCode(phone, 0, 1097, "712986b054dc1311bec3c2dd92e843e7", langCode);
+                    sendCodeSuccess = true;
+                } catch(MTProtoErrorException e) {
+                    logger.warning("connect exception: {0}", e);
+                    sendCodeSuccess = false;
+                    if (e.ErrorMessage.StartsWith("PHONE_MIGRATE_") || e.ErrorMessage.StartsWith("NETWORK_MIGRATE_")) {
+                        migrateDc = Convert.ToInt32(e.ErrorMessage.Replace("PHONE_MIGRATE_", "").Replace("NETWORK_MIGRATE_", ""), 10);
+                    }
+                }
+
+                if(sendCodeSuccess) {
+                    break;
+                } else if(migrateDc != -1) {
+                    await session.Migrate(migrateDc);
+                }
+            }
+
+            if(sendCodeResponse == null) {
+                logger.error("login failed");
+                return;
+            }
 
             if(sendCodeResponse.phone_registered) { // sign in
                 string code;
@@ -55,6 +87,7 @@ namespace Telegram.UI.Flows {
                         Auth_authorizationConstructor authorization = (Auth_authorizationConstructor)await session.Api.auth_signIn(phone, sendCodeResponse.phone_code_hash, code);
                         session.SaveAuthorization(authorization);
                         LoginSuccessEvent(this);
+                        break;
                     } catch(MTProtoErrorException e) {
                         codeSource = new TaskCompletionSource<string>();
                         WrongCodeEvent(this);

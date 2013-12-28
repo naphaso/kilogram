@@ -106,6 +106,7 @@ namespace Telegram.MTProto.Crypto {
                 long divisor = findSmallMultiplierLopatin(pqlong);
                 return new FactorizedPair(BigInteger.ValueOf(divisor), BigInteger.ValueOf(pqlong/divisor));
             } else {
+                // TODO: port pollard factorization
                 logger.error("pq too long; TODO: port the pollard algo");
                 return null;
             }

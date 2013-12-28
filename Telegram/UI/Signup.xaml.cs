@@ -30,8 +30,6 @@ namespace Telegram.UI {
         }
 
         private async Task Login() {
-            await session.ConnectAsync();
-
             flow.NeedCodeEvent += delegate(Login login) {
                 ShowCodeScene();
             };

@@ -287,5 +287,39 @@ namespace Telegram.MTProto {
         public TLApi Api {
             get { return api; }
         }
+
+        public async Task Migrate(int dc) {
+            if(gateway == null) {
+                logger.error("gateway not found, migration impossible");
+                return;
+            }
+
+            if(gateway.Config == null) {
+                logger.error("config in gateway not found, migration impossible");
+                return;
+            }
+
+            ConfigConstructor config = (ConfigConstructor) gateway.Config;
+            if(config.this_dc == dc) {
+                logger.warning("migration to same dc: {0}", dc);
+                return;
+            }
+
+            TelegramDC newDc = new TelegramDC();
+            foreach(var dcOption in config.dc_options) {
+                DcOptionConstructor optionConstructor = (DcOptionConstructor) dcOption;
+                if(optionConstructor.id == dc) {
+                    TelegramEndpoint endpoint = new TelegramEndpoint(optionConstructor.ip_address, optionConstructor.port);
+                    newDc.Endpoints.Add(endpoint);
+                }
+            }
+
+            dcs[dc] = newDc;
+            mainDcId = dc;
+
+            gateway.Dispose();
+            gateway = new MTProtoGateway(MainDc, this);
+            await gateway.ConnectAsync();
+        }
     }
 }

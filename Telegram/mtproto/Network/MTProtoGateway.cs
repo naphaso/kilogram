@@ -166,9 +166,13 @@ namespace Telegram.MTProto {
         public MTProtoGateway(TelegramDC dc, ISession session) {
             this.dc = dc;
             this.session = session;
-            this.gateway = new TransportGateway();
-            this.gateway.InputEvent += GatewayOnInput;
-            this.gateway.ConnectedEvent += delegate { CheckSend(); };
+            gateway = new TransportGateway();
+            gateway.InputEvent += GatewayOnInput;
+            gateway.ConnectedEvent += delegate { CheckSend(); };
+        }
+
+        public Config Config {
+            get { return config; }
         }
 
         private void GatewayOnInput(object sender, byte[] data) {
@@ -213,6 +217,7 @@ namespace Telegram.MTProto {
 
         public async Task ConnectAsync() {
             logger.info("mtptoto gateway connect async");
+
             config = null;
             await gateway.ConnectAsync(dc, -1);
 
@@ -655,6 +660,7 @@ namespace Telegram.MTProto {
             if(timer != null) {
                 timer.Stop();
             }
+            gateway.Dispose();
         }
     }
 }
