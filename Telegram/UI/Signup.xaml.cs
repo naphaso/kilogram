@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using Windows.UI.Core;
 using Microsoft.Phone.Controls;
 using Telegram.MTProto;
 using Telegram.UI.Flows;
@@ -12,6 +16,8 @@ namespace Telegram.UI {
         int _screenState = 0;
         private readonly TelegramSession session;
         private readonly Login flow;
+        private int _timerSeconds = 60;
+        private Popup _progressPopup;
 
         public SignupPhone() {
             InitializeComponent();
@@ -40,6 +46,7 @@ namespace Telegram.UI {
             };
 
             flow.LoginSuccessEvent += delegate(Login login) {
+                HideProgress();
                 NavigationService.Navigate(new Uri("/UI/StartPage.xaml", UriKind.Relative));
             };
 
@@ -49,15 +56,16 @@ namespace Telegram.UI {
         private void nextButton_Click(object sender, RoutedEventArgs e) {
             switch (_screenState) {
                 case 0:
+                    ShowProgress();
                     flow.SetPhone(phoneControl.GetPhone());
-//                    ShowCodeScene();
                     break;
                 case 1:
+                    ShowProgress();
                     flow.SetCode(codeControl.GetCode());
                     break;
                 case 2:
+                    ShowProgress();
                     flow.SetSignUp(nameControl.GetFirstName(), nameControl.GetLastName());
-//                    NavigationService.Navigate(new Uri("/UI/StartPage.xaml", UriKind.Relative));
                     break;
                 default:
                     System.Diagnostics.Debug.WriteLine("Unknown screen state");
@@ -74,12 +82,17 @@ namespace Telegram.UI {
         }
 
         private void ShowCodeScene() {
-            Debug.WriteLine("ShowPhoneScene");
+            Debug.WriteLine("ShowCodeScene");
+
+            HideProgress();
+
             if (!phoneControl.FormValid()) {
                 phoneControl.PhoneNumberHinTextBlock.Foreground = new SolidColorBrush(Colors.Red);
 
                 return;
             }
+
+            RestartTimer();
 
             phoneControl.Visibility = System.Windows.Visibility.Collapsed;
             codeControl.Visibility = System.Windows.Visibility.Visible;
@@ -88,18 +101,51 @@ namespace Telegram.UI {
         }
 
         private void RestartTimer() {
-            
+            _timerSeconds = 60;
+            StartTimer();
         }
 
-        private void UpdateTimer(int seconds) {
+        private void HaltTimer() {
+            _timerSeconds = 0;
+        }
+
+        private async void StartTimer() {
+            while (_timerSeconds != 0) {
+                _timerSeconds--;
+                codeControl.SetTimerTime(_timerSeconds);
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+        }
+
+        private void ShowProgress() {
+            _progressPopup = new Popup();
+            UserControl content = new ProgressBarUserControl();
+            _progressPopup.Child = content;
+
+            _progressPopup.HorizontalAlignment = HorizontalAlignment.Center;
+            _progressPopup.VerticalAlignment = VerticalAlignment.Center;
+
+            _progressPopup.VerticalOffset = (this.ActualHeight - content.ActualHeight) / 2;
             
+            _progressPopup.IsOpen = true;
+            this.IsEnabled = false;
+        }
+
+        private void HideProgress() {
+            this._progressPopup.IsOpen = false;
+            this.IsEnabled = true;
         }
 
         private void ShowNameScene() {
             Debug.WriteLine("ShowNameScene");
+
+            HideProgress();
+            
             phoneControl.Visibility = System.Windows.Visibility.Collapsed;
             codeControl.Visibility = System.Windows.Visibility.Collapsed;
             nameControl.Visibility = System.Windows.Visibility.Visible;
+
+            HaltTimer();
 
             _screenState++;
         }
