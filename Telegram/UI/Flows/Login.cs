@@ -73,16 +73,16 @@ namespace Telegram.UI.Flows {
                 string code;
 
                 NeedCodeEvent(this);
+                while (true) {
 
-                // wait 30 seconds and send phone call
-                if(await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(60))) == codeSource.Task) {
-                    code = codeSource.Task.Result;
-                } else {
-                    session.Api.auth_sendCall(phone, sendCodeResponse.phone_code_hash);
-                    code = await codeSource.Task;
-                }
+                    // wait 30 seconds and send phone call
+                    if(await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(60))) == codeSource.Task) {
+                        code = codeSource.Task.Result;
+                    } else {
+                        session.Api.auth_sendCall(phone, sendCodeResponse.phone_code_hash);
+                        code = await codeSource.Task;
+                    }
 
-                while(true) {
                     try {
                         Auth_authorizationConstructor authorization = (Auth_authorizationConstructor)await session.Api.auth_signIn(phone, sendCodeResponse.phone_code_hash, code);
                         session.SaveAuthorization(authorization);

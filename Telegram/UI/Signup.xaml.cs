@@ -13,7 +13,14 @@ using Telegram.UI.Flows;
 
 namespace Telegram.UI {
     public partial class SignupPhone : PhoneApplicationPage {
-        int _screenState = 0;
+        public enum ScreenState {
+            PhoneScreen = 0,
+            CodeScreen = 1,
+            NameScreen = 2
+        };
+
+        private ScreenState _currentScreenState = 0;
+
         private readonly TelegramSession session;
         private readonly Login flow;
         private int _timerSeconds = 60;
@@ -25,6 +32,10 @@ namespace Telegram.UI {
             flow = new Login(session, "en");
             
             ShowPhoneScene();
+
+            this.BackKeyPress += delegate {
+                Application.Current.Terminate();
+            };
 
             Login();
         }
@@ -52,16 +63,16 @@ namespace Telegram.UI {
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e) {
-            switch (_screenState) {
-                case 0:
+            switch (_currentScreenState) {
+                case ScreenState.PhoneScreen:
                     ShowProgress();
                     flow.SetPhone(phoneControl.GetPhone());
                     break;
-                case 1:
+                case ScreenState.CodeScreen:
                     ShowProgress();
                     flow.SetCode(codeControl.GetCode());
                     break;
-                case 2:
+                case ScreenState.NameScreen:
                     ShowProgress();
                     flow.SetSignUp(nameControl.GetFirstName(), nameControl.GetLastName());
                     break;
@@ -69,7 +80,6 @@ namespace Telegram.UI {
                     System.Diagnostics.Debug.WriteLine("Unknown screen state");
                     break;
             }
-
         }
 
         private void ShowPhoneScene() {
@@ -77,6 +87,8 @@ namespace Telegram.UI {
             phoneControl.Visibility = System.Windows.Visibility.Visible;
             codeControl.Visibility = System.Windows.Visibility.Collapsed;
             nameControl.Visibility = System.Windows.Visibility.Collapsed;
+
+            _currentScreenState = ScreenState.PhoneScreen;
         }
 
         private void ShowCodeScene() {
@@ -95,7 +107,8 @@ namespace Telegram.UI {
             phoneControl.Visibility = System.Windows.Visibility.Collapsed;
             codeControl.Visibility = System.Windows.Visibility.Visible;
             nameControl.Visibility = System.Windows.Visibility.Collapsed;
-            _screenState++;
+
+            _currentScreenState = ScreenState.CodeScreen;
         }
 
         private void RestartTimer() {
@@ -116,6 +129,8 @@ namespace Telegram.UI {
         }
 
         private void ShowProgress() {
+            this.IsEnabled = false;
+
             _progressPopup = new Popup();
             UserControl content = new ProgressBarUserControl();
             _progressPopup.Child = content;
@@ -126,7 +141,6 @@ namespace Telegram.UI {
             _progressPopup.VerticalOffset = (this.ActualHeight - content.ActualHeight) / 2;
             
             _progressPopup.IsOpen = true;
-            this.IsEnabled = false;
         }
 
         private void HideProgress() {
@@ -145,7 +159,7 @@ namespace Telegram.UI {
 
             HaltTimer();
 
-            _screenState++;
+            _currentScreenState = ScreenState.NameScreen;
         }
     }
 }

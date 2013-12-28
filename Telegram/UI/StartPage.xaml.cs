@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Telegram.UI.Models;
@@ -20,6 +21,11 @@ namespace Telegram.UI
         public StartPage()
         {
             InitializeComponent();
+
+            this.BackKeyPress += delegate {
+                Application.Current.Terminate();
+            };
+
 //            RemoveBackStack();
             var items = new ObservableCollection<DialogItem> {
                 new DialogItem() {Avatar = "1", Preview = "Hello.", Timestamp = "11:21a", Title = "John Doe"},

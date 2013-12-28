@@ -187,6 +187,7 @@ namespace Telegram.MTProto {
             int authorizationExists = reader.ReadInt32();
             if(authorizationExists != 0) {
                 authorization = new Auth_authorizationConstructor();
+                reader.ReadUInt32();
                 authorization.Read(reader);
             }
         }
@@ -216,7 +217,7 @@ namespace Telegram.MTProto {
                     logger.info("loaded telegram session: {0}", session);
                 }
             } catch(Exception e) {
-                logger.info("error loading session, create new...");
+                logger.info("error loading session, create new...: {0}", e);
                 Random random = new Random();
                 ulong sessionId = (((ulong) random.Next()) << 32) | ((ulong) random.Next());
                 session = new TelegramSession(sessionId, 0);
@@ -294,7 +295,7 @@ namespace Telegram.MTProto {
                 return;
             }
 
-            if(gateway.Config == null) {
+            if (gateway.Config == null) {
                 logger.error("config in gateway not found, migration impossible");
                 return;
             }
