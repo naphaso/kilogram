@@ -84,8 +84,15 @@ namespace Telegram.UI {
             phoneControl.Visibility = System.Windows.Visibility.Collapsed;
             codeControl.Visibility = System.Windows.Visibility.Visible;
             nameControl.Visibility = System.Windows.Visibility.Collapsed;
-
             _screenState++;
+        }
+
+        private void RestartTimer() {
+            
+        }
+
+        private void UpdateTimer(int seconds) {
+            
         }
 
         private void ShowNameScene() {
