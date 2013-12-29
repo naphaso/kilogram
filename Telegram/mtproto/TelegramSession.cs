@@ -180,6 +180,8 @@ namespace Telegram.MTProto {
                 writer.Write(1);
                 authorization.Write(writer);
             }
+
+            dialogs.save(writer);
         }
 
         public void read(BinaryReader reader) {
