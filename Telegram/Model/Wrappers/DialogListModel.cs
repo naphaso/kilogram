@@ -49,7 +49,7 @@ namespace Telegram.Model.Wrappers {
                     return 0;
             }
 
-            logger.info("process dialogs: {0} dialogs, {1} messages, {2} chats, {3} users", dialogsList.Count, messagesList.Count, chats.Count, users.Count);
+            logger.info("process dialogs: {0} dialogs, {1} messages, {2} chats, {3} users", dialogsList.Count, messagesList.Count, chatsList.Count, usersList.Count);
 
             foreach (Dialog dialog in dialogsList) {
                 dialogs.Add(new DialogModel(dialog, this, this, this));
