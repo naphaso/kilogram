@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using Telegram.Core.Logging;
 using Telegram.MTProto;
@@ -6,12 +7,12 @@ using Telegram.MTProto;
 namespace Telegram.Model.Wrappers {
     public class DialogListModel : IMessageProvider, IUserProvider, IChatProvider {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogListModel));
-        private List<DialogModel> dialogs = new List<DialogModel>();
+        private ObservableCollection<DialogModel> dialogs = new ObservableCollection<DialogModel>();
         private Dictionary<int, MessageModel> messages = new Dictionary<int, MessageModel>();
         private Dictionary<int, UserModel> users = new Dictionary<int, UserModel>();
         private Dictionary<int, ChatModel> chats = new Dictionary<int, ChatModel>();
 
-        public List<DialogModel> Dialogs {
+        public ObservableCollection<DialogModel> Dialogs {
             get { return dialogs; }
         }
 
