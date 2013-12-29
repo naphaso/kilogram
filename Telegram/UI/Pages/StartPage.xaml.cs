@@ -56,15 +56,11 @@ namespace Telegram.UI
         }
 
         private void Search_Click(object sender, EventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/SearchPage.xaml", UriKind.Relative));
         }
 
         private void Settings_Click(object sender, EventArgs e) {
             NavigationService.Navigate(new Uri("/UI/Pages/Settings.xaml", UriKind.Relative));
-        }
-
-        private void SearchTextChanged(object sender, TextChangedEventArgs e) {
-            throw new NotImplementedException();
         }
     }
 }
