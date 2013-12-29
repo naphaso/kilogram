@@ -90,6 +90,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MessageModel.cs" />
+    <Compile Include="Model\Providers.cs" />
+    <Compile Include="Model\Wrappers\ChatModel.cs" />
+    <Compile Include="Model\Wrappers\DialogListModel.cs" />
+    <Compile Include="Model\Wrappers\DialogModel.cs" />
+    <Compile Include="Model\Wrappers\MessageModel.cs" />
+    <Compile Include="Model\Wrappers\UserModel.cs" />
     <Compile Include="UI\Controls\FormLatterEditPhoneControl.xaml.cs">
       <DependentUpon>FormLatterEditPhoneControl.xaml</DependentUpon>
     </Compile>

@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Telegram.Model.TLWrappers;
+using Telegram.Model.Wrappers;
 
 namespace Telegram.Model {
-    interface IMessageProvider {
+    public interface IMessageProvider {
         MessageModel GetMessage(int id);
     }
 
-    interface IUserProvider {
+    public interface IUserProvider {
         UserModel GetUser(int id);
     }
 
-    interface IChatProvider {
+    public interface IChatProvider {
         ChatModel GetChat(int id);
     }
 }

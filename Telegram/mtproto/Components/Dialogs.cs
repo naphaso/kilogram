@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Telegram.Annotations;
 using Telegram.Model.TLWrappers;
+using Telegram.Model.Wrappers;
 
 namespace Telegram.MTProto.Components {
 
