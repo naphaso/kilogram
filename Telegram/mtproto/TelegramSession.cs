@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Telegram.Core.Logging;
+using Telegram.MTProto.Components;
 using Telegram.MTProto.Crypto;
 
 namespace Telegram.MTProto {
@@ -118,14 +119,18 @@ namespace Telegram.MTProto {
         // transient
         private MTProtoGateway gateway = null;
         private TLApi api = null;
+
+        private Dialogs dialogs = null;
         
         public TelegramSession(BinaryReader reader) {
             read(reader);
+            dialogs = new Dialogs(this, reader);
         }
         public TelegramSession(ulong id, int sequence) {
             this.id = id;
             this.sequence = sequence;
             dcs = new Dictionary<int, TelegramDC>();
+            dialogs = new Dialogs(this);
         }
 
         public ulong Id {
@@ -153,6 +158,10 @@ namespace Telegram.MTProto {
         public Dictionary<int, TelegramDC> Dcs {
             get { return dcs; }
             set { dcs = value; }
+        }
+
+        public Dialogs Dialogs {
+            get { return dialogs; }
         }
 
         public void write(BinaryWriter writer) {
@@ -278,6 +287,7 @@ namespace Telegram.MTProto {
 
         public void SaveAuthorization(auth_Authorization authorization) {
             this.authorization = authorization;
+            dialogs.DialogsRequest();
             save();
         }
 
