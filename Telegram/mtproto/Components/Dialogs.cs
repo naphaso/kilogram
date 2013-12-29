@@ -7,18 +7,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Telegram.Annotations;
-using Telegram.Model.TLWrappers;
 using Telegram.Model.Wrappers;
 
 namespace Telegram.MTProto.Components {
 
     public class Dialogs {
         private TelegramSession session;
-        private DialogListModel state;
+        private DialogListModel model;
  
         public Dialogs(TelegramSession session) {
             this.session = session;
-            state = new DialogListModel();
+            model = new DialogListModel();
         }
 
         public Dialogs(TelegramSession session, BinaryReader reader) {
@@ -40,33 +39,33 @@ namespace Telegram.MTProto.Components {
             }
 
             
-            state.Replace(newState);
+            model.Replace(newState);
 
-            return newState;
+            return model;
         }
 
-        public DialogListModel State {
+        public DialogListModel Model {
             get {
-                return state;
+                return model;
             }
         }
 
         public void save(BinaryWriter writer) {
-            if(state == null) {
+            if(model == null) {
                 writer.Write(0);
             } else {
                 writer.Write(1);
-                state.save(writer);
+                model.save(writer);
             }
         }
 
         public void load(BinaryReader reader) {
             int stateExists = reader.ReadInt32();
             if(stateExists != 0) {
-                state = new DialogListModel();
-                state.load(reader);
+                model = new DialogListModel();
+                model.load(reader);
             } else {
-                state = null;
+                model = null;
             }
         }
     }

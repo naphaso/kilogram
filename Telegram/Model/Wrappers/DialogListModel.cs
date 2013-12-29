@@ -1,14 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Telegram.Model.TLWrappers;
 using Telegram.MTProto;
 
 namespace Telegram.Model.Wrappers {
     public class DialogListModel : IMessageProvider, IUserProvider, IChatProvider {
-        public List<DialogModel> dialogs = new List<DialogModel>();
-        public Dictionary<int, MessageModel> messages = new Dictionary<int, MessageModel>();
-        public Dictionary<int, UserModel> users = new Dictionary<int, UserModel>();
-        public Dictionary<int, ChatModel> chats = new Dictionary<int, ChatModel>();
+        private List<DialogModel> dialogs = new List<DialogModel>();
+        private Dictionary<int, MessageModel> messages = new Dictionary<int, MessageModel>();
+        private Dictionary<int, UserModel> users = new Dictionary<int, UserModel>();
+        private Dictionary<int, ChatModel> chats = new Dictionary<int, ChatModel>();
+
+        public List<DialogModel> Dialogs {
+            get { return dialogs; }
+        }
+
+        public Dictionary<int, MessageModel> Messages {
+            get { return messages; }
+        }
+
+        public Dictionary<int, UserModel> Users {
+            get { return users; }
+        }
+
+        public Dictionary<int, ChatModel> Chats {
+            get { return chats; }
+        }
 
         public int ProcessDialogs(messages_Dialogs dialogsObject) {
             List<Dialog> dialogsList;

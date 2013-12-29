@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Telegram.MTProto;
 using Telegram.UI.Models;
 
 namespace Telegram.UI.Controls {
@@ -15,7 +16,12 @@ namespace Telegram.UI.Controls {
         public DialogListControl() {
             InitializeComponent();
 
-            initDemo();
+            LoadModel();
+//            initDemo();
+        }
+
+        private void LoadModel() {
+            DialogList.ItemsSource = TelegramSession.Instance.Dialogs.Model.Dialogs;
         }
 
         private void initDemo() {

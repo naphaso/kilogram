@@ -35,5 +35,26 @@ namespace Telegram.Model.Wrappers {
                 return user;
             }
         }
+
+        public string FullName {
+            get {
+                switch (user.Constructor) {
+                    case Constructor.userEmpty:
+                        return "empty";
+                    case Constructor.userSelf:
+                        return ((UserSelfConstructor)user).first_name + " " + ((UserSelfConstructor)user).first_name;
+                    case Constructor.userContact:
+                        return ((UserContactConstructor)user).first_name + " " + ((UserContactConstructor)user).last_name;
+                    case Constructor.userRequest:
+                        return ((UserRequestConstructor)user).first_name + " " + ((UserRequestConstructor)user).last_name;
+                    case Constructor.userForeign:
+                        return ((UserForeignConstructor)user).first_name + " " + ((UserForeignConstructor)user).last_name;
+                    case Constructor.userDeleted:
+                        return ((UserDeletedConstructor)user).first_name + " " + ((UserDeletedConstructor)user).last_name;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+            }
+        }
     }
 }
