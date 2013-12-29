@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Telegram.UI.Models;
@@ -27,9 +28,12 @@ namespace Telegram.UI
             };
         }
 
-        private void RemoveBackStack() {
-            while (NavigationService.CanGoBack) 
-                NavigationService.RemoveBackEntry();
+        public void EnableSearchMode() {
+            
+        }
+
+        public void DisableSearchMode() {
+            
         }
 
         private void BuildAppBar() {
@@ -57,6 +61,10 @@ namespace Telegram.UI
 
         private void Settings_Click(object sender, EventArgs e) {
             NavigationService.Navigate(new Uri("/UI/Pages/Settings.xaml", UriKind.Relative));
+        }
+
+        private void SearchTextChanged(object sender, TextChangedEventArgs e) {
+            throw new NotImplementedException();
         }
     }
 }
