@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Telegram.Core.Logging;
 using Telegram.MTProto;
 
 namespace Telegram.Model.Wrappers {
     public class DialogListModel : IMessageProvider, IUserProvider, IChatProvider {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogListModel));
         private List<DialogModel> dialogs = new List<DialogModel>();
         private Dictionary<int, MessageModel> messages = new Dictionary<int, MessageModel>();
         private Dictionary<int, UserModel> users = new Dictionary<int, UserModel>();
@@ -46,6 +48,8 @@ namespace Telegram.Model.Wrappers {
                 default:
                     return 0;
             }
+
+            logger.info("process dialogs: {0} dialogs, {1} messages, {2} chats, {3} users", dialogsList.Count, messagesList.Count, chats.Count, users.Count);
 
             foreach (Dialog dialog in dialogsList) {
                 dialogs.Add(new DialogModel(dialog, this, this, this));

@@ -7,17 +7,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Telegram.Annotations;
+using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
 
 namespace Telegram.MTProto.Components {
 
     public class Dialogs {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(Dialogs));
         private TelegramSession session;
         private DialogListModel model;
  
         public Dialogs(TelegramSession session) {
             this.session = session;
             model = new DialogListModel();
+            if(session.AuthorizationExists()) {
+                DialogsRequest();
+            }
         }
 
         public Dialogs(TelegramSession session, BinaryReader reader) {
@@ -30,6 +35,7 @@ namespace Telegram.MTProto.Components {
 
             int offset = 0;
             while(true) {
+                logger.info("request dialogs with offset {0}", offset);
                 messages_Dialogs dialogsPart = await session.Api.messages_getDialogs(offset, 0, 100);
                 offset += newState.ProcessDialogs(dialogsPart);
 
