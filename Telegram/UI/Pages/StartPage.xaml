@@ -48,9 +48,9 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
+        <StackPanel Grid.Row="0" Margin="0,17,0,28">
             <TextBlock Text="TELEGRAM" Style="{StaticResource PhoneTextNormalStyle}" toolkit:TurnstileFeatherEffect.FeatheringIndex="1"/>
-            <phone:Pivot Grid.Row="1" toolkit:TurnstileFeatherEffect.FeatheringIndex="0">
+            <phone:Pivot Margin="0,-20,0,0" Grid.Row="1" toolkit:TurnstileFeatherEffect.FeatheringIndex="0">
                 <phone:PivotItem Header="chats" Height="Auto" Margin="12,28,12,6">
                     <!--ContentPanel - place additional content here-->
                     <Grid x:Name="ContentPanel" Grid.Row="1" Height="500">

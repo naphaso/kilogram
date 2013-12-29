@@ -176,8 +176,8 @@
     <Compile Include="UI\Pages\ChatCreate.xaml.cs">
       <DependentUpon>ChatCreate.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Pages\Dialog.xaml.cs">
-      <DependentUpon>Dialog.xaml</DependentUpon>
+    <Compile Include="UI\Pages\DialogPage.xaml.cs">
+      <DependentUpon>DialogPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Pages\EditNamePage.xaml.cs">
       <DependentUpon>EditNamePage.xaml</DependentUpon>
@@ -199,6 +199,9 @@
     <Compile Include="UI\Models\MessageBubbleTemplateSelector.cs" />
     <Compile Include="UI\Pages\NewGroup.xaml.cs">
       <DependentUpon>NewGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Pages\SearchPage.xaml.cs">
+      <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Pages\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
@@ -293,7 +296,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Pages\Dialog.xaml">
+    <Page Include="UI\Pages\DialogPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -322,6 +325,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\NewGroup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\SearchPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
