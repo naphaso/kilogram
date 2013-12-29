@@ -40,9 +40,11 @@
 				</es:RegularPolygon>
 			</Grid>
 			<MultiScaleImage HorizontalAlignment="Left" Height="191" Margin="150,47,0,0" VerticalAlignment="Top" Width="187"/>
-			<Grid Background="#FF474747" HorizontalAlignment="Left" Height="67" Margin="98,358,0,0" VerticalAlignment="Top" Width="77" >
-				<Image Source="/Assets/UI/emoji.backspace-WXGA.png" Stretch="Fill" Height="64" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6,1,7,2" Width="64"/>
-			</Grid>
+            <Grid Height="62" Margin="0,5">
+                <Image Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Text="Binding Name" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+                <TextBlock Text="Binding LastSeen" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
+            </Grid>
 		</Grid>
 	</Grid>
 

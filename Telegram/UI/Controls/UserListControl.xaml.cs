@@ -24,6 +24,9 @@ namespace Telegram.UI.Controls {
                 new UserItem() {Name = "John Doe", Online = true},
                 new UserItem() {Name = "Jane Doe", Online = true},
                 new UserItem() {Name = "Decard Kain", Online = false, LastSeen = "19:33p"},
+                new UserItem() {Name = "Igor Glotov", Online = true, LastSeen = "19:33p"},
+                new UserItem() {Name = "Mila Kunis", Online = false, LastSeen = "19:33p"},
+                new UserItem() {Name = "Jack Daniel", Online = false, LastSeen = "19:33p"},
                 new UserItem() {Name = "Stanislav Ovsyannikov", AddressBookContact = true}
             };
 

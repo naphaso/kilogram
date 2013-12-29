@@ -90,6 +90,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="UI\Controls\FormLatterEditPhoneControl.xaml.cs">
+      <DependentUpon>FormLatterEditPhoneControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Controls\AddPhoneUserControl.xaml.cs">
       <DependentUpon>AddPhoneUserControl.xaml</DependentUpon>
     </Compile>
@@ -170,6 +173,9 @@
     <Compile Include="UI\Controls\ThreeDotUserControl.xaml.cs">
       <DependentUpon>ThreeDotUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Pages\ChatCreate.xaml.cs">
+      <DependentUpon>ChatCreate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Pages\Dialog.xaml.cs">
       <DependentUpon>Dialog.xaml</DependentUpon>
     </Compile>
@@ -191,6 +197,9 @@
     </Compile>
     <Compile Include="UI\Models\AlphaKeyGroup.cs" />
     <Compile Include="UI\Models\MessageBubbleTemplateSelector.cs" />
+    <Compile Include="UI\Pages\NewGroup.xaml.cs">
+      <DependentUpon>NewGroup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Pages\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -224,6 +233,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="UI\Controls\FormLatterEditPhoneControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Controls\AddPhoneUserControl.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -276,6 +289,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UI\Pages\ChatCreate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Pages\Dialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -301,6 +318,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\MediaViewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\NewGroup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
