@@ -41,7 +41,7 @@ namespace Telegram.UI {
         }
 
         private void button_Click(object sender, RoutedEventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/Signup.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/Signup.xaml", UriKind.Relative));
 
         }
     }

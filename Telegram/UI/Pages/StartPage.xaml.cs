@@ -25,35 +25,6 @@ namespace Telegram.UI
             this.BackKeyPress += delegate {
                 Application.Current.Terminate();
             };
-
-//            RemoveBackStack();
-            var items = new ObservableCollection<DialogItem> {
-                new DialogItem() {Avatar = "1", Preview = "Hello.", Timestamp = "11:21a", Title = "John Doe"},
-                new DialogItem() {Avatar = "2", Preview = "Hi there!", Timestamp = "9:56a", Title = "Jane Doe"},
-                new DialogItem() {Avatar = "3", Preview = "Stay awhile and listen.", Timestamp = "1:21a", Title = "Decard Kain"}
-            };
-
-            dialogList.ItemsSource = items;
-
-            items.Add(new DialogItem() { Avatar = "4", Preview = "Stay awhile and listen.", Timestamp = "1:21a", Title = "Decard Kain" });
-            dialogList.ItemsSource = new ObservableCollection<DialogItem>(items.OrderBy(i => i.Timestamp));
-
-            var users = new List<UserItem> {
-                new UserItem() {Name = "John Doe", Online = true},
-                new UserItem() {Name = "Jane Doe", Online = true},
-                new UserItem() {Name = "Decard Kain", Online = false, LastSeen = "19:33p"},
-                new UserItem() {Name = "Stanislav Ovsyannikov", AddressBookContact = true}
-            };
-
-            List<AlphaKeyGroup<UserItem>> userDataSource = AlphaKeyGroup<UserItem>.CreateGroups(users,
-                System.Threading.Thread.CurrentThread.CurrentUICulture,
-                (UserItem s) => s.Name, true);
-
-            var observableUsersSource = new ObservableCollection<AlphaKeyGroup<UserItem>>(userDataSource);
-            
-            contactsList.ItemsSource = observableUsersSource;
-
-//            BuildAppBar();
         }
 
         private void RemoveBackStack() {
@@ -81,11 +52,11 @@ namespace Telegram.UI
         }
 
         private void Search_Click(object sender, EventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/UserProfile.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml", UriKind.Relative));
         }
 
         private void Settings_Click(object sender, EventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/Settings.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/Settings.xaml", UriKind.Relative));
         }
     }
 }

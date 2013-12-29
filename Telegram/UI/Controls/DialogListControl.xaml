@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="Telegram.UI.Controls.DialogListControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:dialogs="clr-namespace:Telegram.UI.Models.Dialogs"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+             d:DesignWidth="480">
+    <UserControl.Resources>
+        <DataTemplate x:Key="DialogTemplate">
+            <StackPanel>
+                <Grid>
+                    <TextBlock Text="{Binding Preview}" Margin="90,54,50,20" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2"/>
+                    <TextBlock Text="{Binding Timestamp}" Margin="0,10,0,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top"/>
+                    <Image Margin="12,19,0,0" Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding Title}" Margin="90,10,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ChatTemplate">
+            <StackPanel>
+                <Grid>
+                    <TextBlock Text="{Binding Preview}" Margin="90,79,50,0" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2"/>
+                    <TextBlock Text="{Binding Timestamp}" Margin="0,10,0,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top"/>
+                    <Image Margin="12,19,0,0" Source="/Assets/UI/placeholder.group.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding Title}" Margin="90,10,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+                    <TextBlock Text="{Binding Sender}" HorizontalAlignment="Left" Margin="90,52,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+        <!-- DIALOG TEMPLATE SELECTOR -->
+        <DataTemplate x:Key="DialogSelectingTemplate">
+            <dialogs:DialogTemplateSelector Content="{Binding}"
+                                DialogTemplate="{StaticResource DialogTemplate}"
+                                ChatTemplate="{StaticResource ChatTemplate}"
+                                HorizontalContentAlignment="Stretch"/>
+        </DataTemplate>
+
+
+    </UserControl.Resources>
+    <Grid>
+        <phone:LongListSelector
+                            toolkit:TurnstileFeatherEffect.FeatheringIndex="2"
+                            ItemTemplate="{StaticResource DialogSelectingTemplate}"
+                            ItemsSource="{Binding DialogData}" 
+                            Name="DialogList" LayoutMode="List" 
+                            IsGroupingEnabled="False" 
+                            VerticalAlignment="Top">
+        </phone:LongListSelector>
+    </Grid>
+</UserControl>

@@ -22,7 +22,7 @@ namespace Telegram.UI {
         }
 
         private void Edit_Click(object sender, EventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/EditUserProfile.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/EditUserProfile.xaml", UriKind.Relative));
         }
 
         private void Block_Click(object sender, EventArgs e) {

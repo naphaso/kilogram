@@ -25,7 +25,7 @@ namespace Telegram.UI {
         }
 
         private void EditName(object sender, MouseButtonEventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/EditNamePage.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/EditNamePage.xaml", UriKind.Relative));
         }
     }
 }

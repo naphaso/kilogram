@@ -57,7 +57,7 @@ namespace Telegram.UI
 
             if (item.Name == "notifications") {
                 Debug.WriteLine("Selected notifications");
-                NavigationService.Navigate(new Uri("/UI/SettingsNotification.xaml", UriKind.Relative));
+                NavigationService.Navigate(new Uri("/UI/Pages/SettingsNotification.xaml", UriKind.Relative));
             }
             else {
                 Debug.WriteLine("Uknown selection");
