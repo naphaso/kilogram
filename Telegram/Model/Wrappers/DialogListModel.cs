@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Telegram.Core.Logging;
 using Telegram.MTProto;
 
@@ -10,6 +11,12 @@ namespace Telegram.Model.Wrappers {
         private Dictionary<int, MessageModel> messages = new Dictionary<int, MessageModel>();
         private Dictionary<int, UserModel> users = new Dictionary<int, UserModel>();
         private Dictionary<int, ChatModel> chats = new Dictionary<int, ChatModel>();
+
+        private TelegramSession session;
+
+        public DialogListModel(TelegramSession session) {
+            this.session = session;
+        }
 
         public List<DialogModel> Dialogs {
             get { return dialogs; }
@@ -52,7 +59,7 @@ namespace Telegram.Model.Wrappers {
             logger.info("process dialogs: {0} dialogs, {1} messages, {2} chats, {3} users", dialogsList.Count, messagesList.Count, chatsList.Count, usersList.Count);
 
             foreach (Dialog dialog in dialogsList) {
-                dialogs.Add(new DialogModel(dialog, this, this, this));
+                dialogs.Add(new DialogModel(dialog, session, this, this, this));
             }
 
             foreach (var message in messagesList) {

@@ -68,7 +68,7 @@ namespace Telegram.MTProto.Components {
         public void load(BinaryReader reader) {
             int stateExists = reader.ReadInt32();
             if(stateExists != 0) {
-                model = new DialogListModel();
+                model = new DialogListModel(session);
                 model.load(reader);
             } else {
                 model = null;

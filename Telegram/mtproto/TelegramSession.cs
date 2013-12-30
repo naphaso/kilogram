@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Telegram.Core.Logging;
+using Telegram.Model.Wrappers;
 using Telegram.MTProto.Components;
 using Telegram.MTProto.Crypto;
 
@@ -115,6 +116,8 @@ namespace Telegram.MTProto {
         private int mainDcId;
         private Dictionary<int, TelegramDC> dcs;
         private auth_Authorization authorization = null;
+        private Dictionary<int, UserModel> users = null;
+        private Dictionary<int, ChatModel> chats = null; 
         
         // transient
         private MTProtoGateway gateway = null;
@@ -124,13 +127,14 @@ namespace Telegram.MTProto {
         
         public TelegramSession(BinaryReader reader) {
             read(reader);
-            dialogs = new Dialogs(this, reader);
         }
         public TelegramSession(ulong id, int sequence) {
             this.id = id;
             this.sequence = sequence;
             dcs = new Dictionary<int, TelegramDC>();
             dialogs = new Dialogs(this);
+            users = new Dictionary<int, UserModel>();
+            chats = new Dictionary<int, ChatModel>();
         }
 
         public ulong Id {
@@ -182,6 +186,18 @@ namespace Telegram.MTProto {
             }
 
             dialogs.save(writer);
+
+            writer.Write(users.Count);
+            foreach (var userModel in users) {
+                writer.Write(userModel.Key);
+                userModel.Value.RawUser.Write(writer);
+            }
+
+            writer.Write(chats.Count);
+            foreach (var chatModel in chats) {
+                writer.Write(chatModel.Key);
+                chatModel.Value.RawChat.Write(writer);
+            }
         }
 
         public void read(BinaryReader reader) {
@@ -200,6 +216,20 @@ namespace Telegram.MTProto {
                 authorization = new Auth_authorizationConstructor();
                 reader.ReadUInt32();
                 authorization.Read(reader);
+            }
+
+            dialogs = new Dialogs(this, reader);
+
+            int usersCount = reader.ReadInt32();
+            users = new Dictionary<int, UserModel>(usersCount + 10);
+            for(int i = 0; i < usersCount; i++) {
+                users.Add(reader.ReadInt32(), new UserModel(TL.Parse<User>(reader)));
+            }
+
+            int chatsCount = reader.ReadInt32();
+            chats = new Dictionary<int, ChatModel>(chatsCount + 10);
+            for(int i = 0; i < chatsCount; i++) {
+                chats.Add(reader.ReadInt32(), new ChatModel(TL.Parse<Chat>(reader)));
             }
         }
 
@@ -333,6 +363,22 @@ namespace Telegram.MTProto {
             gateway.Dispose();
             gateway = null;
             await ConnectAsync();
+        }
+
+        public UserModel GetUser(int id) {
+            return users[id];
+        }
+
+        public ChatModel GetChat(int id) {
+            return chats[id];
+        }
+
+        public void SaveUser(UserModel user) {
+            users[user.Id] = user;
+        }
+
+        public void SaveChat(ChatModel chat) {
+            chats[chat.Id] = chat;
         }
     }
 }
