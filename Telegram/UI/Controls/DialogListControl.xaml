@@ -29,7 +29,7 @@
                     <TextBlock Text="{Binding TimeOrDate}" Margin="0,52,-1,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top" FontSize="18" Style="{StaticResource TextBlockFieldHint}"/>
                     <Image Margin="12,19,0,0" Source="/Assets/UI/placeholder.group.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                     <TextBlock Margin="90,10,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42" Text="{Binding Title}"/>
-                    <TextBlock Text="Binding Sender" HorizontalAlignment="Left" Margin="90,52,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe WP Semibold" Style="{StaticResource TextBlockFieldHint}"/>
+                    <TextBlock Text="{Binding LastActivityUserName}" HorizontalAlignment="Left" Margin="90,52,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe WP Semibold" Style="{StaticResource TextBlockFieldHint}"/>
                 </Grid>
             </StackPanel>
         </DataTemplate>

@@ -72,5 +72,38 @@ namespace Telegram.Model.Wrappers {
                 return topMessage.TimeOrDate;
             }
         }
+
+        public bool IsChat {
+            get {
+                return dialog.peer.Constructor == Constructor.peerChat;
+            }
+        }
+
+        public string LastActivityUserName {
+            get {
+                var topMessage = messageProvider.GetMessage(dialog.top_message).RawMessage;
+                UserModel user = null;
+                switch (topMessage.Constructor) {
+                    case Constructor.message:
+                        user = userProvider.GetUser(((MessageConstructor)topMessage).from_id);
+                        break;
+                    case Constructor.messageForwarded:
+                        user = userProvider.GetUser(((MessageForwardedConstructor)topMessage).from_id);
+                        break;
+                    case Constructor.messageService:
+                        break;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+                
+                string fullName = "service user";
+                
+                if (user == null) {
+                    return fullName;
+                }
+
+                return user.FullName;
+            }
+        }
     }
 }
