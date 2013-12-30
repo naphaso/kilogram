@@ -20,14 +20,17 @@ namespace Telegram.MTProto.Components {
         public Dialogs(TelegramSession session) {
             this.session = session;
             model = new DialogListModel();
-            if(session.AuthorizationExists()) {
-                DialogsRequest();
-            }
         }
 
         public Dialogs(TelegramSession session, BinaryReader reader) {
             this.session = session;
             load(reader);
+        }
+
+        public void LoadDialogs() {
+            if (session.AuthorizationExists()) {
+                DialogsRequest();
+            } 
         }
 
         public async Task<DialogListModel> DialogsRequest() {
