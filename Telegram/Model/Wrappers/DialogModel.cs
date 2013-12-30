@@ -1,31 +1,23 @@
+﻿
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Phone.Reactive;
+﻿using System.IO;
 using Telegram.MTProto;
 
 namespace Telegram.Model.Wrappers {
     public class DialogModel {
         private DialogConstructor dialog;
-        private IMessageProvider messageProvider;
-        private IUserProvider userProvider;
-        private IChatProvider chatProvider;
-
         private ObservableCollection<MessageModel> messages;
-        private Dictionary<int, UserModel> users;
-        private Dictionary<int, ChatModel> chats; 
-
         private TelegramSession session;
 
-        public DialogModel(Dialog dialog, TelegramSession session, IMessageProvider messageProvider, IUserProvider userProvider, IChatProvider chatProvider) {
+        public DialogModel(Dialog dialog, TelegramSession session) {
             this.dialog = (DialogConstructor) dialog;
-            this.messageProvider = messageProvider;
-            this.userProvider = userProvider;
-            this.chatProvider = chatProvider;
             this.session = session;
         }
 
-        public Dialog RawDialog {
+        private Dialog RawDialog {
             get {
                 return dialog;
             }
@@ -38,13 +30,13 @@ namespace Telegram.Model.Wrappers {
                     case Constructor.peerChat:
                         var peerChat = dialog.peer as PeerChatConstructor;
                         // check null
-                        var chatModel = chatProvider.GetChat(peerChat.chat_id);
+                        var chatModel = session.GetChat(peerChat.chat_id);
                         title = chatModel.Title;                        
                         break;
 
                     case Constructor.peerUser:
                         var peerUser = dialog.peer as PeerUserConstructor;
-                        var userModel = userProvider.GetUser(peerUser.user_id);
+                        var userModel = session.GetUser(peerUser.user_id);
                         title = userModel.FullName;
                         break;
                 }
@@ -53,16 +45,16 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public ObservableCollection<Message> Messages {
+        public ObservableCollection<MessageModel> Messages {
             get {
                 if(messages == null) {
-                    messages = new ObservableCollection<Message>();
+                    messages = new ObservableCollection<MessageModel>();
                     MessagesRequest();
-                } else {
-                    return messages;
                 }
+
+                return messages;
             }
-        } 
+        }
 
 
         private async Task MessagesRequest() {
@@ -74,13 +66,13 @@ namespace Telegram.Model.Wrappers {
             switch(loadedMessages.Constructor) {
                 case Constructor.messages_messages:
                     chatsList = ((Messages_messagesConstructor) loadedMessages).chats;
-                    messagesList = ((Messages_messagesConstructor)loadedMessages).messages;
-                    usersList = ((Messages_messagesConstructor)loadedMessages).users;
+                    messagesList = ((Messages_messagesConstructor) loadedMessages).messages;
+                    usersList = ((Messages_messagesConstructor) loadedMessages).users;
                     break;
                 case Constructor.messages_messagesSlice:
                     chatsList = ((Messages_messagesSliceConstructor) loadedMessages).chats;
-                    messagesList = ((Messages_messagesSliceConstructor)loadedMessages).messages;
-                    usersList = ((Messages_messagesSliceConstructor)loadedMessages).users;
+                    messagesList = ((Messages_messagesSliceConstructor) loadedMessages).messages;
+                    usersList = ((Messages_messagesSliceConstructor) loadedMessages).users;
                     break;
                 default:
                     return;
@@ -88,17 +80,63 @@ namespace Telegram.Model.Wrappers {
 
 
             foreach(var user in usersList) {
-                var userModel = new UserModel(user);
-                users.Add(userModel.Id, userModel);
+                session.SaveUser(new UserModel(user));
             }
 
             foreach(var chat in chatsList) {
-                var chatModel = new ChatModel(chat);
-                chats.Add(chatModel.Id, chatModel);
+                session.SaveChat(new ChatModel(chat));
             }
 
-            foreach (var message in messagesList) {
+            foreach(var message in messagesList) {
                 messages.Add(new MessageModel(message));
+            }
+        }
+
+        public string Preview {
+            get {
+                string preview = "";
+                var topMessage = session.Dialogs.Model.GetMessage(dialog.top_message).RawMessage;
+
+                switch (topMessage.Constructor) {
+                    case Constructor.message:
+                        preview = ((MessageConstructor)topMessage).message;
+                        break;
+                    case Constructor.messageForwarded:
+                        preview = ((MessageForwardedConstructor)topMessage).message;
+                        break;
+                    case Constructor.messageService:
+                        preview = "SERVICE";
+                        break;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+
+                return preview;
+            }
+        }
+
+        public string TimeOrDate {
+            get {
+                var topMessage = session.Dialogs.Model.GetMessage(dialog.top_message);
+                return topMessage.TimeOrDate;
+            }
+        }
+
+        public void Write(BinaryWriter writer) {
+            dialog.Write(writer);
+            if(messages == null) {
+                writer.Write(0);
+            } else {
+                int messagesIndexStart = 0;
+                int messagesCount = messages.Count;
+                if(messagesCount > 100) {
+                    messagesCount = 100;
+                    messagesIndexStart = messagesCount - 100;
+                }
+                writer.Write(messagesCount);
+                for(int i = messagesIndexStart; i < messagesIndexStart + messagesCount; i++) {
+                    messages[i].Write(writer);
+                }
             }
         }
     }

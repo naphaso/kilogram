@@ -313,6 +313,8 @@ namespace Telegram.MTProto {
                 gateway = new MTProtoGateway(MainDc, this);
                 await gateway.ConnectAsync();
                 api = new TLApi(gateway);
+
+                dialogs.LoadDialogs();
             }
         }
 
