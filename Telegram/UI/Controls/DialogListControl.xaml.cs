@@ -20,9 +20,9 @@ namespace Telegram.UI.Controls {
 
         public event OnDialogSelected DialogSelected;
 
-        protected virtual void OnSelected(int userid) {
+        protected virtual void OnSelected(DialogModel model) {
             OnDialogSelected handler = DialogSelected;
-            if (handler != null) handler(this, userid);
+            if (handler != null) handler(this, model);
         }
 
         public DialogListControl() {
@@ -39,12 +39,12 @@ namespace Telegram.UI.Controls {
                 var selectedDialog = longListSelector.SelectedItem as DialogModel;
                 Debug.Assert(selectedDialog != null, "selectedDialog != null");
 
-                OnSelected(selectedDialog.Id);
+                OnSelected(selectedDialog);
             };
         }
 
         private void LoadModel() {
-//            DialogList.ItemsSource = TelegramSession.Instance.Dialogs.Model.Dialogs;
+            DialogList.ItemsSource = TelegramSession.Instance.Dialogs.Model.Dialogs;
 //            initDemo();
         }
 
@@ -73,5 +73,5 @@ namespace Telegram.UI.Controls {
         }
     }
 
-    public delegate void OnDialogSelected(object sender, int userId);
+    public delegate void OnDialogSelected(object sender, DialogModel model);
 }

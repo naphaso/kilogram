@@ -65,5 +65,47 @@ namespace Telegram.Model.Wrappers {
                 }
             }
         }
+
+        public string Status {
+            get {
+                switch (user.Constructor) {
+                    case Constructor.userEmpty:
+                        return "loading";
+                    case Constructor.userSelf:
+                        return GetStatusString(((UserSelfConstructor) user).status);
+                    case Constructor.userContact:
+                        return GetStatusString(((UserContactConstructor)user).status);
+                    case Constructor.userRequest:
+                        return GetStatusString(((UserRequestConstructor) user).status);
+                    case Constructor.userForeign:
+                        return GetStatusString(((UserForeignConstructor) user).status);
+                    case Constructor.userDeleted:
+                        return "deleted";
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+            }
+        }
+
+        public static string GetStatusString(UserStatus status) {
+            string statusString = "unknown";
+            switch (status.Constructor) {
+                case Constructor.userStatusEmpty:
+                    statusString = "loading";
+                    break;
+                case Constructor.userStatusOffline:
+                    statusString = "offline";
+                    break;
+                case Constructor.userStatusOnline:
+                    statusString = "online";
+                    break;
+            }
+
+            return statusString;
+        }
+
+        public static string GetLastOnlineTime(int lastOnline) {
+            return "last online 14:88a";
+        }
     }
 }

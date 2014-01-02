@@ -7,15 +7,47 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Logging;
 using Microsoft.Phone.Shell;
+using Telegram.Core.Logging;
 using Telegram.Model;
+using Telegram.Model.Wrappers;
+using Telegram.MTProto;
+using Telegram.UI.Controls;
+using Logger = Telegram.Core.Logging.Logger;
 
 namespace Telegram.UI {
     public partial class DialogPage : PhoneApplicationPage {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogListControl));
+        private TelegramSession session;
+
         public static DialogMessageModel MessageModel = null; // FIXME testing purpose only
         private bool keyboardWasShownBeforeEmojiPanelIsAppeared;
 
+        private DialogModel model;
+
+        protected override void OnNavigatedTo(NavigationEventArgs e) {
+            base.OnNavigatedTo(e);
+
+            string uriParam = "";
+
+            if (NavigationContext.QueryString.TryGetValue("modelId", out uriParam)) {
+                model = TelegramSession.Instance.Dialogs.Model.Dialogs[(int.Parse(uriParam))];
+            }
+            else {
+                logger.error("Unable to get model id from navigation");
+            }
+
+            UpdateDataContext();
+        }
+
+        private void UpdateDataContext() {
+            this.DataContext = model;
+        }
+
         public DialogPage() {
+            session = TelegramSession.Instance;
+
             if (MessageModel == null)
                 MessageModel = new DialogMessageModel();
 

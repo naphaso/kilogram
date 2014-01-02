@@ -49,6 +49,31 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public Peer Peer {
+            get {
+                return dialog.peer;
+            }
+        }
+
+        public string Status {
+            get {
+                string status = "";
+                switch (dialog.peer.Constructor) {
+                    case Constructor.peerChat:
+                        var peerChat = dialog.peer as PeerChatConstructor;
+                        var chat = session.GetChat(peerChat.chat_id);
+                        return chat.Status;
+
+                    case Constructor.peerUser:
+                        var peerUser = dialog.peer as PeerUserConstructor;
+                        var user = session.GetUser(peerUser.user_id);
+                        return user.Status;
+                }
+
+                return status;
+            }
+        }
+
         public string Title {
             get {
                 string title = "";

@@ -51,6 +51,19 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-
+        public string Status {
+            get {
+                switch (chat.Constructor) {
+                    case Constructor.chatEmpty:
+                        return "chat is empty: 0 users";
+                    case Constructor.chat:
+                        return ((ChatConstructor)chat).participants_count + " users";
+                    case Constructor.chatForbidden:
+                        return "blocked";
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+            }
+        }
     }
 }
