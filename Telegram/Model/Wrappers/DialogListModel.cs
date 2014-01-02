@@ -85,7 +85,7 @@ namespace Telegram.Model.Wrappers {
             // dialogs
             writer.Write(dialogs.Count);
             foreach (var dialog in dialogs) {
-                dialog.RawDialog.Write(writer);
+                dialog.Write(writer);
             }
 
             // messages
@@ -111,10 +111,11 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void load(BinaryReader reader) {
+            logger.info("loading dialog list model");
             // dialogs
             int dialogsCount = reader.ReadInt32();
             for (int i = 0; i < dialogsCount; i++) {
-                dialogs.Add(new DialogModel(TL.Parse<Dialog>(reader), session));
+                dialogs.Add(new DialogModel(session, reader));
             }
 
             // messages

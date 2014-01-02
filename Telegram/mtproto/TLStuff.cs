@@ -12,6 +12,8 @@ namespace Telegram.MTProto {
                     return TL.inputPeerContact(((PeerUserConstructor) peer).user_id);
                 case Constructor.peerChat:
                     return TL.inputPeerChat(((PeerChatConstructor) peer).chat_id);
+                default:
+                    throw new Exception("invalid constructor");
             }
         }
     }

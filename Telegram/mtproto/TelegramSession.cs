@@ -169,6 +169,7 @@ namespace Telegram.MTProto {
         }
 
         public void write(BinaryWriter writer) {
+            logger.info("saving session...");
             writer.Write(id);
             writer.Write(sequence);
             writer.Write(mainDcId);
@@ -198,9 +199,11 @@ namespace Telegram.MTProto {
                 writer.Write(chatModel.Key);
                 chatModel.Value.RawChat.Write(writer);
             }
+            logger.info("saving session complete");
         }
 
         public void read(BinaryReader reader) {
+            logger.info("read session...");
             id = reader.ReadUInt64();
             sequence = reader.ReadInt32();
             mainDcId = reader.ReadInt32();
@@ -231,6 +234,7 @@ namespace Telegram.MTProto {
             for(int i = 0; i < chatsCount; i++) {
                 chats.Add(reader.ReadInt32(), new ChatModel(TL.Parse<Chat>(reader)));
             }
+            logger.info("session readed complete");
         }
 
         public byte[] serialize() {

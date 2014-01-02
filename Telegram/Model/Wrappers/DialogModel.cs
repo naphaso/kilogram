@@ -4,10 +4,12 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Phone.Reactive;
 ﻿using System.IO;
-using Telegram.MTProto;
+﻿using Telegram.Core.Logging;
+﻿using Telegram.MTProto;
 
 namespace Telegram.Model.Wrappers {
     public class DialogModel {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogModel));
         private DialogConstructor dialog;
         private ObservableCollection<MessageModel> messages;
         private TelegramSession session;
@@ -15,6 +17,11 @@ namespace Telegram.Model.Wrappers {
         public DialogModel(Dialog dialog, TelegramSession session) {
             this.dialog = (DialogConstructor) dialog;
             this.session = session;
+        }
+
+        public DialogModel(TelegramSession session, BinaryReader reader) {
+            this.session = session;
+            Read(reader);
         }
 
         private Dialog RawDialog {
@@ -137,6 +144,53 @@ namespace Telegram.Model.Wrappers {
                 for(int i = messagesIndexStart; i < messagesIndexStart + messagesCount; i++) {
                     messages[i].Write(writer);
                 }
+
+                logger.info("saved {0} messages", messagesCount);
+            }
+        }
+
+        public void Read(BinaryReader reader) {
+            dialog = new DialogConstructor();
+            dialog.Read(reader);
+            int messagesCount = reader.ReadInt32();
+            messages = new ObservableCollection<MessageModel>();
+            for(int i = 0; i < messagesCount; i++) {
+                messages.Add(new MessageModel(TL.Parse<Message>(reader)));
+            }
+
+            logger.info("loaded {0} messages", messagesCount);
+        }
+
+        public bool IsChat {
+            get {
+                return dialog.peer.Constructor == Constructor.peerChat;
+            }
+        }
+
+        public string LastActivityUserName {
+            get {
+                var topMessage = session.Dialogs.Model.GetMessage(dialog.top_message).RawMessage;
+                UserModel user = null;
+                switch (topMessage.Constructor) {
+                    case Constructor.message:
+                        user = session.GetUser(((MessageConstructor)topMessage).from_id);
+                        break;
+                    case Constructor.messageForwarded:
+                        user = session.GetUser(((MessageForwardedConstructor)topMessage).from_id);
+                        break;
+                    case Constructor.messageService:
+                        break;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+                
+                string fullName = "service user";
+                
+                if (user == null) {
+                    return fullName;
+                }
+
+                return user.FullName;
             }
         }
     }

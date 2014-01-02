@@ -71,8 +71,10 @@ namespace Telegram.Model.Wrappers {
             get {
                 int unixSeconds = UnixSecondsTime;
 
-                DateTime dateTime = new DateTime((long)unixSeconds*1000);
+                DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                dateTime = dateTime.AddSeconds(unixSeconds);
 
+                // Now - DateTime.FromToday
                 if (DateTime.Now - dateTime > TimeSpan.FromDays(1)) {
                     return dateTime.ToShortDateString();
                 }

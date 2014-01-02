@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Telegram.Model.Wrappers;
 
 namespace Telegram.UI.Models.Dialogs {
 
@@ -9,7 +10,11 @@ namespace Telegram.UI.Models.Dialogs {
         public DataTemplate ChatTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container) {
-            return ChatTemplate;
+            var model = item as DialogModel;
+            if (model == null)
+                return ChatTemplate;
+
+            return model.IsChat ? ChatTemplate : DialogTemplate;
         }
     }
 }
