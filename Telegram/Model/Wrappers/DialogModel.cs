@@ -1,15 +1,19 @@
 ﻿
+﻿using System;
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+﻿using System.ComponentModel;
 ﻿using System.Linq;
+﻿using System.Runtime.CompilerServices;
 ﻿using System.Threading.Tasks;
 using Microsoft.Phone.Reactive;
 ﻿using System.IO;
+﻿using Telegram.Annotations;
 ﻿using Telegram.Core.Logging;
 ﻿using Telegram.MTProto;
 
 namespace Telegram.Model.Wrappers {
-    public class DialogModel {
+    public class DialogModel: INotifyPropertyChanged {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogModel));
         private DialogConstructor dialog;
         private ObservableCollection<MessageModel> messages;
@@ -20,6 +24,39 @@ namespace Telegram.Model.Wrappers {
             this.session = session;
             this.messages = new ObservableCollection<MessageModel>();
             this.messages.Add(messagesMap[this.dialog.top_message]);
+
+            SubscribeToDialog();
+        }
+
+        private void SubscribeToDialog() {
+            switch (dialog.peer.Constructor) {
+                case Constructor.peerChat:
+                    var peerChat = dialog.peer as PeerChatConstructor;
+                    var chat = session.GetChat(peerChat.chat_id);
+
+                    chat.PropertyChanged += DialogOnPropertyChanged;
+
+                    break;
+                case Constructor.peerUser:
+                    var peerUser = dialog.peer as PeerUserConstructor;
+                    var user = session.GetUser(peerUser.user_id);
+
+                    user.PropertyChanged += DialogOnPropertyChanged;
+
+                    break;
+            }
+        }
+
+        // proxy method from holded dialog object (user or chat)
+        private void DialogOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs) {
+            logger.debug("Property changing [Title] " + propertyChangedEventArgs.PropertyName);
+
+            if (propertyChangedEventArgs.PropertyName == "Title"
+                || propertyChangedEventArgs.PropertyName == "FullName") {
+                OnPropertyChanged("Title");
+            } else if (propertyChangedEventArgs.PropertyName == "Status") {
+                OnPropertyChanged("Status");
+            }
         }
 
         public DialogModel(TelegramSession session, BinaryReader reader) {
@@ -238,6 +275,14 @@ namespace Telegram.Model.Wrappers {
 
                 return user.FullName;
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

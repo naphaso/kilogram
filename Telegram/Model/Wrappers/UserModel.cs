@@ -1,10 +1,21 @@
-﻿using System.IO;
+﻿using System;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Windows.Storage.FileProperties;
+using Telegram.Annotations;
+using Telegram.Core.Logging;
 using Telegram.MTProto;
+using Telegram.MTProto.Exceptions;
+using Telegram.UI;
 
 namespace Telegram.Model.Wrappers {
 
     public delegate void UserModelChangeHandler();
-    public class UserModel {
+    public class UserModel : INotifyPropertyChanged {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(StartPage));
+
         private User user;
 
         public event UserModelChangeHandler ChangeEvent;
@@ -16,6 +27,8 @@ namespace Telegram.Model.Wrappers {
         public void SetUser(User user) {
             this.user = user;
             ChangeEvent();
+            OnPropertyChanged("FullName");
+            OnPropertyChanged("Status");
         }
 
         public int Id {
@@ -106,6 +119,146 @@ namespace Telegram.Model.Wrappers {
 
         public static string GetLastOnlineTime(int lastOnline) {
             return "last online 14:88a";
+        }
+
+
+        private PeerNotifySettingsConstructor peerNotifySettings = null;
+
+        private void UpdatePeerNotifySettings(PeerNotifySettingsConstructor newSettings) {
+            if (newSettings == null) {
+                logger.error("Strange shit is happened, newSettings == null");
+                return;
+            }
+
+            if (peerNotifySettings == null) {
+                peerNotifySettings = newSettings;
+                OnPropertyChanged("NotificationSound");
+                OnPropertyChanged("NotificationsEnabled");
+                return;
+            }
+
+            if (peerNotifySettings.sound != newSettings.sound) {
+                peerNotifySettings = newSettings;
+                OnPropertyChanged("NotificationSound");
+            } else if (peerNotifySettings.mute_until != newSettings.mute_until) {
+                peerNotifySettings = newSettings;
+                OnPropertyChanged("NotificationsEnabled");
+            }
+        }
+
+        public string NotificationSound {
+            get {
+                GetUserSettings();
+                return peerNotifySettings == null ? "Default" : peerNotifySettings.sound;
+            }
+            set {
+                peerNotifySettings.sound = value;
+                UpdateUserSettings();
+                OnPropertyChanged("NotificationSound");
+            }
+        }
+
+        public bool NotificationsEnabled {
+            get {
+                GetUserSettings();
+
+                if(peerNotifySettings == null)
+                    return true;
+                
+                DateTime nowTime = DateTime.Now;
+                DateTime muteUntil = DateTimeExtensions.DateTimeFromUnixTimestampSeconds(peerNotifySettings.mute_until);
+
+                if (nowTime > muteUntil)
+                    return true;
+
+                return false;
+            }
+            set {
+                logger.debug("NotificationsEnabled " + value);
+                
+                if (peerNotifySettings == null) {
+                    GetUserSettings();
+                    return;
+                }
+
+                if (value == false)
+                    peerNotifySettings.mute_until = int.MaxValue;
+                else
+                    peerNotifySettings.mute_until = 0;
+
+                UpdateUserSettings();
+                OnPropertyChanged("NotificationsEnabled");
+            }
+        }
+
+        private bool _updateInProgress = false;
+
+        private async Task UpdateUserSettings() {
+            if (_updateInProgress)
+                return;
+
+            // LOCK ON THIS
+            _updateInProgress = true;
+            
+            logger.debug("Synchronizing settings");
+            try {
+                InputPeerNotifySettings newSettings = TL.inputPeerNotifySettings(peerNotifySettings.mute_until,
+                    peerNotifySettings.sound, peerNotifySettings.show_previews, peerNotifySettings.events_mask);
+
+                // FIXME: catch exception, process BOOl error
+                bool update = await TelegramSession.Instance.Api.account_updateNotifySettings(TL.inputNotifyPeer
+                    (TL.inputPeerContact(Id)), newSettings);
+
+                logger.debug("Synchronized settings: " + update);
+            }
+            catch (MTProtoException ex) {
+                logger.error("UpdateUserSettings Exception");
+            }
+            // UNLOCK ON THIS
+            _updateInProgress = false;
+
+        }
+
+        private bool _getInProgress = false;
+
+        private async Task GetUserSettings() {
+            if (_getInProgress)
+                return;
+
+            _getInProgress = true;
+            // FIXME: catch exception
+            try {
+                PeerNotifySettings settings =
+                    await
+                        TelegramSession.Instance.Api.account_getNotifySettings(
+                            TL.inputNotifyPeer(TL.inputPeerContact(Id)));
+            
+
+            switch (settings.Constructor) {
+                case Constructor.peerNotifySettings:
+                    UpdatePeerNotifySettings(settings as PeerNotifySettingsConstructor);
+                    break;
+
+                case Constructor.peerNotifySettingsEmpty:
+                    logger.error("Unable to get USER settings: Constructor.peerNotifySettingsEmpty");
+                    break;
+            }
+
+            } catch (MTProtoException ex) {
+                logger.error("GetUserSettings Exception");
+            }
+
+            _getInProgress = false;
+        }
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

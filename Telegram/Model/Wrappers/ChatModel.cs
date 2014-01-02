@@ -1,9 +1,12 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
+using Telegram.Annotations;
 using Telegram.MTProto;
 
 namespace Telegram.Model.Wrappers {
     public delegate void ChatModelChangeHandler();
-    public class ChatModel {
+    public class ChatModel : INotifyPropertyChanged {
         private Chat chat;
         public event ChatModelChangeHandler ChangeEvent;
         public ChatModel(Chat chat) {
@@ -13,6 +16,8 @@ namespace Telegram.Model.Wrappers {
         public void SetChat(Chat chat) {
             this.chat = chat;
             ChangeEvent();
+            OnPropertyChanged("Title");
+            OnPropertyChanged("Status");
         }
 
         public int Id {
@@ -64,6 +69,14 @@ namespace Telegram.Model.Wrappers {
                         throw new InvalidDataException("invalid constructor");
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

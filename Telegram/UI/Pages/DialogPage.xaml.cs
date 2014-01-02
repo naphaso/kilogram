@@ -14,6 +14,7 @@ using Telegram.Model;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto;
 using Telegram.UI.Controls;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 using Logger = Telegram.Core.Logging.Logger;
 
 namespace Telegram.UI {
@@ -164,6 +165,11 @@ namespace Telegram.UI {
 
         private void DisableEditBox() {
             ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; 
+        }
+
+        private void OnHeaderTap(object sender, GestureEventArgs e) {
+            int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(model);
+            NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?modelId=" + modelId, UriKind.Relative));
         }
     }
 }
