@@ -66,6 +66,10 @@ namespace Telegram.Model.Wrappers {
             return dialogsList.Count;
         }
 
+        public void ProcessNewMessage(Message message) {
+            MessageModel messageModel = new MessageModel(message);
+        }
+
         public void save(BinaryWriter writer) {
             // dialogs
             writer.Write(dialogs.Count);

@@ -20,11 +20,13 @@ namespace Telegram.MTProto.Components {
         public Dialogs(TelegramSession session) {
             this.session = session;
             model = new DialogListModel(session);
+            session.Updates.NewMessageEvent += model.ProcessNewMessage;
         }
 
         public Dialogs(TelegramSession session, BinaryReader reader) {
             this.session = session;
             load(reader);
+            session.Updates.NewMessageEvent += model.ProcessNewMessage;
         }
 
         public async Task DialogsRequest() { // call it only on login!

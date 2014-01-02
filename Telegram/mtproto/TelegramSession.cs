@@ -116,7 +116,7 @@ namespace Telegram.MTProto {
         private int sequence;
         private int mainDcId;
         private Dictionary<int, TelegramDC> dcs;
-        private auth_Authorization authorization = null;
+        private Auth_authorizationConstructor authorization = null;
         private Dictionary<int, UserModel> users = null;
         private Dictionary<int, ChatModel> chats = null; 
         
@@ -127,6 +127,7 @@ namespace Telegram.MTProto {
         private TLApi api = null;
 
         private Dialogs dialogs = null;
+        private UpdatesProcessor updates = null;
         
         public TelegramSession(BinaryReader reader) {
             read(reader);
@@ -138,6 +139,7 @@ namespace Telegram.MTProto {
             dialogs = new Dialogs(this);
             users = new Dictionary<int, UserModel>();
             chats = new Dictionary<int, ChatModel>();
+            updates = new UpdatesProcessor(this);
         }
 
         public ulong Id {
@@ -314,10 +316,19 @@ namespace Telegram.MTProto {
             }
         }
 
+        private TaskCompletionSource<object> establishedTask = new TaskCompletionSource<object>();
+
+        public Task Established {
+            get {
+                return establishedTask.Task;
+            }
+        }
+
         public async Task ConnectAsync() {
             if(gateway == null) {
                 logger.info("creating new mtproto gateway...");
                 gateway = new MTProtoGateway(MainDc, this);
+                gateway.UpdatesEvent += updates.ProcessUpdates;
                 while(true) {
                     try {
                         await gateway.ConnectAsync();
@@ -330,21 +341,36 @@ namespace Telegram.MTProto {
                         sequence = 0;
                         gateway.Dispose();
                         gateway = new MTProtoGateway(MainDc, this);
+                        gateway.UpdatesEvent += updates.ProcessUpdates;
                     }
                 }
                 api = new TLApi(gateway);
+
+                establishedTask.SetResult(true);
             }
         }
 
 
         public async Task SaveAuthorization(auth_Authorization authorization) {
-            this.authorization = authorization;
+            this.authorization = (Auth_authorizationConstructor) authorization;
             await dialogs.DialogsRequest();
             save();
         }
 
         public bool AuthorizationExists() {
             return authorization != null;
+        }
+
+        public Peer SelfPeer {
+            get {
+                return TL.peerUser(((UserSelfConstructor) authorization.user).id);
+            }
+        }
+
+        public UpdatesProcessor Updates {
+            get {
+                return updates;
+            }
         }
         
         public TLApi Api {

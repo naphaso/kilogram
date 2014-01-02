@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Phone.Media;
 using Telegram.MTProto;
 
 namespace Telegram.Model.Wrappers {
@@ -83,6 +84,34 @@ namespace Telegram.Model.Wrappers {
                 }
             }
         }
+
+        public Peer Peer {
+            get {
+                return null;
+//                                switch (message.Constructor) {
+//                    case Constructor.message: {
+//                        MessageConstructor msg = (MessageConstructor) message;
+//                        return msg.to_id.Constructor == Constructor.peerChat ? msg.to_id : ()
+//                        ;
+//                    } 
+//                        break;
+//                    case Constructor.messageForwarded:
+//                        unixSeconds = ((MessageForwardedConstructor)message).date;
+//                        break;
+//                    case Constructor.messageService:
+//                        unixSeconds = ((MessageServiceConstructor)message).date;
+//                        break;
+//                    default:
+//                        throw new InvalidDataException("invalid constructor");
+//                }
+            }
+        }
+
+        private static Peer GetPeer(MessageConstructor message) {
+            return null;
+        }
+
+        //private static Peer 
 
         public void Write(BinaryWriter writer) {
             message.Write(writer);

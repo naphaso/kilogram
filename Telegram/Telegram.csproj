@@ -100,6 +100,7 @@
     <Compile Include="Model\Wrappers\DialogModel.cs" />
     <Compile Include="Model\Wrappers\MessageModel.cs" />
     <Compile Include="Model\Wrappers\UserModel.cs" />
+    <Compile Include="MTProto\Components\UpdatesProcessor.cs" />
     <Compile Include="MTProto\TLStuff.cs" />
     <Compile Include="SecretChatNotice.xaml.cs">
       <DependentUpon>SecretChatNotice.xaml</DependentUpon>
