@@ -10,6 +10,7 @@ using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto.Components;
 using Telegram.MTProto.Crypto;
+using Telegram.MTProto.Exceptions;
 
 namespace Telegram.MTProto {
 
@@ -120,6 +121,8 @@ namespace Telegram.MTProto {
         private Dictionary<int, ChatModel> chats = null; 
         
         // transient
+        public static TelegramSession instance = loadIfExists();
+
         private MTProtoGateway gateway = null;
         private TLApi api = null;
 
@@ -304,7 +307,7 @@ namespace Telegram.MTProto {
             }
         }
 
-        public static TelegramSession instance = loadIfExists();
+        
         public static TelegramSession Instance {
             get {
                 return instance;
@@ -315,7 +318,20 @@ namespace Telegram.MTProto {
             if(gateway == null) {
                 logger.info("creating new mtproto gateway...");
                 gateway = new MTProtoGateway(MainDc, this);
-                await gateway.ConnectAsync();
+                while(true) {
+                    try {
+                        await gateway.ConnectAsync();
+                        break;
+                    } catch(MTProtoBrokenSessionException e) {
+                        logger.info("creating new session... TODO: destroy old session");
+                        // creating new session
+                        Random random = new Random();
+                        id = (((ulong) random.Next()) << 32) | ((ulong) random.Next());
+                        sequence = 0;
+                        gateway.Dispose();
+                        gateway = new MTProtoGateway(MainDc, this);
+                    }
+                }
                 api = new TLApi(gateway);
             }
         }
