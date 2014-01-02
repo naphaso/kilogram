@@ -67,6 +67,7 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void ProcessNewMessage(Message message) {
+            logger.info("process new message: {0}", message);
             MessageModel messageModel = new MessageModel(message);
             Peer targetPeer = messageModel.Peer;
 
@@ -80,9 +81,11 @@ namespace Telegram.Model.Wrappers {
             }
 
             if(targetDialogModel == null) {
+                logger.info("target dialog not found, creating new...");
                 targetDialogModel = new DialogModel(messageModel, session);
                 dialogs.Insert(0, targetDialogModel);
             } else {
+                logger.info("target dialog found, rearrange...");
                 dialogs.Remove(targetDialogModel);
                 dialogs.Insert(0, targetDialogModel);
             }
