@@ -90,6 +90,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ChatNotice.xaml.cs">
+      <DependentUpon>ChatNotice.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Providers.cs" />
     <Compile Include="Model\Wrappers\ChatModel.cs" />
     <Compile Include="Model\Wrappers\DialogListModel.cs" />
@@ -97,6 +100,9 @@
     <Compile Include="Model\Wrappers\MessageModel.cs" />
     <Compile Include="Model\Wrappers\UserModel.cs" />
     <Compile Include="MTProto\TLStuff.cs" />
+    <Compile Include="SecretChatNotice.xaml.cs">
+      <DependentUpon>SecretChatNotice.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Controls\FormLatterEditPhoneControl.xaml.cs">
       <DependentUpon>FormLatterEditPhoneControl.xaml</DependentUpon>
     </Compile>
@@ -243,6 +249,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="ChatNotice.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SecretChatNotice.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Controls\FormLatterEditPhoneControl.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>

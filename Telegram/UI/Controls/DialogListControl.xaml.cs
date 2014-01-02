@@ -44,7 +44,8 @@ namespace Telegram.UI.Controls {
         }
 
         private void LoadModel() {
-            DialogList.ItemsSource = TelegramSession.Instance.Dialogs.Model.Dialogs;
+//            DialogList.ItemsSource = TelegramSession.Instance.Dialogs.Model.Dialogs;
+//            initDemo();
         }
 
         private void initDemo() {

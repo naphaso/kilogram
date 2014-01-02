@@ -37,31 +37,8 @@ namespace Telegram.UI
             };
         }
 
-        public void EnableSearchMode() {
-            
-        }
-
-        public void DisableSearchMode() {
-            
-        }
-
-        private void BuildAppBar() {
-            ApplicationBar = new ApplicationBar();
-            
-            var newButton = new ApplicationBarIconButton(new Uri("/Assets/UI/appbar.new.png", UriKind.Relative));
-            newButton.Text = "Create";
-
-            var searchButton = new ApplicationBarIconButton(new Uri("/Assets/UI/appbar.feature.search.png", UriKind.Relative));
-            searchButton.Text = "Search";
-
-            ApplicationBar.Buttons.Add(newButton);
-            ApplicationBar.Buttons.Add(searchButton);
-
-            ApplicationBar.MenuItems.Add(new ApplicationBarMenuItem("Settings"));
-        }
-
         private void New_Click(object sender, EventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/Pages/ChatCreate.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml", UriKind.Relative));
         }
 
         private void Search_Click(object sender, EventArgs e) {

@@ -124,6 +124,8 @@
 
 			</StackPanel>
 		</StackPanel>
+		<Telegram:SecretChatNotice Name="SecretChatNoticeControl" Margin="0" Grid.Row="1" Canvas.ZIndex="-1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+		<Telegram:ChatNotice Name="ChatNoticeControl" Margin="0" Grid.Row="1" Width="480" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.ZIndex="-1" Visibility="Collapsed"/>
 
 	</Grid>
 

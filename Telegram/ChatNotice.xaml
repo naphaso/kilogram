@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="Telegram.ChatNotice"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}" d:DesignWidth="100" Width="480" Height="195.5">
+    
+    <Grid x:Name="LayoutRoot">
+    	<StackPanel VerticalAlignment="Center" Margin="0">
+    		<Image Height="66" Source="/Assets/UI/chat.nomessages-720p.png" Stretch="Fill" Margin="0,0,0,30" Width="80"/>
+    		<TextBlock TextWrapping="Wrap" Text="No messages yet..." HorizontalAlignment="Center" Foreground="{StaticResource PhoneForegroundBrush}" Opacity="0.7"/>
+    	</StackPanel>
+
+    </Grid>
+</UserControl>

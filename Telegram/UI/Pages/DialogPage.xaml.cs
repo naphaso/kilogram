@@ -21,7 +21,7 @@ namespace Telegram.UI {
 
             MessageModel.Init();
 
-            this.DataContext = MessageModel;
+//            this.DataContext = MessageModel;
 
             InitializeComponent();
             DisableEditBox();
@@ -39,6 +39,32 @@ namespace Telegram.UI {
             };
 
             EmojiPanelControl.EmojiGridListSelector.SelectionChanged += EmojiGridListSelectorOnSelectionChanged;
+
+            // init notice
+            // FIXME: assure that no actual history received from server
+            // or this is new chat
+            if (dialogList.ItemsSource == null || dialogList.ItemsSource.Count == 0)
+                ShowNotice();
+
+//            dialogList.ItemsSource
+        }
+
+
+        private void ShowNotice() {
+            if (IsPrivate()) {
+                SecretChatNoticeControl.Visibility = Visibility.Visible;
+            } else {
+                ChatNoticeControl.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void HideNotice() {
+            SecretChatNoticeControl.Visibility = Visibility.Collapsed;
+            ChatNoticeControl.Visibility = Visibility.Collapsed;
+        }
+
+        private bool IsPrivate() {
+            return false;
         }
 
         private void EmojiGridListSelectorOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs) {
