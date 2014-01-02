@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using Microsoft.Phone.Media;
 using Telegram.MTProto;
 
@@ -44,6 +45,24 @@ namespace Telegram.Model.Wrappers {
                     default:
                         throw new InvalidDataException("invalid constructor");
                 }
+            }
+        }
+
+        public string Timestamp {
+            get {
+                return DateTimeExtensions.DateTimeFromUnixTimestampSeconds(UnixSecondsTime).ToShortDateString();
+            }
+        }
+
+        public Visibility SenderVisibility {
+            get {
+                return Visibility.Collapsed;
+            }
+        }
+
+        public Visibility ForwardedVisibility {
+            get {
+                return Visibility.Collapsed;
             }
         }
 

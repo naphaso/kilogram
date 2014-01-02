@@ -44,6 +44,8 @@ namespace Telegram.UI {
 
         private void UpdateDataContext() {
             this.DataContext = model;
+
+            MessageLongListSelector.ItemsSource = model.Messages;
         }
 
         public DialogPage() {
@@ -76,7 +78,7 @@ namespace Telegram.UI {
             // init notice
             // FIXME: assure that no actual history received from server
             // or this is new chat
-            if (dialogList.ItemsSource == null || dialogList.ItemsSource.Count == 0)
+            if (MessageLongListSelector.ItemsSource == null || MessageLongListSelector.ItemsSource.Count == 0)
                 ShowNotice();
 
 //            dialogList.ItemsSource
@@ -111,7 +113,7 @@ namespace Telegram.UI {
             var dialogMessageItem = new DialogMessageItem() { Sender = "editor", Text = text, Time = "14:88", IsOut = true};
             MessageModel.Items.Add(dialogMessageItem);
             messageEditor.Text = "";
-            dialogList.ScrollTo(dialogMessageItem);
+            MessageLongListSelector.ScrollTo(dialogMessageItem);
 
             Toaster.Show("Igor Glotov", text);
         }
@@ -135,12 +137,12 @@ namespace Telegram.UI {
         }
 
         private void HideEmojiPanel() {
-            dialogList.Height = ContentPanel.Height - GetEditorTotalHeight();
+            MessageLongListSelector.Height = ContentPanel.Height - GetEditorTotalHeight();
             emojiPanelShowing = false;
         }
 
         private void ShowEmojiPanel() {
-            dialogList.Height = ContentPanel.Height - EditorEmojiPanel.Height;
+            MessageLongListSelector.Height = ContentPanel.Height - EditorEmojiPanel.Height;
             emojiPanelShowing = true;
         }
 
