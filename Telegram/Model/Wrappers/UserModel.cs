@@ -219,7 +219,7 @@ namespace Telegram.Model.Wrappers {
 
         }
 
-        private bool _getInProgress = false;
+        private volatile bool _getInProgress = false;
 
         private async Task GetUserSettings() {
             if (_getInProgress)
@@ -227,6 +227,8 @@ namespace Telegram.Model.Wrappers {
 
             _getInProgress = true;
             // FIXME: catch exception
+
+            await TelegramSession.Instance.Established;
             try {
                 PeerNotifySettings settings =
                     await

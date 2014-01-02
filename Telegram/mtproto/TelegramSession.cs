@@ -136,10 +136,10 @@ namespace Telegram.MTProto {
             this.id = id;
             this.sequence = sequence;
             dcs = new Dictionary<int, TelegramDC>();
+            updates = new UpdatesProcessor(this);
             dialogs = new Dialogs(this);
             users = new Dictionary<int, UserModel>();
             chats = new Dictionary<int, ChatModel>();
-            updates = new UpdatesProcessor(this);
         }
 
         public ulong Id {
@@ -225,6 +225,7 @@ namespace Telegram.MTProto {
                 reader.ReadUInt32();
                 authorization.Read(reader);
             }
+            updates = new UpdatesProcessor(this);
             logger.info("reading dialogs...");
             dialogs = new Dialogs(this, reader);
 
@@ -284,6 +285,7 @@ namespace Telegram.MTProto {
         }
 
         public void save() {
+            logger.debug("Saving session instance");
             try {
                 lock(typeof(TelegramSession))
                     using(IsolatedStorageFile fileStorage = IsolatedStorageFile.GetUserStoreForApplication())
@@ -346,7 +348,7 @@ namespace Telegram.MTProto {
                 }
                 api = new TLApi(gateway);
 
-                establishedTask.SetResult(true);
+                establishedTask.SetResult(null);
             }
         }
 
