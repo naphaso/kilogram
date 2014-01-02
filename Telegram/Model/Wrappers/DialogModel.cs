@@ -21,6 +21,22 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public int Id {
+            get {
+                switch (dialog.peer.Constructor) {
+                    case Constructor.peerChat:
+                        var peerChat = dialog.peer as PeerChatConstructor;
+                        return peerChat.chat_id;
+
+                    case Constructor.peerUser:
+                        var peerUser = dialog.peer as PeerUserConstructor;
+                        return peerUser.user_id;
+                }
+
+                return -1;
+            }
+        }
+
         public string Title {
             get {
                 string title = "";

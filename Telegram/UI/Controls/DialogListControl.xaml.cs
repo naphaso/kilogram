@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -8,17 +9,38 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto;
 using Telegram.UI.Models;
 
 namespace Telegram.UI.Controls {
     public partial class DialogListControl : UserControl {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogListControl));
+
+        public event OnDialogSelected DialogSelected;
+
+        protected virtual void OnSelected(int userid) {
+            OnDialogSelected handler = DialogSelected;
+            if (handler != null) handler(this, userid);
+        }
+
         public DialogListControl() {
             InitializeComponent();
 
             LoadModel();
-//            initDemo();
+            DialogList.SelectionChanged += delegate(object sender, SelectionChangedEventArgs e) {
+                var longListSelector = sender as LongListSelector;
+                if (longListSelector == null) {
+                    logger.error("sender as LongListSelector == null");
+                    return;
+                }
+
+                var selectedDialog = longListSelector.SelectedItem as DialogModel;
+                Debug.Assert(selectedDialog != null, "selectedDialog != null");
+
+                OnSelected(selectedDialog.Id);
+            };
         }
 
         private void LoadModel() {
@@ -49,4 +71,6 @@ namespace Telegram.UI.Controls {
 
         }
     }
+
+    public delegate void OnDialogSelected(object sender, int userId);
 }
