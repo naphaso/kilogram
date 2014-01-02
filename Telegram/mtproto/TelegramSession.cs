@@ -272,7 +272,7 @@ namespace Telegram.MTProto {
                 Random random = new Random();
                 ulong sessionId = (((ulong) random.Next()) << 32) | ((ulong) random.Next());
                 session = new TelegramSession(sessionId, 0);
-                TelegramEndpoint endpoint = new TelegramEndpoint("173.240.5.253", 443);
+                TelegramEndpoint endpoint = new TelegramEndpoint("173.240.5.1", 443);
                 TelegramDC dc = new TelegramDC();
                 dc.Endpoints.Add(endpoint);
                 session.Dcs.Add(1, dc);
@@ -410,6 +410,7 @@ namespace Telegram.MTProto {
 
             gateway.Dispose();
             gateway = null;
+            establishedTask = new TaskCompletionSource<object>();
             await ConnectAsync();
         }
 
