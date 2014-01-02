@@ -393,12 +393,22 @@ namespace Telegram.MTProto {
             return chats[id];
         }
 
-        public void SaveUser(UserModel user) {
-            users[user.Id] = user;
+        public void SaveUser(User user) {
+            UserModel model = new UserModel(user);
+            if(users.ContainsKey(model.Id)) {
+                users[model.Id].SetUser(user);
+            } else {
+                users[model.Id] = model;    
+            }
         }
 
-        public void SaveChat(ChatModel chat) {
-            chats[chat.Id] = chat;
+        public void SaveChat(Chat chat) {
+            ChatModel model = new ChatModel(chat);
+            if(chats.ContainsKey(model.Id)) {
+                chats[model.Id].SetChat(chat);
+            } else {
+                chats[model.Id] = model;
+            }
         }
     }
 }

@@ -62,15 +62,18 @@ namespace Telegram.MTProto {
                 return;
             }
 
+            if(connectRetries == 0) {
+                logger.info("connect failed");
+                connectTaskCompletionSource.SetException(new TransportConnectException());
+                return;
+            }
+
             if(connectRetries != 0) {
                 logger.info("reconnect, remaining retries: {0}", connectRetries);
                 state = NetworkGatewayState.INIT;
                 connectRetries--;
                 endpointIndex = (endpointIndex + 1)%dc.Endpoints.Count;
                 Task.Delay(3000).ContinueWith(delegate { Connect(dc); });
-            } else {
-                logger.info("connect failed");
-                connectTaskCompletionSource.SetException(new TransportConnectException());
             }
         }
 

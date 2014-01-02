@@ -106,11 +106,11 @@ namespace Telegram.Model.Wrappers {
 
 
             foreach(var user in usersList) {
-                session.SaveUser(new UserModel(user));
+                session.SaveUser(user);
             }
 
             foreach(var chat in chatsList) {
-                session.SaveChat(new ChatModel(chat));
+                session.SaveChat(chat);
             }
 
             foreach(var message in messagesList) {

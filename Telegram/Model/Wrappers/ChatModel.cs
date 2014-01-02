@@ -2,11 +2,17 @@
 using Telegram.MTProto;
 
 namespace Telegram.Model.Wrappers {
+    public delegate void ChatModelChangeHandler();
     public class ChatModel {
         private Chat chat;
-
+        public event ChatModelChangeHandler ChangeEvent;
         public ChatModel(Chat chat) {
             this.chat = chat;
+        }
+
+        public void SetChat(Chat chat) {
+            this.chat = chat;
+            ChangeEvent();
         }
 
         public int Id {
@@ -44,5 +50,7 @@ namespace Telegram.Model.Wrappers {
                 }
             }
         }
+
+
     }
 }

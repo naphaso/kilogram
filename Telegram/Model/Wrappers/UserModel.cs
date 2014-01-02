@@ -2,11 +2,20 @@
 using Telegram.MTProto;
 
 namespace Telegram.Model.Wrappers {
+
+    public delegate void UserModelChangeHandler();
     public class UserModel {
         private User user;
 
+        public event UserModelChangeHandler ChangeEvent;
+
         public UserModel(User user) {
             this.user = user;
+        }
+
+        public void SetUser(User user) {
+            this.user = user;
+            ChangeEvent();
         }
 
         public int Id {

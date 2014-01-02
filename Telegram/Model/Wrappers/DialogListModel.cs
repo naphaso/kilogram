@@ -45,13 +45,11 @@ namespace Telegram.Model.Wrappers {
             logger.info("process dialogs: {0} dialogs, {1} messages, {2} chats, {3} users", dialogsList.Count, messagesList.Count, chatsList.Count, usersList.Count);
 
             foreach (var user in usersList) {
-                var userModel = new UserModel(user);
-                session.SaveUser(userModel);
+                session.SaveUser(user);
             }
 
             foreach (var chat in chatsList) {
-                var chatModel = new ChatModel(chat);
-                session.SaveChat(chatModel);
+                session.SaveChat(chat);
             }
 
             Dictionary<int, MessageModel> messagesMap = new Dictionary<int, MessageModel>();
