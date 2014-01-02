@@ -317,15 +317,13 @@ namespace Telegram.MTProto {
                 gateway = new MTProtoGateway(MainDc, this);
                 await gateway.ConnectAsync();
                 api = new TLApi(gateway);
-
-                dialogs.LoadDialogs();
             }
         }
 
 
-        public void SaveAuthorization(auth_Authorization authorization) {
+        public async Task SaveAuthorization(auth_Authorization authorization) {
             this.authorization = authorization;
-            dialogs.DialogsRequest();
+            await dialogs.DialogsRequest();
             save();
         }
 

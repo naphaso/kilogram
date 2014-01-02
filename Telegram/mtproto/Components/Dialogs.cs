@@ -27,13 +27,7 @@ namespace Telegram.MTProto.Components {
             load(reader);
         }
 
-        public void LoadDialogs() {
-            if (session.AuthorizationExists()) {
-                DialogsRequest();
-            } 
-        }
-
-        public async Task<DialogListModel> DialogsRequest() {
+        public async Task DialogsRequest() { // call it only on login!
             DialogListModel newState = new DialogListModel(session);
 
             int offset = 0;
@@ -47,10 +41,8 @@ namespace Telegram.MTProto.Components {
                 }
             }
 
-            
-            model.Replace(newState);
-
-            return model;
+            //model.Replace(newState);
+            model = newState;
         }
 
         public DialogListModel Model {

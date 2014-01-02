@@ -1,7 +1,8 @@
 ﻿
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using System.Linq;
+﻿using System.Threading.Tasks;
 using Microsoft.Phone.Reactive;
 ﻿using System.IO;
 ﻿using Telegram.Core.Logging;
@@ -14,9 +15,11 @@ namespace Telegram.Model.Wrappers {
         private ObservableCollection<MessageModel> messages;
         private TelegramSession session;
 
-        public DialogModel(Dialog dialog, TelegramSession session) {
+        public DialogModel(Dialog dialog, TelegramSession session, Dictionary<int, MessageModel> messagesMap) {
             this.dialog = (DialogConstructor) dialog;
             this.session = session;
+            this.messages = new ObservableCollection<MessageModel>();
+            this.messages.Add(messagesMap[this.dialog.top_message]);
         }
 
         public DialogModel(TelegramSession session, BinaryReader reader) {
@@ -118,7 +121,7 @@ namespace Telegram.Model.Wrappers {
         public string Preview {
             get {
                 string preview = "";
-                var topMessage = session.Dialogs.Model.GetMessage(dialog.top_message).RawMessage;
+                var topMessage = messages.Last().RawMessage;
 
                 switch (topMessage.Constructor) {
                     case Constructor.message:
@@ -140,8 +143,7 @@ namespace Telegram.Model.Wrappers {
 
         public string TimeOrDate {
             get {
-                var topMessage = session.Dialogs.Model.GetMessage(dialog.top_message);
-                return topMessage.TimeOrDate;
+                return messages.Last().TimeOrDate;
             }
         }
 
@@ -185,7 +187,7 @@ namespace Telegram.Model.Wrappers {
 
         public string LastActivityUserName {
             get {
-                var topMessage = session.Dialogs.Model.GetMessage(dialog.top_message).RawMessage;
+                var topMessage = messages.Last().RawMessage;
                 UserModel user = null;
                 switch (topMessage.Constructor) {
                     case Constructor.message:
