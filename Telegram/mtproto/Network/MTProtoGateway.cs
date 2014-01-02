@@ -231,6 +231,13 @@ namespace Telegram.MTProto {
                     Submit(initRequest);
                     config = await initRequest.Task;
                     break;
+                } catch(MTProtoBadMessageException e) {
+                    if(e.ErrorCode == 32) {
+                        // broken seq
+                        throw new MTProtoBrokenSessionException();
+                    } else {
+                        logger.info("init connection failed: {0}", e);
+                    }
                 } catch(Exception e) {
                     logger.info("init connection failed: {0}", e);
                 }

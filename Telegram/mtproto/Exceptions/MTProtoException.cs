@@ -25,4 +25,8 @@ namespace Telegram.MTProto.Exceptions {
             get { return errorCode; }
         }
     }
+
+    class MTProtoBrokenSessionException : MTProtoException {
+
+    }
 }
