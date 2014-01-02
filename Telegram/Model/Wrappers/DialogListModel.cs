@@ -68,6 +68,26 @@ namespace Telegram.Model.Wrappers {
 
         public void ProcessNewMessage(Message message) {
             MessageModel messageModel = new MessageModel(message);
+            Peer targetPeer = messageModel.Peer;
+
+            DialogModel targetDialogModel = null;
+
+            foreach(DialogModel dialogModel in dialogs) {
+                if(TLStuff.PeerEquals(dialogModel.Peer, targetPeer)) {
+                    targetDialogModel = dialogModel;
+                    break;
+                }
+            }
+
+            if(targetDialogModel == null) {
+                targetDialogModel = new DialogModel(messageModel, session);
+                dialogs.Insert(0, targetDialogModel);
+            } else {
+                dialogs.Remove(targetDialogModel);
+                dialogs.Insert(0, targetDialogModel);
+            }
+
+            targetDialogModel.ProcessNewMessage(messageModel);
         }
 
         public void save(BinaryWriter writer) {

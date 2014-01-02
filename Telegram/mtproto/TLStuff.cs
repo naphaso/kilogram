@@ -16,5 +16,21 @@ namespace Telegram.MTProto {
                     throw new Exception("invalid constructor");
             }
         }
+
+        public static bool PeerEquals(Peer a, Peer b) {
+            if(a.Constructor != b.Constructor) {
+                return false;
+            }
+
+            if(a.Constructor == Constructor.peerUser) {
+                return ((PeerUserConstructor) a).user_id == ((PeerUserConstructor) b).user_id;
+            }
+
+            if(a.Constructor == Constructor.peerChat) {
+                return ((PeerChatConstructor) a).chat_id == ((PeerChatConstructor) b).chat_id;
+            }
+
+            return false;
+        }
     }
 }

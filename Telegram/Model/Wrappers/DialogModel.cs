@@ -28,6 +28,15 @@ namespace Telegram.Model.Wrappers {
             SubscribeToDialog();
         }
 
+        public DialogModel(MessageModel topMessage, TelegramSession session) {
+            this.dialog = (DialogConstructor) TL.dialog(topMessage.Peer, topMessage.Id, 1);
+            this.session = session;
+            this.messages = new ObservableCollection<MessageModel>();
+            this.messages.Add(topMessage);
+            
+            SubscribeToDialog();
+        }
+
         private void SubscribeToDialog() {
             switch (dialog.peer.Constructor) {
                 case Constructor.peerChat:
@@ -283,6 +292,10 @@ namespace Telegram.Model.Wrappers {
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void ProcessNewMessage(MessageModel messageModel) {
+            messages.Add(messageModel);
         }
     }
 }
