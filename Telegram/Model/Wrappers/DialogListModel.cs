@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading;
 using Telegram.Core.Logging;
 using Telegram.MTProto;
 
@@ -11,6 +12,12 @@ namespace Telegram.Model.Wrappers {
         private Dictionary<int, MessageModel> messages = new Dictionary<int, MessageModel>();
         private Dictionary<int, UserModel> users = new Dictionary<int, UserModel>();
         private Dictionary<int, ChatModel> chats = new Dictionary<int, ChatModel>();
+
+        private TelegramSession session;
+
+        public DialogListModel(TelegramSession session) {
+            this.session = session;
+        }
 
         public ObservableCollection<DialogModel> Dialogs {
             get { return dialogs; }
@@ -53,7 +60,7 @@ namespace Telegram.Model.Wrappers {
             logger.info("process dialogs: {0} dialogs, {1} messages, {2} chats, {3} users", dialogsList.Count, messagesList.Count, chatsList.Count, usersList.Count);
 
             foreach (Dialog dialog in dialogsList) {
-                dialogs.Add(new DialogModel(dialog, this, this, this));
+                dialogs.Add(new DialogModel(dialog, session));
             }
 
             foreach (var message in messagesList) {
@@ -78,7 +85,7 @@ namespace Telegram.Model.Wrappers {
             // dialogs
             writer.Write(dialogs.Count);
             foreach (var dialog in dialogs) {
-                dialog.RawDialog.Write(writer);
+                dialog.Write(writer);
             }
 
             // messages
@@ -104,10 +111,11 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void load(BinaryReader reader) {
+            logger.info("loading dialog list model");
             // dialogs
             int dialogsCount = reader.ReadInt32();
             for (int i = 0; i < dialogsCount; i++) {
-                dialogs.Add(new DialogModel(TL.Parse<Dialog>(reader), this, this, this));
+                dialogs.Add(new DialogModel(session, reader));
             }
 
             // messages

@@ -83,5 +83,9 @@ namespace Telegram.Model.Wrappers {
                 }
             }
         }
+
+        public void Write(BinaryWriter writer) {
+            message.Write(writer);
+        }
     }
 }
