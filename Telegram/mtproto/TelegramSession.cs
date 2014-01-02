@@ -220,7 +220,7 @@ namespace Telegram.MTProto {
                 reader.ReadUInt32();
                 authorization.Read(reader);
             }
-
+            logger.info("reading dialogs...");
             dialogs = new Dialogs(this, reader);
 
             int usersCount = reader.ReadInt32();

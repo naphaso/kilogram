@@ -80,6 +80,7 @@ namespace Telegram.Model.Wrappers {
             logger.info("loading dialog list model");
             // dialogs
             int dialogsCount = reader.ReadInt32();
+            logger.info("dialogs count {0}", dialogsCount);
             for (int i = 0; i < dialogsCount; i++) {
                 dialogs.Add(new DialogModel(session, reader));
             }

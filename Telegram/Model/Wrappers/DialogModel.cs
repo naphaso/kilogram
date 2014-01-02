@@ -168,9 +168,12 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void Read(BinaryReader reader) {
+            logger.info("loading dialog");
             dialog = new DialogConstructor();
+            reader.ReadInt32();
             dialog.Read(reader);
             int messagesCount = reader.ReadInt32();
+            logger.info("loading {0} messages", messagesCount);
             messages = new ObservableCollection<MessageModel>();
             for(int i = 0; i < messagesCount; i++) {
                 messages.Add(new MessageModel(TL.Parse<Message>(reader)));
