@@ -15,6 +15,7 @@ namespace Telegram.MTProto {
     // all constructor types
 
     public enum Constructor {
+        messageUndelivered,
         error, inputPeerEmpty, inputPeerSelf, inputPeerContact, inputPeerForeign, inputPeerChat, inputUserEmpty, inputUserSelf, inputUserContact, inputUserForeign, inputPhoneContact, inputFile, inputMediaEmpty, inputMediaUploadedPhoto, inputMediaPhoto, inputMediaGeoPoint, inputMediaContact, inputMediaUploadedVideo, inputMediaUploadedThumbVideo, inputMediaVideo, inputChatPhotoEmpty, inputChatUploadedPhoto, inputChatPhoto, inputGeoPointEmpty, inputGeoPoint, inputPhotoEmpty, inputPhoto, inputVideoEmpty, inputVideo, inputFileLocation, inputVideoFileLocation, inputPhotoCropAuto, inputPhotoCrop, inputAppEvent, peerUser, peerChat, storage_fileUnknown, storage_fileJpeg, storage_fileGif, storage_filePng, storage_fileMp3, storage_fileMov, storage_filePartial, storage_fileMp4, storage_fileWebp, fileLocationUnavailable, fileLocation, userEmpty, userSelf, userContact, userRequest, userForeign, userDeleted, userProfilePhotoEmpty, userProfilePhoto, userStatusEmpty, userStatusOnline, userStatusOffline, chatEmpty, chat, chatForbidden, chatFull, chatParticipant, chatParticipantsForbidden, chatParticipants, chatPhotoEmpty, chatPhoto, messageEmpty, message, messageForwarded, messageService, messageMediaEmpty, messageMediaPhoto, messageMediaVideo, messageMediaGeo, messageMediaContact, messageMediaUnsupported, messageActionEmpty, messageActionChatCreate, messageActionChatEditTitle, messageActionChatEditPhoto, messageActionChatDeletePhoto, messageActionChatAddUser, messageActionChatDeleteUser, dialog, photoEmpty, photo, photoSizeEmpty, photoSize, photoCachedSize, videoEmpty, video, geoPointEmpty, geoPoint, auth_checkedPhone, auth_sentCode, auth_authorization, auth_exportedAuthorization, inputNotifyPeer, inputNotifyUsers, inputNotifyChats, inputNotifyAll, inputPeerNotifyEventsEmpty, inputPeerNotifyEventsAll, inputPeerNotifySettings, peerNotifyEventsEmpty, peerNotifyEventsAll, peerNotifySettingsEmpty, peerNotifySettings, wallPaper, userFull, contact, importedContact, contactBlocked, contactFound, contactSuggested, contactStatus, chatLocated, contacts_foreignLinkUnknown, contacts_foreignLinkRequested, contacts_foreignLinkMutual, contacts_myLinkEmpty, contacts_myLinkRequested, contacts_myLinkContact, contacts_link, contacts_contacts, contacts_contactsNotModified, contacts_importedContacts, contacts_blocked, contacts_blockedSlice, contacts_found, contacts_suggested, messages_dialogs, messages_dialogsSlice, messages_messages, messages_messagesSlice, messages_messageEmpty, messages_message, messages_statedMessages, messages_statedMessage, messages_sentMessage, messages_chat, messages_chats, messages_chatFull, messages_affectedHistory, inputMessagesFilterEmpty, inputMessagesFilterPhotos, inputMessagesFilterVideo, inputMessagesFilterPhotoVideo, updateNewMessage, updateMessageID, updateReadMessages, updateDeleteMessages, updateRestoreMessages, updateUserTyping, updateChatUserTyping, updateChatParticipants, updateUserStatus, updateUserName, updateUserPhoto, updateContactRegistered, updateContactLink, updateActivation, updateNewAuthorization, updates_state, updates_differenceEmpty, updates_difference, updates_differenceSlice, updatesTooLong, updateShortMessage, updateShortChatMessage, updateShort, updatesCombined, updates, photos_photos, photos_photosSlice, photos_photo, upload_file, dcOption, config, nearestDc, help_appUpdate, help_noAppUpdate, help_inviteText, messages_statedMessagesLinks, messages_statedMessageLink, messages_sentMessageLink, inputGeoChat, inputNotifyGeoChatPeer, geoChat, geoChatMessageEmpty, geoChatMessage, geoChatMessageService, geochats_statedMessage, geochats_located, geochats_messages, geochats_messagesSlice, messageActionGeoChatCreate, messageActionGeoChatCheckin, updateNewGeoChatMessage, wallPaperSolid, updateNewEncryptedMessage, updateEncryptedChatTyping, updateEncryption, updateEncryptedMessagesRead, encryptedChatEmpty, encryptedChatWaiting, encryptedChatRequested, encryptedChat, encryptedChatDiscarded, inputEncryptedChat, encryptedFileEmpty, encryptedFile, inputEncryptedFileEmpty, inputEncryptedFileUploaded, inputEncryptedFile, inputEncryptedFileLocation, encryptedMessage, encryptedMessageService, decryptedMessageLayer, decryptedMessage, decryptedMessageService, decryptedMessageMediaEmpty, decryptedMessageMediaPhoto, decryptedMessageMediaVideo, decryptedMessageMediaGeoPoint, decryptedMessageMediaContact, decryptedMessageActionSetMessageTTL, messages_dhConfigNotModified, messages_dhConfig, messages_sentEncryptedMessage, messages_sentEncryptedFile, inputFileBig, inputEncryptedFileBigUploaded, updateChatParticipantAdd, updateChatParticipantDelete, updateDcOptions, inputMediaUploadedAudio, inputMediaAudio, inputMediaUploadedDocument, inputMediaUploadedThumbDocument, inputMediaDocument, messageMediaDocument, messageMediaAudio, inputAudioEmpty, inputAudio, inputDocumentEmpty, inputDocument, inputAudioFileLocation, inputDocumentFileLocation, decryptedMessageMediaDocument, decryptedMessageMediaAudio, audioEmpty, audio, documentEmpty, document
     }
 
@@ -1345,307 +1346,307 @@ namespace Telegram.MTProto {
     }
 
     // abstract types
-    public abstract class contacts_Blocked : TLObject {
-
-    }
-    public abstract class WallPaper : TLObject {
-
-    }
-    public abstract class Message : TLObject {
-
-    }
-    public abstract class MessageAction : TLObject {
-
-    }
-    public abstract class messages_Chats : TLObject {
-
-    }
-    public abstract class auth_CheckedPhone : TLObject {
-
-    }
-    public abstract class UserStatus : TLObject {
-
-    }
-    public abstract class InputChatPhoto : TLObject {
-
-    }
-    public abstract class Photo : TLObject {
-
-    }
-    public abstract class Audio : TLObject {
-
-    }
-    public abstract class messages_Chat : TLObject {
-
-    }
-    public abstract class PhotoSize : TLObject {
-
-    }
-    public abstract class ChatLocated : TLObject {
-
-    }
-    public abstract class help_AppUpdate : TLObject {
-
-    }
-    public abstract class InputFile : TLObject {
-
-    }
-    public abstract class InputDocument : TLObject {
-
-    }
-    public abstract class Chat : TLObject {
-
-    }
-    public abstract class InputFileLocation : TLObject {
+    public abstract class contacts_ImportedContacts : TLObject {
 
     }
     public abstract class Peer : TLObject {
 
     }
-    public abstract class MessageMedia : TLObject {
-
-    }
-    public abstract class InputContact : TLObject {
-
-    }
-    public abstract class auth_SentCode : TLObject {
-
-    }
-    public abstract class messages_DhConfig : TLObject {
-
-    }
-    public abstract class contacts_ForeignLink : TLObject {
-
-    }
-    public abstract class InputGeoChat : TLObject {
-
-    }
-    public abstract class updates_Difference : TLObject {
-
-    }
-    public abstract class InputAppEvent : TLObject {
-
-    }
-    public abstract class InputPeerNotifySettings : TLObject {
-
-    }
-    public abstract class geochats_Located : TLObject {
-
-    }
-    public abstract class photos_Photo : TLObject {
-
-    }
-    public abstract class Config : TLObject {
-
-    }
-    public abstract class InputEncryptedChat : TLObject {
-
-    }
-    public abstract class EncryptedChat : TLObject {
-
-    }
-    public abstract class UserProfilePhoto : TLObject {
-
-    }
-    public abstract class ChatParticipant : TLObject {
-
-    }
-    public abstract class ContactSuggested : TLObject {
-
-    }
-    public abstract class photos_Photos : TLObject {
-
-    }
-    public abstract class DcOption : TLObject {
-
-    }
-    public abstract class Contact : TLObject {
-
-    }
-    public abstract class geochats_Messages : TLObject {
-
-    }
-    public abstract class InputGeoPoint : TLObject {
-
-    }
-    public abstract class auth_ExportedAuthorization : TLObject {
-
-    }
-    public abstract class InputUser : TLObject {
-
-    }
-    public abstract class InputPeer : TLObject {
-
-    }
-    public abstract class UserFull : TLObject {
-
-    }
-    public abstract class InputNotifyPeer : TLObject {
-
-    }
-    public abstract class EncryptedFile : TLObject {
-
-    }
-    public abstract class contacts_Contacts : TLObject {
-
-    }
-    public abstract class User : TLObject {
-
-    }
-    public abstract class auth_Authorization : TLObject {
-
-    }
-    public abstract class PeerNotifySettings : TLObject {
-
-    }
-    public abstract class InputMedia : TLObject {
-
-    }
-    public abstract class contacts_Found : TLObject {
-
-    }
-    public abstract class GeoPoint : TLObject {
-
-    }
-    public abstract class ContactBlocked : TLObject {
-
-    }
-    public abstract class InputAudio : TLObject {
+    public abstract class InputVideo : TLObject {
 
     }
     public abstract class help_InviteText : TLObject {
 
     }
-    public abstract class PeerNotifyEvents : TLObject {
-
-    }
-    public abstract class messages_StatedMessages : TLObject {
-
-    }
-    public abstract class InputVideo : TLObject {
-
-    }
-    public abstract class FileLocation : TLObject {
-
-    }
-    public abstract class InputEncryptedFile : TLObject {
-
-    }
-    public abstract class InputPeerNotifyEvents : TLObject {
-
-    }
-    public abstract class messages_AffectedHistory : TLObject {
-
-    }
-    public abstract class EncryptedMessage : TLObject {
-
-    }
-    public abstract class Video : TLObject {
-
-    }
-    public abstract class ImportedContact : TLObject {
-
-    }
-    public abstract class contacts_Link : TLObject {
-
-    }
-    public abstract class DecryptedMessageMedia : TLObject {
+    public abstract class UserStatus : TLObject {
 
     }
     public abstract class MessagesFilter : TLObject {
 
     }
-    public abstract class upload_File : TLObject {
-
-    }
-    public abstract class ChatPhoto : TLObject {
-
-    }
-    public abstract class messages_SentEncryptedMessage : TLObject {
+    public abstract class Error : TLObject {
 
     }
     public abstract class Updates : TLObject {
 
     }
-    public abstract class ChatParticipants : TLObject {
+    public abstract class help_AppUpdate : TLObject {
 
     }
-    public abstract class storage_FileType : TLObject {
-
-    }
-    public abstract class ContactFound : TLObject {
-
-    }
-    public abstract class contacts_ImportedContacts : TLObject {
-
-    }
-    public abstract class messages_SentMessage : TLObject {
-
-    }
-    public abstract class updates_State : TLObject {
-
-    }
-    public abstract class contacts_Suggested : TLObject {
-
-    }
-    public abstract class ChatFull : TLObject {
-
-    }
-    public abstract class geochats_StatedMessage : TLObject {
-
-    }
-    public abstract class Document : TLObject {
-
-    }
-    public abstract class GeoChatMessage : TLObject {
-
-    }
-    public abstract class DecryptedMessageAction : TLObject {
-
-    }
-    public abstract class Update : TLObject {
-
-    }
-    public abstract class messages_Message : TLObject {
-
-    }
-    public abstract class messages_Dialogs : TLObject {
-
-    }
-    public abstract class messages_ChatFull : TLObject {
-
-    }
-    public abstract class InputPhoto : TLObject {
+    public abstract class InputEncryptedChat : TLObject {
 
     }
     public abstract class DecryptedMessage : TLObject {
 
     }
-    public abstract class DecryptedMessageLayer : TLObject {
+    public abstract class InputAudio : TLObject {
 
     }
-    public abstract class ContactStatus : TLObject {
+    public abstract class ChatLocated : TLObject {
+
+    }
+    public abstract class PhotoSize : TLObject {
+
+    }
+    public abstract class messages_SentEncryptedMessage : TLObject {
+
+    }
+    public abstract class MessageMedia : TLObject {
+
+    }
+    public abstract class InputDocument : TLObject {
+
+    }
+    public abstract class ImportedContact : TLObject {
+
+    }
+    public abstract class ContactBlocked : TLObject {
+
+    }
+    public abstract class Message : TLObject {
+
+    }
+    public abstract class InputNotifyPeer : TLObject {
+
+    }
+    public abstract class messages_ChatFull : TLObject {
+
+    }
+    public abstract class ChatParticipant : TLObject {
+
+    }
+    public abstract class InputPhoto : TLObject {
+
+    }
+    public abstract class DecryptedMessageMedia : TLObject {
+
+    }
+    public abstract class InputFileLocation : TLObject {
+
+    }
+    public abstract class InputEncryptedFile : TLObject {
+
+    }
+    public abstract class contacts_ForeignLink : TLObject {
+
+    }
+    public abstract class Document : TLObject {
+
+    }
+    public abstract class UserFull : TLObject {
+
+    }
+    public abstract class messages_Message : TLObject {
+
+    }
+    public abstract class DcOption : TLObject {
+
+    }
+    public abstract class photos_Photos : TLObject {
+
+    }
+    public abstract class InputPeerNotifySettings : TLObject {
+
+    }
+    public abstract class contacts_Suggested : TLObject {
+
+    }
+    public abstract class InputGeoPoint : TLObject {
+
+    }
+    public abstract class InputGeoChat : TLObject {
+
+    }
+    public abstract class InputContact : TLObject {
+
+    }
+    public abstract class EncryptedFile : TLObject {
+
+    }
+    public abstract class PeerNotifySettings : TLObject {
+
+    }
+    public abstract class auth_Authorization : TLObject {
+
+    }
+    public abstract class auth_CheckedPhone : TLObject {
+
+    }
+    public abstract class FileLocation : TLObject {
+
+    }
+    public abstract class messages_Chats : TLObject {
+
+    }
+    public abstract class contacts_Link : TLObject {
 
     }
     public abstract class messages_StatedMessage : TLObject {
 
     }
-    public abstract class InputPhotoCrop : TLObject {
+    public abstract class geochats_Located : TLObject {
 
     }
-    public abstract class Dialog : TLObject {
+    public abstract class updates_State : TLObject {
 
     }
-    public abstract class Error : TLObject {
+    public abstract class storage_FileType : TLObject {
+
+    }
+    public abstract class geochats_StatedMessage : TLObject {
+
+    }
+    public abstract class ContactFound : TLObject {
+
+    }
+    public abstract class Photo : TLObject {
+
+    }
+    public abstract class InputMedia : TLObject {
+
+    }
+    public abstract class photos_Photo : TLObject {
+
+    }
+    public abstract class InputFile : TLObject {
+
+    }
+    public abstract class auth_ExportedAuthorization : TLObject {
+
+    }
+    public abstract class User : TLObject {
+
+    }
+    public abstract class NearestDc : TLObject {
+
+    }
+    public abstract class Video : TLObject {
+
+    }
+    public abstract class contacts_Blocked : TLObject {
+
+    }
+    public abstract class messages_AffectedHistory : TLObject {
+
+    }
+    public abstract class messages_Chat : TLObject {
+
+    }
+    public abstract class Chat : TLObject {
+
+    }
+    public abstract class ChatParticipants : TLObject {
+
+    }
+    public abstract class InputAppEvent : TLObject {
 
     }
     public abstract class messages_Messages : TLObject {
 
     }
+    public abstract class messages_Dialogs : TLObject {
+
+    }
+    public abstract class InputPeer : TLObject {
+
+    }
+    public abstract class ChatPhoto : TLObject {
+
+    }
     public abstract class contacts_MyLink : TLObject {
 
     }
-    public abstract class NearestDc : TLObject {
+    public abstract class InputChatPhoto : TLObject {
+
+    }
+    public abstract class messages_SentMessage : TLObject {
+
+    }
+    public abstract class messages_StatedMessages : TLObject {
+
+    }
+    public abstract class UserProfilePhoto : TLObject {
+
+    }
+    public abstract class updates_Difference : TLObject {
+
+    }
+    public abstract class Update : TLObject {
+
+    }
+    public abstract class GeoPoint : TLObject {
+
+    }
+    public abstract class WallPaper : TLObject {
+
+    }
+    public abstract class DecryptedMessageLayer : TLObject {
+
+    }
+    public abstract class Config : TLObject {
+
+    }
+    public abstract class EncryptedMessage : TLObject {
+
+    }
+    public abstract class Dialog : TLObject {
+
+    }
+    public abstract class ContactStatus : TLObject {
+
+    }
+    public abstract class InputPeerNotifyEvents : TLObject {
+
+    }
+    public abstract class MessageAction : TLObject {
+
+    }
+    public abstract class DecryptedMessageAction : TLObject {
+
+    }
+    public abstract class auth_SentCode : TLObject {
+
+    }
+    public abstract class geochats_Messages : TLObject {
+
+    }
+    public abstract class InputUser : TLObject {
+
+    }
+    public abstract class EncryptedChat : TLObject {
+
+    }
+    public abstract class contacts_Contacts : TLObject {
+
+    }
+    public abstract class GeoChatMessage : TLObject {
+
+    }
+    public abstract class PeerNotifyEvents : TLObject {
+
+    }
+    public abstract class contacts_Found : TLObject {
+
+    }
+    public abstract class Audio : TLObject {
+
+    }
+    public abstract class ChatFull : TLObject {
+
+    }
+    public abstract class messages_DhConfig : TLObject {
+
+    }
+    public abstract class Contact : TLObject {
+
+    }
+    public abstract class upload_File : TLObject {
+
+    }
+    public abstract class InputPhotoCrop : TLObject {
+
+    }
+    public abstract class ContactSuggested : TLObject {
 
     }
 
