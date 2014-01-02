@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Core.Logging;
 
 namespace Telegram.MTProto.Components {
     public delegate void NewMessageHandler(Message message);
 
     public class UpdatesProcessor {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(UpdatesProcessor));
         private TelegramSession session;
 
         public event NewMessageHandler NewMessageEvent;
@@ -17,6 +19,7 @@ namespace Telegram.MTProto.Components {
         }
 
         public void ProcessUpdates(Updates update) {
+            logger.info("processing updates: {0}", update);
             switch (update.Constructor) {
                 case Constructor.updatesTooLong:
                     ProcessUpdate((UpdatesTooLongConstructor)update);
@@ -44,6 +47,7 @@ namespace Telegram.MTProto.Components {
         }
 
         private void ProcessUpdate(UpdateShortMessageConstructor update) {
+            logger.info("processing short message: {0}", update);
             // TODO: process pts, seq
             Message message = TL.message(update.id, update.from_id, session.SelfPeer, false, true, update.date, update.message, TL.messageMediaEmpty());
             NewMessageEvent(message);

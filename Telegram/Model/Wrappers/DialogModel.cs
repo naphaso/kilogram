@@ -295,6 +295,7 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void ProcessNewMessage(MessageModel messageModel) {
+            logger.info("processing message and adding to observable collection");
             messages.Add(messageModel);
         }
     }
