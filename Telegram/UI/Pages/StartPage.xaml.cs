@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Telegram.Core.Logging;
+using Telegram.MTProto;
 using Telegram.UI.Controls;
 using Telegram.UI.Models;
 using Telegram.UI.Models.Users;
@@ -31,9 +32,11 @@ namespace Telegram.UI
                 Application.Current.Terminate();
             };
 
-            DialogList.DialogSelected += delegate(object sender, int userId) {
-                logger.debug("Selected dialog with user/chat ID=" + userId);
-                NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml", UriKind.Relative));
+            DialogList.DialogSelected += delegate(object sender, Peer peer) {
+                string uriParams = "";
+                
+//                logger.debug("Selected dialog with user/chat ID=" + userId);
+                NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml?modelId=" + uriParams, UriKind.Relative));
             };
         }
 
