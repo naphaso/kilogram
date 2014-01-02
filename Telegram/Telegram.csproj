@@ -94,11 +94,14 @@
       <DependentUpon>ChatNotice.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\DateTimeExtensions.cs" />
+    <Compile Include="Model\Internal\MessageUndelivered.cs" />
     <Compile Include="Model\Providers.cs" />
     <Compile Include="Model\Wrappers\ChatModel.cs" />
     <Compile Include="Model\Wrappers\DialogListModel.cs" />
     <Compile Include="Model\Wrappers\DialogModel.cs" />
     <Compile Include="Model\Wrappers\MessageModel.cs" />
+    <Compile Include="Model\Wrappers\MessageModelDelivered.cs" />
+    <Compile Include="Model\Wrappers\MessageModelUndelivered.cs" />
     <Compile Include="Model\Wrappers\UserModel.cs" />
     <Compile Include="MTProto\Components\UpdatesProcessor.cs" />
     <Compile Include="MTProto\TLStuff.cs" />
@@ -245,6 +248,8 @@
     <Compile Include="UI\Pages\UserProfile.xaml.cs">
       <DependentUpon>UserProfile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Helpers.cs" />
+    <Compile Include="Utils\ObservableCollectionUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

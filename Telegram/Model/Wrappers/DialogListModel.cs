@@ -2,13 +2,15 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
+using System.Windows;
 using Telegram.Core.Logging;
 using Telegram.MTProto;
+using Telegram.Utils;
 
 namespace Telegram.Model.Wrappers {
     public class DialogListModel {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogListModel));
-        private ObservableCollection<DialogModel> dialogs = new ObservableCollection<DialogModel>();
+        private ObservableCollectionUI<DialogModel> dialogs = new ObservableCollectionUI<DialogModel>();
 
         private TelegramSession session;
 
@@ -83,11 +85,11 @@ namespace Telegram.Model.Wrappers {
             if(targetDialogModel == null) {
                 logger.info("target dialog not found, creating new...");
                 targetDialogModel = new DialogModel(messageModel, session);
-                dialogs.Insert(0, targetDialogModel);
+                    dialogs.Insert(0, targetDialogModel);
             } else {
                 logger.info("target dialog found, rearrange...");
-                dialogs.Remove(targetDialogModel);
-                dialogs.Insert(0, targetDialogModel);
+                    dialogs.Remove(targetDialogModel);
+                    dialogs.Insert(0, targetDialogModel);
             }
 
             targetDialogModel.ProcessNewMessage(messageModel);

@@ -13,6 +13,10 @@ namespace Telegram.Model {
             return (long)(DateTime.UtcNow - UnixEpoch).TotalMilliseconds;
         }
 
+        public static long GetUnixTimestampSeconds(DateTime time) {
+            return (long) (time - UnixEpoch).TotalSeconds;
+        }
+
         public static DateTime DateTimeFromUnixTimestampMillis(long millis) {
             return UnixEpoch.AddMilliseconds(millis);
         }

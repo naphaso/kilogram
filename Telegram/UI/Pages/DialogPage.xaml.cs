@@ -40,11 +40,16 @@ namespace Telegram.UI {
             }
 
             UpdateDataContext();
+
+            // init notice
+            // FIXME: assure that no actual history received from server
+            // or this is new chat
+            if (MessageLongListSelector.ItemsSource == null || MessageLongListSelector.ItemsSource.Count == 0)
+                ShowNotice();
         }
 
         private void UpdateDataContext() {
             this.DataContext = model;
-
             MessageLongListSelector.ItemsSource = model.Messages;
         }
 
@@ -74,12 +79,6 @@ namespace Telegram.UI {
             };
 
             EmojiPanelControl.EmojiGridListSelector.SelectionChanged += EmojiGridListSelectorOnSelectionChanged;
-
-            // init notice
-            // FIXME: assure that no actual history received from server
-            // or this is new chat
-            if (MessageLongListSelector.ItemsSource == null || MessageLongListSelector.ItemsSource.Count == 0)
-                ShowNotice();
 
 //            dialogList.ItemsSource
         }

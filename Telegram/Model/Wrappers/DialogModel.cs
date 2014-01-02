@@ -6,23 +6,25 @@ using System.Collections.ObjectModel;
 ﻿using System.Linq;
 ﻿using System.Runtime.CompilerServices;
 ﻿using System.Threading.Tasks;
-using Microsoft.Phone.Reactive;
+﻿using System.Windows;
+﻿using Microsoft.Phone.Reactive;
 ﻿using System.IO;
 ﻿using Telegram.Annotations;
 ﻿using Telegram.Core.Logging;
 ﻿using Telegram.MTProto;
+﻿using Telegram.Utils;
 
 namespace Telegram.Model.Wrappers {
     public class DialogModel: INotifyPropertyChanged {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogModel));
         private DialogConstructor dialog;
-        private ObservableCollection<MessageModel> messages;
+        private ObservableCollectionUI<MessageModel> messages;
         private TelegramSession session;
 
         public DialogModel(Dialog dialog, TelegramSession session, Dictionary<int, MessageModel> messagesMap) {
             this.dialog = (DialogConstructor) dialog;
             this.session = session;
-            this.messages = new ObservableCollection<MessageModel>();
+            this.messages = new ObservableCollectionUI<MessageModel>();
             this.messages.Add(messagesMap[this.dialog.top_message]);
 
             SubscribeToDialog();
@@ -31,7 +33,7 @@ namespace Telegram.Model.Wrappers {
         public DialogModel(MessageModel topMessage, TelegramSession session) {
             this.dialog = (DialogConstructor) TL.dialog(topMessage.Peer, topMessage.Id, 1);
             this.session = session;
-            this.messages = new ObservableCollection<MessageModel>();
+            this.messages = new ObservableCollectionUI<MessageModel>();
             this.messages.Add(topMessage);
             
             SubscribeToDialog();
@@ -101,6 +103,19 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        private InputPeer InputPeer {
+            get {
+                if (dialog.Constructor == Constructor.peerChat) {
+                    return TL.inputPeerChat(((PeerChatConstructor) dialog.peer).chat_id);
+                }
+
+                var peerUser = dialog.peer as PeerUserConstructor;
+                var user = session.GetUser(peerUser.user_id);
+
+                return user.InputPeer;
+            }
+        }
+
         public string Status {
             get {
                 string status = "";
@@ -145,7 +160,7 @@ namespace Telegram.Model.Wrappers {
         public ObservableCollection<MessageModel> Messages {
             get {
                 if(messages == null) {
-                    messages = new ObservableCollection<MessageModel>();
+                    messages = new ObservableCollectionUI<MessageModel>();
                     MessagesRequest();
                 }
 
@@ -245,8 +260,17 @@ namespace Telegram.Model.Wrappers {
             dialog.Read(reader);
             int messagesCount = reader.ReadInt32();
             logger.info("loading {0} messages", messagesCount);
-            messages = new ObservableCollection<MessageModel>();
+            messages = new ObservableCollectionUI<MessageModel>();
             for(int i = 0; i < messagesCount; i++) {
+                int type = reader.ReadInt32();
+                if (type == 1) {
+                    // delivered
+                    messages.Add(new MessageModelDelivered(reader));
+                }
+                else {
+                    // undelivered
+                    
+                }
                 messages.Add(new MessageModel(TL.Parse<Message>(reader)));
             }
 
@@ -296,7 +320,28 @@ namespace Telegram.Model.Wrappers {
 
         public void ProcessNewMessage(MessageModel messageModel) {
             logger.info("processing message and adding to observable collection");
-            messages.Add(messageModel);
+                messages.Add(messageModel);
+        }
+
+        public async Task SendMessage(string message) {
+            long randomId = Helpers.GenerateRandomLong();
+
+            messages.Add(new MessageModelUndelivered() {
+                MessageType = MessageModelUndelivered.Type.Text,
+                Text = message,
+                Timestamp = DateTime.Now
+            });
+
+            messages_SentMessage sentMessage = await TelegramSession.Instance.Api.messages_sendMessage(InputPeer, message, randomId);
+
+            switch (sentMessage.Constructor) {
+                case Constructor.messages_sentMessage:
+                    // replace Undelivered with delivered
+                    break;
+                case Constructor.messages_sentMessageLink:
+                    // ???
+                    break;
+            }
         }
     }
 }

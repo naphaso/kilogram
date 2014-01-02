@@ -11,6 +11,7 @@ using Telegram.Model.Wrappers;
 using Telegram.MTProto.Components;
 using Telegram.MTProto.Crypto;
 using Telegram.MTProto.Exceptions;
+using Telegram.Utils;
 
 namespace Telegram.MTProto {
 
@@ -269,8 +270,7 @@ namespace Telegram.MTProto {
                 }
             } catch(Exception e) {
                 logger.info("error loading session, create new...: {0}", e);
-                Random random = new Random();
-                ulong sessionId = (((ulong) random.Next()) << 32) | ((ulong) random.Next());
+                ulong sessionId = Helpers.GenerateRandomUlong();
                 session = new TelegramSession(sessionId, 0);
                 TelegramEndpoint endpoint = new TelegramEndpoint("173.240.5.1", 443);
                 TelegramDC dc = new TelegramDC();
