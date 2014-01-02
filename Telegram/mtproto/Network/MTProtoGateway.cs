@@ -145,6 +145,8 @@ namespace Telegram.MTProto {
         }
     }
 
+    public delegate void UpdatesHandler(Updates updates);
+
     public class MTProtoGateway : IDisposable {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(MTProtoGateway));
         private TransportGateway gateway;
@@ -162,6 +164,8 @@ namespace Telegram.MTProto {
         private DateTime lastSend = DateTime.Now;
 
         private DispatcherTimer timer = null;
+
+        public event UpdatesHandler UpdatesEvent;
 
         public MTProtoGateway(TelegramDC dc, ISession session) {
             this.dc = dc;
@@ -529,8 +533,15 @@ namespace Telegram.MTProto {
         }
 
         private bool HandleUpdate(ulong messageId, int sequence, BinaryReader messageReader) {
-            return false;
+            try {
+                UpdatesEvent(TL.Parse<Updates>(messageReader));
+                return true;
+            } catch(Exception e) {
+                return false;
+            }
         }
+
+
 
         private bool HandleGzipPacked(ulong messageId, int sequence, BinaryReader messageReader) {
             return false;
