@@ -71,6 +71,31 @@ namespace Telegram.UI.Controls {
             DialogList.ItemsSource = new ObservableCollection<DialogItem>(items.OrderBy(i => i.Timestamp));
 
         }
+
+        private void OnClearChatHistory(object sender, RoutedEventArgs e) {
+            
+
+        }
+
+        private void OnClearAndExit(object sender, RoutedEventArgs e) {
+            
+
+        }
+
+        private void ChatContextMenuOpened(object sender, RoutedEventArgs e) {
+            
+
+        }
+
+        private void OnDeleteDialog(object sender, RoutedEventArgs e) {
+            
+
+        }
+
+        private void DialogContextMenuOpened(object sender, RoutedEventArgs e) {
+            
+
+        }
     }
 
     public delegate void OnDialogSelected(object sender, DialogModel model);

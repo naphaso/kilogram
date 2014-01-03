@@ -33,7 +33,7 @@
 			<TextBlock Margin="9,50,0,0" Style="{StaticResource PhoneTextLargeStyle}" FontSize="48">
 				<Run Text="Your phone"/>
 			</TextBlock>
-			<TextBlock TextWrapping="Wrap" Margin="9,30,100,0" Style="{StaticResource PhoneTextBlockBase}" Text="Please confirm your country code and enter your phone number."/>
+			<TextBlock Name="GuideTextBlock" TextWrapping="Wrap" Margin="9,30,100,0" Style="{StaticResource PhoneTextBlockBase}" Text="Please confirm your country code and enter your phone number."/>
 		</StackPanel>
 		<StackPanel x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Grid.RowSpan="2">
             <local:SignupPhone_Control x:Name="phoneControl" Visibility="Visible" Margin="0,0,6,0"/>

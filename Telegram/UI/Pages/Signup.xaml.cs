@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Media;
 using Windows.UI.Core;
 using Microsoft.Phone.Controls;
 using Telegram.MTProto;
 using Telegram.UI.Flows;
+using Telegram.Utils;
 
 namespace Telegram.UI {
     public partial class SignupPhone : PhoneApplicationPage {
@@ -42,6 +44,7 @@ namespace Telegram.UI {
 
         private async Task Login() {
             flow.NeedCodeEvent += delegate(Login login) {
+                RestartTimer();
                 ShowCodeScene();
             };
 
@@ -93,6 +96,11 @@ namespace Telegram.UI {
 
         private void ShowCodeScene() {
             Debug.WriteLine("ShowCodeScene");
+            
+            GuideTextBlock.Text = "";
+            GuideTextBlock.Inlines.Clear();
+            GuideTextBlock.Inlines.Add(new Run() { Text = "We have sent an SMS with an activation code to your phone " });
+            GuideTextBlock.Inlines.Add(new Run() { Text = Formatters.FormatPhoneNumber("+" + phoneControl.GetPhone()), FontWeight = FontWeights.SemiBold });
 
             HideProgress();
 
@@ -101,8 +109,6 @@ namespace Telegram.UI {
 
                 return;
             }
-
-            RestartTimer();
 
             phoneControl.Visibility = System.Windows.Visibility.Collapsed;
             codeControl.Visibility = System.Windows.Visibility.Visible;
@@ -150,6 +156,9 @@ namespace Telegram.UI {
 
         private void ShowNameScene() {
             Debug.WriteLine("ShowNameScene");
+
+            GuideTextBlock.Inlines.Clear();
+            GuideTextBlock.Text = "Enter your name and add a profile picture.";
 
             HideProgress();
             

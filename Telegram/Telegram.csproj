@@ -248,6 +248,7 @@
     <Compile Include="UI\Pages\UserProfile.xaml.cs">
       <DependentUpon>UserProfile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Formatters.cs" />
     <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Utils\ObservableCollectionUI.cs" />
   </ItemGroup>
