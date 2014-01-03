@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 ﻿using System.IO;
 ﻿using Telegram.Annotations;
 ﻿using Telegram.Core.Logging;
+﻿using Telegram.Model.Internal;
 ﻿using Telegram.MTProto;
 ﻿using Telegram.Utils;
 
@@ -21,6 +22,12 @@ namespace Telegram.Model.Wrappers {
         private ObservableCollectionUI<MessageModel> messages;
         private TelegramSession session;
 
+        private string MyNamePattern {
+            get {
+                return "You";
+            }
+        }
+
         public DialogModel(Dialog dialog, TelegramSession session, Dictionary<int, MessageModel> messagesMap) {
             this.dialog = (DialogConstructor) dialog;
             this.session = session;
@@ -30,7 +37,8 @@ namespace Telegram.Model.Wrappers {
             SubscribeToDialog();
         }
 
-        public DialogModel(MessageModel topMessage, TelegramSession session) {
+        // FIXME: review ctor params !!
+        public DialogModel(MessageModelDelivered topMessage, TelegramSession session) {
             this.dialog = (DialogConstructor) TL.dialog(topMessage.Peer, topMessage.Id, 1);
             this.session = session;
             this.messages = new ObservableCollectionUI<MessageModel>();
@@ -200,14 +208,20 @@ namespace Telegram.Model.Wrappers {
             }
 
             foreach(var message in messagesList) {
-                messages.Add(new MessageModel(message));
+                messages.Add(new MessageModelDelivered(message));
             }
         }
 
         public string Preview {
             get {
+
+                MessageModel messageModel = messages.Last();
+                if (messageModel.Delivered == false) {
+                    return ((MessageModelUndelivered) messageModel).Text;
+                }
+                
                 string preview = "";
-                var topMessage = messages.Last().RawMessage;
+                var topMessage = ((MessageModelDelivered) messageModel).RawMessage;
 
                 switch (topMessage.Constructor) {
                     case Constructor.message:
@@ -224,12 +238,6 @@ namespace Telegram.Model.Wrappers {
                 }
 
                 return preview;
-            }
-        }
-
-        public string TimeOrDate {
-            get {
-                return messages.Last().TimeOrDate;
             }
         }
 
@@ -271,7 +279,7 @@ namespace Telegram.Model.Wrappers {
                     // undelivered
                     
                 }
-                messages.Add(new MessageModel(TL.Parse<Message>(reader)));
+                messages.Add(new MessageModelDelivered(TL.Parse<Message>(reader)));
             }
 
             logger.info("loaded {0} messages", messagesCount);
@@ -285,7 +293,15 @@ namespace Telegram.Model.Wrappers {
 
         public string LastActivityUserName {
             get {
-                var topMessage = messages.Last().RawMessage;
+                MessageModel messageModel = messages.Last();
+
+                if (messageModel.Delivered == false) {
+                    return MyNamePattern;
+                }
+
+                var messageModelDelivered = (MessageModelDelivered) messageModel;
+
+                var topMessage = messageModelDelivered.RawMessage;
                 UserModel user = null;
                 switch (topMessage.Constructor) {
                     case Constructor.message:

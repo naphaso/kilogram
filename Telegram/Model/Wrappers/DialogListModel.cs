@@ -57,7 +57,8 @@ namespace Telegram.Model.Wrappers {
             Dictionary<int, MessageModel> messagesMap = new Dictionary<int, MessageModel>();
 
             foreach (var message in messagesList) {
-                var messageModel = new MessageModel(message);
+                // FIXME: review
+                var messageModel = new MessageModelDelivered(message);
                 messagesMap.Add(messageModel.Id, messageModel);
             }
 
@@ -70,13 +71,13 @@ namespace Telegram.Model.Wrappers {
 
         public void ProcessNewMessage(Message message) {
             logger.info("process new message: {0}", message);
-            MessageModel messageModel = new MessageModel(message);
+            MessageModelDelivered messageModel = new MessageModelDelivered(message);
             Peer targetPeer = messageModel.Peer;
 
             DialogModel targetDialogModel = null;
 
             foreach(DialogModel dialogModel in dialogs) {
-                if(TLStuff.PeerEquals(dialogModel.Peer, targetPeer)) {
+                if (TLStuff.PeerEquals(dialogModel.Peer, targetPeer)) {
                     targetDialogModel = dialogModel;
                     break;
                 }
