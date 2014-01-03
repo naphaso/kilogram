@@ -17,26 +17,38 @@
         <!-- USER TEMPLATE SELECTOR -->
 
         <DataTemplate x:Key="ContactTemplate">
-            <Grid  Height="82">
-                <TextBlock Text="{Binding Name}" Margin="80,17,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42" FontSize="34.667"/>
-                <Rectangle Fill="#FF333333" Margin="10,10,384,10" Stroke="Black" Width="62"/>
-            </Grid>
+            <ListBoxItem>
+                <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
+                    <Grid  Height="82">
+                        <TextBlock Text="{Binding Name}" Margin="80,17,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42" FontSize="34.667"/>
+                        <Rectangle Fill="#FF333333" Margin="10,10,384,10" Stroke="Black" Width="62"/>
+                    </Grid>
+                </StackPanel>
+            </ListBoxItem>
         </DataTemplate>
 
         <DataTemplate x:Key="FriendOfflineTemplate">
-            <Grid Height="62" Margin="0,6">
-                <Image Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <TextBlock Text="{Binding Name}" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
-                <TextBlock Text="{Binding LastSeen}" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
-            </Grid>
+            <ListBoxItem>
+                <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
+                    <Grid Height="62" Margin="0,6">
+                        <Image Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding Name}" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+                        <TextBlock Text="{Binding LastSeen}" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
+                    </Grid>
+                </StackPanel>
+            </ListBoxItem>
         </DataTemplate>
 
         <DataTemplate x:Key="FriendOnlineTemplate">
-            <Grid Height="62" Margin="0,6">
-                <Image Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <TextBlock Text="{Binding Name}" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
-                <TextBlock Text="{Binding LastSeen}" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
-            </Grid>
+            <ListBoxItem>
+                <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
+                    <Grid Height="62" Margin="0,6">
+                        <Image Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding Name}" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+                        <TextBlock Text="{Binding LastSeen}" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
+                    </Grid>
+                </StackPanel>
+            </ListBoxItem>
         </DataTemplate>
 
         <!-- USER TEMPLATE SELECTOR -->

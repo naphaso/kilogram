@@ -13,6 +13,7 @@ using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto;
 using Telegram.UI.Models;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Telegram.UI.Controls {
     public partial class DialogListControl : UserControl {
@@ -95,6 +96,10 @@ namespace Telegram.UI.Controls {
         private void DialogContextMenuOpened(object sender, RoutedEventArgs e) {
             
 
+        }
+
+        private void OnItemHold(object sender, GestureEventArgs e) {
+            Debug.WriteLine("Menu item hold");
         }
     }
 
