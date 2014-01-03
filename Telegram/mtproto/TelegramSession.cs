@@ -370,6 +370,12 @@ namespace Telegram.MTProto {
             }
         }
 
+        public int SelfId {
+            get {
+                return ((UserSelfConstructor)authorization.user).id;
+            }
+        }
+
         public UpdatesProcessor Updates {
             get {
                 return updates;

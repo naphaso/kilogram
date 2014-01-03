@@ -113,7 +113,7 @@ namespace Telegram.Model.Wrappers {
 
         private InputPeer InputPeer {
             get {
-                if (dialog.Constructor == Constructor.peerChat) {
+                if (dialog.peer.Constructor == Constructor.peerChat) {
                     return TL.inputPeerChat(((PeerChatConstructor) dialog.peer).chat_id);
                 }
 
@@ -352,12 +352,40 @@ namespace Telegram.Model.Wrappers {
 
             switch (sentMessage.Constructor) {
                 case Constructor.messages_sentMessage:
+                    
                     // replace Undelivered with delivered
                     break;
                 case Constructor.messages_sentMessageLink:
                     // ???
                     break;
             }
+        }
+
+        public async Task RemoveAndClearDialog() {
+            try {
+                await ClearDialogHistory();
+
+                if (dialog.peer.Constructor == Constructor.peerChat) {
+                    InputPeer peer = InputPeer;
+                    InputPeerChatConstructor peerChat = (InputPeerChatConstructor)peer;
+                    InputUser user = TL.inputUserSelf();
+
+                    messages_StatedMessage message =
+                        await TelegramSession.Instance.Api.messages_deleteChatUser(peerChat.chat_id, user);
+                    // TODO: pts and seq
+                    TelegramSession.Instance.Dialogs.Model.Dialogs.Remove(this);
+                }
+            }
+            catch (Exception ex) {
+                logger.error("exception: {0}", ex);
+            }
+        }
+
+        public async Task ClearDialogHistory() {
+            Messages_affectedHistoryConstructor affectedHistory = (Messages_affectedHistoryConstructor)await
+                TelegramSession.Instance.Api.messages_deleteHistory(InputPeer, 0);
+
+            // TODO: handle pts and seq
         }
     }
 }
