@@ -277,9 +277,8 @@ namespace Telegram.Model.Wrappers {
                 }
                 else {
                     // undelivered
-                    
+                    messages.Add(new MessageModelUndelivered(reader));
                 }
-                messages.Add(new MessageModelDelivered(TL.Parse<Message>(reader)));
             }
 
             logger.info("loaded {0} messages", messagesCount);
