@@ -74,13 +74,22 @@ namespace Telegram.UI.Controls {
         }
 
         private void OnClearChatHistory(object sender, RoutedEventArgs e) {
-            
+            MessageBoxResult result = MessageBox.Show("You are about to clear chat hostory. Continue?",
+"Confirm action", MessageBoxButton.OKCancel);
+            var model = ((sender as MenuItem).DataContext as DialogModel);
 
+            if (result == MessageBoxResult.OK) {
+                model.ClearDialogHistory();
+            }
         }
 
         private void OnClearAndExit(object sender, RoutedEventArgs e) {
-            
-
+            MessageBoxResult result = MessageBox.Show("You are about to delete chat and leave it. Continue?",
+    "Confirm action", MessageBoxButton.OKCancel);
+            var model = ((sender as MenuItem).DataContext as DialogModel);
+            if (result == MessageBoxResult.OK) {
+                model.RemoveAndClearDialog();
+            }
         }
 
         private void ChatContextMenuOpened(object sender, RoutedEventArgs e) {
@@ -89,13 +98,17 @@ namespace Telegram.UI.Controls {
         }
 
         private void OnDeleteDialog(object sender, RoutedEventArgs e) {
-            
+            MessageBoxResult result = MessageBox.Show("You are about to delete dialog. Continue?",
+                "Confirm action", MessageBoxButton.OKCancel);
+            var model = ((sender as MenuItem).DataContext as DialogModel);
 
+            if (result == MessageBoxResult.OK) {
+                model.RemoveAndClearDialog();
+            }
         }
 
         private void DialogContextMenuOpened(object sender, RoutedEventArgs e) {
             
-
         }
 
         private void OnItemHold(object sender, GestureEventArgs e) {
