@@ -373,8 +373,9 @@ namespace Telegram.Model.Wrappers {
                     messages_StatedMessage message =
                         await TelegramSession.Instance.Api.messages_deleteChatUser(peerChat.chat_id, user);
                     // TODO: pts and seq
-                    TelegramSession.Instance.Dialogs.Model.Dialogs.Remove(this);
                 }
+
+                TelegramSession.Instance.Dialogs.Model.Dialogs.Remove(this);
             }
             catch (Exception ex) {
                 logger.error("exception: {0}", ex);
