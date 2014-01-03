@@ -59,6 +59,7 @@ namespace Telegram.UI {
 
             flow.LoginSuccessEvent += delegate(Login login) {
                 HideProgress();
+                TelegramSettings.Instance.Notifications().RegisterPushNotifications();
                 NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
             };
 

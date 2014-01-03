@@ -272,8 +272,9 @@ namespace Telegram.MTProto {
                 logger.info("error loading session, create new...: {0}", e);
                 ulong sessionId = Helpers.GenerateRandomUlong();
                 session = new TelegramSession(sessionId, 0);
-                // 173.240.5.1 
-                TelegramEndpoint endpoint = new TelegramEndpoint("173.240.5.253", 443);
+                // prod 173.240.5.1 
+                // test 173.240.5.253
+                TelegramEndpoint endpoint = new TelegramEndpoint("173.240.5.1", 443);
                 TelegramDC dc = new TelegramDC();
                 dc.Endpoints.Add(endpoint);
                 session.Dcs.Add(1, dc);

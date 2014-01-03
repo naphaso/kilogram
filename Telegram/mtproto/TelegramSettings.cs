@@ -4,10 +4,13 @@ using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Notifications;
 
 namespace Telegram.MTProto {
     class TelegramSettings {
         private static readonly TelegramSettings instance = new TelegramSettings();
+        private static readonly NotificationManager notifications = new NotificationManager();
+
         IsolatedStorageSettings settings;
         static TelegramSettings() {
             
@@ -21,6 +24,10 @@ namespace Telegram.MTProto {
             get {
                 return instance;
             }
+        }
+
+        public NotificationManager Notifications() {
+            return notifications;
         }
 
         public long TimeOffset {

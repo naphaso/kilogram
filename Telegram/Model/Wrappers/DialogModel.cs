@@ -11,7 +11,6 @@ using System.Collections.ObjectModel;
 ﻿using System.IO;
 ﻿using Telegram.Annotations;
 ﻿using Telegram.Core.Logging;
-﻿using Telegram.Model.Internal;
 ﻿using Telegram.MTProto;
 ﻿using Telegram.Utils;
 
