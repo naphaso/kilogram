@@ -55,9 +55,48 @@ namespace Telegram.MTProto {
             return string.Format("(Host: {0}, Port: {1})", host, port);
         }
     }
+
+    public class TelegramFileSession : ISession {
+        private ulong id;
+        private int sequence;
+
+        public TelegramFileSession(ulong id, int sequence) {
+            this.id = id;
+            this.sequence = sequence;
+        }
+
+        public TelegramFileSession(BinaryReader reader) {
+            Read(reader);
+        }
+
+        public ulong Id {
+            get { return id; }
+        }
+        public int GenerateSequence(bool confirmed) {
+            lock (this) {
+                return confirmed ? sequence++ * 2 + 1 : sequence * 2;
+            }
+        }
+
+        public void Write(BinaryWriter writer) {
+            writer.Write(id);
+            writer.Write(sequence);
+        }
+
+        public void Read(BinaryReader reader) {
+            id = reader.ReadUInt64();
+            sequence = reader.ReadInt32();
+        }
+    }
+
     public class TelegramDC {
         private List<TelegramEndpoint> endpoints; 
         private AuthKey authKey;
+        private TelegramFileSession fileSession;
+        private Auth_authorizationConstructor fileAuthorization;
+        // transient fields
+        private MTProtoGateway fileGateway = null;
+
 
         public TelegramDC(BinaryReader reader) {
             read(reader);
@@ -77,6 +116,32 @@ namespace Telegram.MTProto {
             set { authKey = value; }
         }
 
+        public async Task<MTProtoGateway> GetFileGateway() {
+            fileGateway = new MTProtoGateway(this, fileSession);
+            if(fileGateway != null) {
+                return fileGateway;
+            }
+
+            if(fileSession == null) {
+                fileSession = new TelegramFileSession(Helpers.GenerateRandomUlong(), 0);
+            }
+
+            fileGateway = new MTProtoGateway(this, fileSession);
+            await fileGateway.ConnectAsync();
+            return fileGateway;
+        }
+
+        public bool FileAuthorized {
+            get {
+                return fileAuthorization != null;
+            }
+        }
+
+        public void SaveFileAuthorization(auth_Authorization authorization) {
+            this.fileAuthorization = (Auth_authorizationConstructor) authorization;
+        }
+        
+
         public void write(BinaryWriter writer) {
             writer.Write(endpoints.Count);
             foreach(var telegramEndpoint in endpoints) {
@@ -88,6 +153,20 @@ namespace Telegram.MTProto {
             } else {
                 writer.Write(1);
                 Serializers.Bytes.write(writer, authKey.Data);    
+            }
+
+            if(fileSession == null) {
+                writer.Write(0);
+            } else {
+                writer.Write(1);
+                fileSession.Write(writer);
+            }
+
+            if(fileAuthorization == null) {
+                writer.Write(0);
+            } else {
+                writer.Write(1);
+                fileAuthorization.Write(writer);
             }
         }
 
@@ -103,6 +182,20 @@ namespace Telegram.MTProto {
                 authKey = null;
             } else {
                 authKey = new AuthKey(Serializers.Bytes.read(reader));    
+            }
+
+            int fileSessionExists = reader.ReadInt32();
+            if(fileSessionExists == 0) {
+                fileSession = null;
+            } else {
+                fileSession = new TelegramFileSession(reader);
+            }
+
+            int fileAuthExists = reader.ReadInt32();
+            if(fileAuthExists == 0) {
+                fileAuthorization = null;
+            } else {
+                fileAuthorization = (Auth_authorizationConstructor) TL.Parse<auth_Authorization>(reader);
             }
         }
 
@@ -129,6 +222,7 @@ namespace Telegram.MTProto {
 
         private Dialogs dialogs = null;
         private UpdatesProcessor updates = null;
+        private Files files = null;
         
         public TelegramSession(BinaryReader reader) {
             read(reader);
@@ -139,6 +233,7 @@ namespace Telegram.MTProto {
             dcs = new Dictionary<int, TelegramDC>();
             updates = new UpdatesProcessor(this);
             dialogs = new Dialogs(this);
+            files = new Files(this);
             users = new Dictionary<int, UserModel>();
             chats = new Dictionary<int, ChatModel>();
         }
@@ -172,6 +267,10 @@ namespace Telegram.MTProto {
 
         public Dialogs Dialogs {
             get { return dialogs; }
+        }
+
+        public Files Files {
+            get { return files; }
         }
 
         public void write(BinaryWriter writer) {
@@ -229,6 +328,7 @@ namespace Telegram.MTProto {
             updates = new UpdatesProcessor(this);
             logger.info("reading dialogs...");
             dialogs = new Dialogs(this, reader);
+            files = new Files(this);
 
             int usersCount = reader.ReadInt32();
             users = new Dictionary<int, UserModel>(usersCount + 10);
@@ -420,6 +520,40 @@ namespace Telegram.MTProto {
             gateway = null;
             establishedTask = new TaskCompletionSource<object>();
             await ConnectAsync();
+        }
+
+        public async Task<TLApi> GetFileSession(int dc) {
+            await Established;
+            ConfigConstructor config = (ConfigConstructor) gateway.Config;
+
+            TelegramDC targetDc;
+            if(dcs.ContainsKey(dc)) {
+                targetDc = dcs[dc];
+            } else {
+                targetDc = new TelegramDC();
+                foreach(var dcOption in config.dc_options) {
+                    DcOptionConstructor optionConstructor = (DcOptionConstructor) dcOption;
+                    if(optionConstructor.id == dc) {
+                        TelegramEndpoint endpoint = new TelegramEndpoint(optionConstructor.ip_address, optionConstructor.port);
+                    }
+                }
+
+                dcs[dc] = targetDc;
+            }
+
+            MTProtoGateway fileGateway = await targetDc.GetFileGateway();
+            TLApi fileGatewayApi = new TLApi(fileGateway);
+
+            if(targetDc.FileAuthorized) {
+                return fileGatewayApi;
+            } 
+
+            Task<auth_ExportedAuthorization> exportAuthTask = Api.auth_exportAuthorization(dc);
+            Auth_exportedAuthorizationConstructor exportedAuth = (Auth_exportedAuthorizationConstructor) await exportAuthTask;
+            auth_Authorization authorization = await fileGatewayApi.auth_importAuthorization(exportedAuth.id, exportedAuth.bytes);
+            targetDc.SaveFileAuthorization(authorization);
+
+            return fileGatewayApi;
         }
 
         public UserModel GetUser(int id) {

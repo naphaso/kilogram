@@ -101,10 +101,14 @@ namespace Telegram.MTProto {
             connectRetries = maxRetries;
             endpointIndex = 0;
             connectTaskCompletionSource = new TaskCompletionSource<object>();
-            if(Connect(dc)) {
-                await connectTaskCompletionSource.Task;
-            } else {
-                throw new TransportConnectException();
+            try {
+                if(Connect(dc)) {
+                    await connectTaskCompletionSource.Task;
+                } else {
+                    throw new TransportConnectException();
+                }
+            } finally {
+                connectTaskCompletionSource = new TaskCompletionSource<object>();    
             }
             logger.info("transport gateway connected");
         }
