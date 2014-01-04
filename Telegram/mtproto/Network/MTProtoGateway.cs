@@ -570,7 +570,7 @@ namespace Telegram.MTProto {
                 messageReader.ReadUInt32();
                 byte[] packedData = Serializers.Bytes.read(messageReader);
                 using(MemoryStream packedStream = new MemoryStream(packedData, false))
-                using(GZipStream zipStream = new GZipStream(, CompressionMode.Decompress))
+                using (GZipStream zipStream = new GZipStream(packedStream, CompressionMode.Decompress))
                 using(BinaryReader compressedReader = new BinaryReader(zipStream)) {
                     request.OnResponse(compressedReader);
                 }
