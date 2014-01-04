@@ -31,7 +31,8 @@ namespace Telegram.MTProto.Components {
                     TLApi api = await session.GetFileSession(location.dc_id);
                     Upload_fileConstructor file = (Upload_fileConstructor) await api.upload_getFile(TL.inputFileLocation(location.volume_id, location.local_id, location.secret), 0, int.MaxValue);
 
-                    using(Stream fileStream = new IsolatedStorageFileStream(filePath)) {
+                    using (Stream fileStream = new IsolatedStorageFileStream(filePath, FileMode.OpenOrCreate,
+                                                                          FileAccess.Write, storage)) {
                         await fileStream.WriteAsync(file.bytes, 0, file.bytes.Length);
                     }
 

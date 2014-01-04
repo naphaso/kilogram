@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Telegram.Annotations;
 using Telegram.MTProto;
 
@@ -39,6 +40,47 @@ namespace Telegram.Model.Wrappers {
             get {
                 return chat;
             }
+        }
+
+        public string AvatarPath {
+            get {
+                if (_avatarPath != null)
+                    return _avatarPath;
+
+                ChatPhoto avatarPhoto;
+                switch (chat.Constructor) {
+                    case Constructor.chatEmpty:
+                        avatarPhoto = TL.chatPhotoEmpty();
+                        break;
+                    case Constructor.chat:
+                        avatarPhoto = ((ChatConstructor)chat).photo;
+                        break;
+                    case Constructor.chatForbidden:
+                        avatarPhoto = TL.chatPhotoEmpty();
+                        break;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+
+                FileLocation avatarFileLocation = null;
+
+                if (avatarPhoto.Constructor != Constructor.chatPhoto) {
+                    _avatarPath = "/Assets/UI/placeholder.user.blue-WVGA.png";
+                    return _avatarPath;
+                }
+
+                avatarFileLocation = ((ChatPhotoConstructor)avatarPhoto).photo_small;
+
+                TelegramSession.Instance.Files.GetAvatar(avatarFileLocation).ContinueWith((path) => SetAvatarPath(path.Result));
+                _avatarPath = "/Assets/UI/placeholder.user.blue-WVGA.png";
+                return _avatarPath;
+            }
+        }
+
+        private string _avatarPath = null;
+        public void SetAvatarPath(string path) {
+            _avatarPath = path;
+            OnPropertyChanged("AvatarPath");
         }
 
         public string Title {

@@ -3,6 +3,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 ﻿using System.ComponentModel;
+﻿using System.Diagnostics;
 ﻿using System.Linq;
 ﻿using System.Runtime.CompilerServices;
 ﻿using System.Threading.Tasks;
@@ -101,6 +102,18 @@ namespace Telegram.Model.Wrappers {
                 }
 
                 return -1;
+            }
+        }
+
+        public string AvatarPath {
+            get {
+                if (dialog.peer.Constructor == Constructor.peerChat) {
+                    PeerChatConstructor peerChat = (PeerChatConstructor) dialog.peer ;
+                    ChatModel chat = TelegramSession.Instance.GetChat(peerChat.chat_id);
+                    return chat.AvatarPath;
+                }
+                
+                return "/Assets/UI/placeholder.user.blue-WVGA.png";
             }
         }
 

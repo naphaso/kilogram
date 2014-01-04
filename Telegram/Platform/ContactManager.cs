@@ -41,7 +41,7 @@ namespace Telegram.Platform {
 
         private async Task SyncContactsAsync(List<InputContact> contacts) {
             try {
-                await TelegramSession.Instance.Api.contacts_getContacts()
+//                await TelegramSession.Instance.Api.contacts_getContacts()
                 await TelegramSession.Instance.Api.contacts_importContacts(contacts, true);
             }
             catch (Exception ex) {
