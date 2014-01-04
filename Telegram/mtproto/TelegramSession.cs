@@ -544,7 +544,7 @@ namespace Telegram.MTProto {
             MTProtoGateway fileGateway = await targetDc.GetFileGateway();
             TLApi fileGatewayApi = new TLApi(fileGateway);
 
-            if(targetDc.FileAuthorized) {
+            if(targetDc.FileAuthorized || dc == mainDcId) {
                 return fileGatewayApi;
             } 
 
