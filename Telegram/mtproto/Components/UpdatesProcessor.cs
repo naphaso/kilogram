@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Documents;
+using Microsoft.Xna.Framework.GamerServices;
+using Telegram.Core;
 using Telegram.Core.Logging;
 
 namespace Telegram.MTProto.Components {
     public delegate void NewMessageHandler(Message message);
+
 
     public class UpdatesProcessor {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(UpdatesProcessor));
@@ -14,9 +20,161 @@ namespace Telegram.MTProto.Components {
 
         public event NewMessageHandler NewMessageEvent;
 
+        // update state
+        private int pts;
+        private int qts;
+        private int date;
+        private int seq;
+        private int unread_count; // needed? 
+        private int friends_unread_count;  // needed?
+
         public UpdatesProcessor(TelegramSession session) {
             this.session = session;
+            DifferenceExecutor = new RequestTask(async delegate {
+                await this.session.Api.updates_getDifference(pts, date, qts);
+            });
         }
+
+        // update request
+        private RequestTask DifferenceExecutor;
+
+        // save and load
+        public void Write(BinaryWriter writer) {
+            lock(this) {
+                writer.Write(pts);
+                writer.Write(qts);
+                writer.Write(date);
+                writer.Write(seq);
+                logger.debug("saved updates state: pts {0}, qts {1}, date {2}, seq {3}", pts, qts, date, seq);
+            }
+        }
+
+        public void Read(BinaryReader reader) {
+            lock(this) {
+                pts = reader.ReadInt32();
+                qts = reader.ReadInt32();
+                date = reader.ReadInt32();
+                seq = reader.ReadInt32();
+                logger.debug("loaded updates state: pts {0}, qts {1}, date {2}, seq {3}", pts, qts, date, seq);
+            }
+        }
+
+        // update numbers processing methods
+        private void updatePts(int pts) {
+            logger.info("update pts from {0} to {1}", this.pts, pts);
+            lock(this) {
+                this.pts = pts;    
+            }
+        }
+
+        private bool updateSeq(int seq) {
+            lock(this) {
+                logger.info("update seq from {0} to {1}", this.seq, seq);
+                if(seq == 0) {
+                    return true;
+                }
+
+                if(seq <= this.seq) {
+                    logger.debug("update alteady taken, skip");
+                    return false;
+                }
+
+                if(seq - this.seq > 1) {
+                    logger.warning("lost updates! skip and force get difference");
+                    // TODO: get difference request
+                    return false;
+                }
+
+                logger.info("regular update");
+
+                this.seq = seq;
+                return true;
+            }
+        }
+
+        private bool updateSeq(int startSeq, int seq) {
+            lock(this) {
+                logger.info("update seq combined: stored seq {0}, start seq {1}, new seq {2}", this.seq, startSeq, seq);
+
+                if(seq == 0) {
+                    return true;
+                }
+
+                if(seq <= this.seq) {
+                    logger.info("update already taken, skip");
+                    return false;
+                }
+
+                if(startSeq - this.seq > 1) {
+                    logger.warning("lost updates! skip and force get difference");
+                    // TODO: get difference
+                    return false;
+                }
+
+                logger.info("regular combined update");
+                this.seq = seq;
+                return true;
+            }
+        }
+
+        public bool processUpdatePtsSeq(int pts, int seq) {
+            lock(this) {
+                if(updateSeq(seq)) {
+                    this.pts = pts;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public bool processUpdatePtsSeqDate(int pts, int seq, int date) {
+            lock(this) {
+                if(updateSeq(seq)) {
+                    this.pts = pts;
+                    this.date = date;
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+        }
+
+        public bool processUpdateSeqDate(int seq, int date) {
+            lock(this) {
+                if(updateSeq(seq)) {
+                    this.date = date;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public bool processUpdateDate(int date) {
+            lock(this) {
+                if(this.date <= date) {
+                    this.date = date;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+
+        public bool processUpdateSeqRangeDate(int seqStart, int seq, int date) {
+            lock(this) {
+                if(updateSeq(seqStart, seq)) {
+                    this.date = date;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
 
         public void ProcessUpdates(Updates update) {
             logger.info("processing updates: {0}", update);
@@ -43,40 +201,70 @@ namespace Telegram.MTProto.Components {
         }
 
         private void ProcessUpdate(UpdatesTooLongConstructor update) {
-            // process to long updates
+            // TODO: force get difference
         }
 
         private void ProcessUpdate(UpdateShortMessageConstructor update) {
             logger.info("processing short message: {0}", update);
-            // TODO: process pts, seq
+            if(!processUpdatePtsSeqDate(update.pts, update.seq, update.date)) {
+                return;
+            }
+
             Message message = TL.message(update.id, update.from_id, session.SelfPeer, false, true, update.date, update.message, TL.messageMediaEmpty());
             NewMessageEvent(message);
         }
 
         private void ProcessUpdate(UpdateShortChatMessageConstructor update) {
-            // TODO: process pts, seq
+            logger.info("processing short chat message: {0}", update);
+            if(!processUpdatePtsSeqDate(update.pts, update.seq, update.date)) {
+                return;
+            }
+
             Message message = TL.message(update.id, update.from_id, TL.peerChat(update.chat_id), false, true, update.date, update.message, TL.messageMediaEmpty());
             NewMessageEvent(message);
         }
 
         private void ProcessUpdate(UpdateShortConstructor update) {
-            // TODO: work with date
+            this.date = update.date;
+
             ProcessUpdate(update.update);
         }
 
 
 
         private void ProcessUpdate(UpdatesCombinedConstructor update) {
-            // TODO: process users,chats,date, seq_start, seq_end
+            if(!processUpdateSeqRangeDate(update.seq_start, update.seq, date)) {
+                return;
+            }
+
+            // TODO: process users,chats
+            
             foreach(var innerUpdate in update.updates) {
                 ProcessUpdate(innerUpdate);
             }
         }
 
         private void ProcessUpdate(UpdatesConstructor update) {
+            if(!processUpdateSeqDate(update.seq, update.date)) {
+                return;
+            }
+
             // TODO: process users, chats, date, seq
+
             foreach(var innerUpdate in update.updates) {
                 ProcessUpdate(innerUpdate);
+            }
+        }
+
+        // retreiving state
+        private async Task GetStateRequest() {
+            Updates_stateConstructor state = (Updates_stateConstructor) await session.Api.updates_getState();
+            lock(this) {
+                logger.debug("setting update state: pts {0}, qts {1}, seq {2}, date {3}", state.pts, state.qts, state.seq, state.date);
+                this.pts = state.pts;
+                this.qts = state.qts;
+                this.seq = state.seq;
+                this.date = state.date;
             }
         }
 
@@ -157,7 +345,7 @@ namespace Telegram.MTProto.Components {
         }
 
         private void ProcessUpdate(UpdateNewMessageConstructor update) {
-            // TODO: process pts
+            updatePts(update.pts);
             NewMessageEvent(update.message);
         }
 
@@ -166,71 +354,73 @@ namespace Telegram.MTProto.Components {
         }
 
         private void ProcessUpdate(UpdateReadMessagesConstructor update) {
+            updatePts(update.pts);
 
         }
         private void ProcessUpdate(UpdateDeleteMessagesConstructor update) {
-
+            updatePts(update.pts);
         }
         private void ProcessUpdate(UpdateRestoreMessagesConstructor update) {
+            updatePts(update.pts);
 
         }
         private void ProcessUpdate(UpdateUserTypingConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateChatUserTypingConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateChatParticipantsConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateUserStatusConstructor update) {
-
+            
         }
 
         private void ProcessUpdate(UpdateUserNameConstructor update) {
-
+            
         }
 
         private void ProcessUpdate(UpdateUserPhotoConstructor update) {
-
+            
         }
 
         private void ProcessUpdate(UpdateContactRegisteredConstructor update) {
-
+            
         }
 
         private void ProcessUpdate(UpdateContactLinkConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateActivationConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateNewAuthorizationConstructor update) {
 
         }
         private void ProcessUpdate(UpdateNewGeoChatMessageConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateNewEncryptedMessageConstructor update) {
-
+            // TODO: update qts
         }
         private void ProcessUpdate(UpdateEncryptedChatTypingConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateEncryptionConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateEncryptedMessagesReadConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateChatParticipantAddConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateChatParticipantDeleteConstructor update) {
-
+            
         }
         private void ProcessUpdate(UpdateDcOptionsConstructor update) {
-
+            
         }
 
 

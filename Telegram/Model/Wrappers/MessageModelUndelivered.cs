@@ -43,7 +43,7 @@ namespace Telegram.Model.Wrappers {
         public override void Write(BinaryWriter writer) {
             writer.Write(2);
 
-            Serializers.String.write(writer, Text);
+            Serializers.String.write(writer, _text);
             writer.Write(DateTimeExtensions.GetUnixTimestampSeconds(Timestamp));
             writer.Write((int) MessageType);
         }

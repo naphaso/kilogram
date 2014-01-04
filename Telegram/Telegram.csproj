@@ -93,8 +93,8 @@
     <Compile Include="ChatNotice.xaml.cs">
       <DependentUpon>ChatNotice.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\RequestTask.cs" />
     <Compile Include="Model\DateTimeExtensions.cs" />
-    <Compile Include="Model\Providers.cs" />
     <Compile Include="Model\Wrappers\ChatModel.cs" />
     <Compile Include="Model\Wrappers\DialogListModel.cs" />
     <Compile Include="Model\Wrappers\DialogModel.cs" />
