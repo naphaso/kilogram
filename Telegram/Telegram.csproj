@@ -102,6 +102,7 @@
     <Compile Include="Model\Wrappers\MessageModelDelivered.cs" />
     <Compile Include="Model\Wrappers\MessageModelUndelivered.cs" />
     <Compile Include="Model\Wrappers\UserModel.cs" />
+    <Compile Include="MTProto\Components\Files.cs" />
     <Compile Include="MTProto\Components\UpdatesProcessor.cs" />
     <Compile Include="MTProto\TLStuff.cs" />
     <Compile Include="Notifications\NotificationManager.cs" />

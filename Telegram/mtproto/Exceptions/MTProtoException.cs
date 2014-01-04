@@ -29,4 +29,8 @@ namespace Telegram.MTProto.Exceptions {
     class MTProtoBrokenSessionException : MTProtoException {
 
     }
+
+    class MTProtoFileUnavailableException : MTProtoException {
+        
+    }
 }
