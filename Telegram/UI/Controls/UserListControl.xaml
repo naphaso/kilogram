@@ -18,11 +18,9 @@
 
         <DataTemplate x:Key="ContactTemplate">
             <ListBoxItem>
-                <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
-                    <Grid  Height="82">
-                        <TextBlock Text="{Binding Name}" Margin="80,17,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42" FontSize="34.667"/>
-                        <Rectangle Fill="#FF333333" Margin="10,10,384,10" Stroke="Black" Width="62"/>
-                    </Grid>
+                <StackPanel Orientation="Horizontal" toolkit:TiltEffect.IsTiltEnabled="True" Height="82">
+                    <Rectangle Fill="#FF333333" VerticalAlignment="Center" Stroke="Black" Width="62" Height="62"/>
+                    <TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" VerticalAlignment="Center" Style="{StaticResource PhoneTextLargeStyle}" FontSize="34.667"/>
                 </StackPanel>
             </ListBoxItem>
         </DataTemplate>
@@ -72,14 +70,24 @@
     </UserControl.Resources>
     
     <Grid>
-        <phone:LongListSelector 
-            ItemTemplate="{StaticResource UserSelectingTemplate}"
-            GroupHeaderTemplate="{StaticResource UserGroupHeaderTemplate}"
-            Name="ContactsList"
-            LayoutMode="List"
-            IsGroupingEnabled="true"
-            HideEmptyGroups ="true"
-            VerticalAlignment="Top"/>
+        <ScrollViewer>
+            <StackPanel>
+                <phone:LongListSelector 
+                    ItemTemplate="{StaticResource UserSelectingTemplate}"
+                    Name="FriendsList"
+                    LayoutMode="List"
+                VerticalAlignment="Top"/>
+                <phone:LongListSelector 
+                    ItemTemplate="{StaticResource ContactTemplate}"
+                    Name="ContactsList"
+                    IsGroupingEnabled="true"
+                    SelectionChanged="AddressbookContactSelected"
+                    HideEmptyGroups ="true"
+                    GroupHeaderTemplate="{StaticResource UserGroupHeaderTemplate}"
+                    LayoutMode="List"
+                    VerticalAlignment="Top"/>
+            </StackPanel>
+        </ScrollViewer>
 
     </Grid>
 </UserControl>

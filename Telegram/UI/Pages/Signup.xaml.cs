@@ -63,7 +63,7 @@ namespace Telegram.UI {
                 NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
             };
 
-            await flow.Start();
+            flow.Start();
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e) {

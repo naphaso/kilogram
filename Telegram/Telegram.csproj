@@ -104,7 +104,8 @@
     <Compile Include="Model\Wrappers\UserModel.cs" />
     <Compile Include="MTProto\Components\UpdatesProcessor.cs" />
     <Compile Include="MTProto\TLStuff.cs" />
-    <Compile Include="Notifications\NotificationManager.cs" />
+    <Compile Include="Platform\ContactManager.cs" />
+    <Compile Include="Platform\NotificationManager.cs" />
     <Compile Include="SecretChatNotice.xaml.cs">
       <DependentUpon>SecretChatNotice.xaml</DependentUpon>
     </Compile>

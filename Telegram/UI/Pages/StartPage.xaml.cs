@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto;
 using Telegram.UI.Controls;
 using Telegram.UI.Models;
 using Telegram.UI.Models.Users;
+using Contact = Microsoft.Phone.UserData.Contact;
 
 namespace Telegram.UI
 {
@@ -24,6 +28,14 @@ namespace Telegram.UI
 
         public static DialogsModel Dialogs {
             get { return _dialogs ?? (_dialogs = new DialogsModel()); }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e) {
+            base.OnNavigatedFrom(e);
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e) {
+            base.OnNavigatedTo(e);
         }
 
         public StartPage()
@@ -40,6 +52,33 @@ namespace Telegram.UI
 //                logger.debug("Selected dialog with user/chat ID=" + userId);
                 NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml?modelId=" + modelId, UriKind.Relative));
             };
+
+            ContactList.AddressbookUserSelected += ContactListOnAddressbookUserSelected;
+
+            TelegramSettings.Instance.Notifications().RegisterPushNotifications();
+        }
+
+        private void ContactListOnAddressbookUserSelected(object sender, Contact contact) {
+            InviteContactAsync(contact);
+        }
+
+        private async Task InviteContactAsync(Contact contact) {
+            try {
+                ContactsProgressBar.Visibility = Visibility.Visible;
+                help_InviteText text = await TelegramSession.Instance.Api.help_getInviteText("en");
+                Help_inviteTextConstructor textCtor = (Help_inviteTextConstructor) text;
+
+                SmsComposeTask smsComposeTask = new SmsComposeTask();
+
+                smsComposeTask.To = contact.PhoneNumbers.ToList()[0].PhoneNumber;
+                smsComposeTask.Body = textCtor.message;
+                smsComposeTask.Show();
+
+                ContactsProgressBar.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception ex) {
+                logger.error("exception {0}", ex);
+            }
         }
 
         private void New_Click(object sender, EventArgs e) {

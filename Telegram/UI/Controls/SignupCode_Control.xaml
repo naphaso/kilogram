@@ -12,7 +12,7 @@
     <StackPanel x:Name="LayoutRoot">
         <TextBlock TextWrapping="Wrap" Text="Code" Style="{StaticResource TextBlockFieldHint}" Margin="12,0,6,-5" Height="27"/>
 
-        <TextBox Name="Code" TextWrapping="Wrap" BorderThickness="3" HorizontalContentAlignment="Left" Height="72"/>
+        <TextBox InputScope="Digits" Name="Code" TextWrapping="Wrap" BorderThickness="3" HorizontalContentAlignment="Left" Height="72"/>
         <TextBlock Name="CodeInvalidTextBlock" Visibility="Collapsed" TextWrapping="Wrap" Text="Code is invalid" Foreground="Red" Style="{StaticResource TextBlockFieldHint}" Margin="12,0,6,-5" Height="27"/>
         <TextBlock Name="TimerTextBlock" TextWrapping="Wrap" Text="We will call you in 0:59" Style="{StaticResource TextBlockFieldHint}" Margin="12,20,6,0" Height="27"/>
 
