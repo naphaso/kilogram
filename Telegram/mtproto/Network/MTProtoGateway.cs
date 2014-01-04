@@ -568,7 +568,9 @@ namespace Telegram.MTProto {
             } else if(innerCode == 0x3072cfa1) {
                 // gzip_packed
                 messageReader.ReadUInt32();
-                using(GZipStream zipStream = new GZipStream(messageReader.BaseStream, CompressionMode.Decompress))
+                byte[] packedData = Serializers.Bytes.read(messageReader);
+                using(MemoryStream packedStream = new MemoryStream(packedData, false))
+                using(GZipStream zipStream = new GZipStream(, CompressionMode.Decompress))
                 using(BinaryReader compressedReader = new BinaryReader(zipStream)) {
                     request.OnResponse(compressedReader);
                 }
