@@ -19,6 +19,7 @@ namespace Telegram.Notifications {
         private static string AppVersion = "1.0";
         public async void RegisterPushNotifications() {
             try {
+                await TelegramSession.Instance.Established;
 
                 var pushChannel = HttpNotificationChannel.Find(ChannelName);
 
@@ -37,14 +38,15 @@ namespace Telegram.Notifications {
 
                     // Bind this new channel for toast events.
                     pushChannel.BindToShellToast();
+                    
                     bool register = await
     TelegramSession.Instance.Api.account_registerDevice(3, pushChannel.ChannelUri.ToString(), DeviceStatus.DeviceName,
         Environment.OSVersion.ToString(), AppVersion, true, "ru");
-                    logger.debug("Registering GCM result {}", register.ToString());
+                    logger.debug("Registering GCM result {0}", register.ToString());
                 } else {
                     bool register = await TelegramSession.Instance.Api.account_registerDevice(3, pushChannel.ChannelUri.ToString(), DeviceStatus.DeviceName,
     Environment.OSVersion.ToString(), AppVersion, true, "ru");
-                    logger.debug("Registering GCM result {}", register.ToString());
+                    logger.debug("Registering GCM result {0}", register.ToString());
 
                     // The channel was already open, so just register for all the events.
                     pushChannel.ChannelUriUpdated += new EventHandler<NotificationChannelUriEventArgs>(PushChannel_ChannelUriUpdated);
@@ -134,8 +136,10 @@ namespace Telegram.Notifications {
                 }
             }
 
-            logger.debug("MPNS message {}", message.ToString());
-            Toaster.Show("MPNS", message.ToString());
+            logger.debug("MPNS message {0}", message.ToString());
+            Deployment.Current.Dispatcher.BeginInvoke(() => Toaster.Show("MPNS", message.ToString()));
+
+//            Toaster.Show("MPNS", message.ToString());
             // Display a dialog of all the fields in the toast.
 //            Dispatcher.BeginInvoke(() => MessageBox.Show(message.ToString()));
 

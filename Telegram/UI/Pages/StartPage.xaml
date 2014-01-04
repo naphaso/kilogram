@@ -46,7 +46,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        <ProgressBar Name="ContactsProgressBar" IsIndeterminate="true" VerticalAlignment="Top" Visibility="Collapsed" />
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="0,17,0,28">
             <TextBlock Text="TELEGRAM" Style="{StaticResource PhoneTextNormalStyle}" toolkit:TurnstileFeatherEffect.FeatheringIndex="1"/>
@@ -59,7 +59,7 @@
                 </phone:PivotItem>
                 <phone:PivotItem Header="contacts">
                     <Grid Grid.Row="1" Height="500">
-                        <controls:UserListControl/>
+                        <controls:UserListControl Name="ContactList"/>
                     </Grid>
                 </phone:PivotItem>
             </phone:Pivot>
