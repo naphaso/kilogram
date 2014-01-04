@@ -4,10 +4,13 @@
 using System.Collections.ObjectModel;
 ﻿using System.ComponentModel;
 ﻿using System.Diagnostics;
+﻿using System.IO.IsolatedStorage;
 ﻿using System.Linq;
 ﻿using System.Runtime.CompilerServices;
 ﻿using System.Threading.Tasks;
 ﻿using System.Windows;
+﻿using System.Windows.Media.Imaging;
+﻿using Coding4Fun.Toolkit.Controls.Common;
 ﻿using Microsoft.Phone.Reactive;
 ﻿using System.IO;
 ﻿using Telegram.Annotations;
@@ -75,6 +78,8 @@ namespace Telegram.Model.Wrappers {
                 OnPropertyChanged("Title");
             } else if (propertyChangedEventArgs.PropertyName == "Status") {
                 OnPropertyChanged("Status");
+            } else if (propertyChangedEventArgs.PropertyName == "AvatarPath") {
+                OnPropertyChanged("AvatarPath");
             }
         }
 
@@ -105,15 +110,26 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public string AvatarPath {
+        public BitmapImage AvatarPath {
             get {
                 if (dialog.peer.Constructor == Constructor.peerChat) {
                     PeerChatConstructor peerChat = (PeerChatConstructor) dialog.peer ;
                     ChatModel chat = TelegramSession.Instance.GetChat(peerChat.chat_id);
-                    return chat.AvatarPath;
+                    string avatarPath = chat.AvatarPath;
+                    if (avatarPath == null)
+                        return new BitmapImage(new Uri("/Assets/UI/placeholder.user.blue-WVGA.png", UriKind.Relative));
+
+                    BitmapImage bi = new BitmapImage();
+                    
+                    using (var iso = IsolatedStorageFile.GetUserStoreForApplication()) {
+                        using (var stream = iso.OpenFile(avatarPath, FileMode.Open, FileAccess.Read)) {
+                            bi.SetSource(stream);
+                        }
+                    }
+                    return bi;
                 }
                 
-                return "/Assets/UI/placeholder.user.blue-WVGA.png";
+                return new BitmapImage(new Uri("/Assets/UI/placeholder.user.blue-WVGA.png", UriKind.Relative));
             }
         }
 

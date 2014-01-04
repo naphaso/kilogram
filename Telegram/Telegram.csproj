@@ -252,6 +252,7 @@
     </Compile>
     <Compile Include="Utils\Formatters.cs" />
     <Compile Include="Utils\Helpers.cs" />
+    <Compile Include="Utils\ImageByteArrayAttachedProperty.cs" />
     <Compile Include="Utils\ObservableCollectionUI.cs" />
   </ItemGroup>
   <ItemGroup>
