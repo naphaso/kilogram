@@ -180,7 +180,6 @@ namespace Telegram.MTProto {
         }
 
         private void GatewayOnInput(object sender, byte[] data) {
-            logger.info("on input event: {0}", BitConverter.ToString(data));
 
             ulong remoteSalt;
             ulong remoteSessionId;
@@ -208,7 +207,7 @@ namespace Telegram.MTProto {
                     message = plaintextReader.ReadBytes(msgLen);
                 }
 
-                logger.info("salt: {0}, session {1}, msgid {2}, seqno {3}, msg {4}", remoteSalt, remoteSessionId, remoteMessageId, remoteSequence, BitConverter.ToString(message).Replace("-", ""));
+                logger.info("salt: {0}, session {1}, msgid {2}, seqno {3}", remoteSalt, remoteSessionId, remoteMessageId, remoteSequence);
             }
 
             using(MemoryStream messageStream = new MemoryStream(message, false))

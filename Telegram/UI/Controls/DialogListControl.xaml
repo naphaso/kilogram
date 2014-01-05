@@ -23,8 +23,8 @@
                         </toolkit:ContextMenu>
                     </toolkit:ContextMenuService.ContextMenu>
                     <TextBlock Text="{Binding Preview}" Margin="90,54,50,20" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP Light" FontSize="18" Style="{StaticResource TextBlockFieldHint}"/>
-                    <TextBlock Text="{Binding TimeOrDate}" Margin="0,54,-1,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top" FontFamily="Segoe WP" FontSize="18" Style="{StaticResource TextBlockFieldHint}"/>
-                    <Image Margin="12,19,0,0" Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding Timestamp}" Margin="0,54,-1,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top" FontFamily="Segoe WP" FontSize="18" Style="{StaticResource TextBlockFieldHint}"/>
+                    <Image Margin="12,19,0,0" Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                     <TextBlock Text="{Binding Title}" Margin="90,10,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
                 </Grid>
             </StackPanel>
@@ -41,7 +41,7 @@
                         </toolkit:ContextMenu>
                     </toolkit:ContextMenuService.ContextMenu>
                     <TextBlock Margin="90,73,50,0" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" Text="{Binding Preview}" FontSize="18" FontFamily="Segoe WP Light" Style="{StaticResource TextBlockFieldHint}"/>
-                    <TextBlock Text="{Binding TimeOrDate}" Margin="0,52,-1,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top" FontSize="18" Style="{StaticResource TextBlockFieldHint}"/>
+                        <TextBlock Text="{Binding Timestamp}" Margin="0,52,-1,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top" FontSize="18" Style="{StaticResource TextBlockFieldHint}"/>
 <!--                        utils:ImageByteArrayAttachedProperty.ByteArraySource-->
                         <Image Margin="12,19,0,0" Source="{Binding AvatarPath}"  Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                     <TextBlock Margin="90,10,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42" Text="{Binding Title}"/>

@@ -55,6 +55,7 @@ namespace Telegram.Model.Wrappers {
                 case Constructor.peerChat:
                     var peerChat = dialog.peer as PeerChatConstructor;
                     var chat = session.GetChat(peerChat.chat_id);
+                    logger.debug("Subscribing PropertyChanged for chat {0}", peerChat);
 
                     chat.PropertyChanged += DialogOnPropertyChanged;
 
@@ -62,6 +63,8 @@ namespace Telegram.Model.Wrappers {
                 case Constructor.peerUser:
                     var peerUser = dialog.peer as PeerUserConstructor;
                     var user = session.GetUser(peerUser.user_id);
+
+                    logger.debug("Subscribing PropertyChanged for user {0}", peerUser);
 
                     user.PropertyChanged += DialogOnPropertyChanged;
 
@@ -71,7 +74,7 @@ namespace Telegram.Model.Wrappers {
 
         // proxy method from holded dialog object (user or chat)
         private void DialogOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs) {
-            logger.debug("Property changing [Title] " + propertyChangedEventArgs.PropertyName);
+            logger.debug("Property changing [{0}] ", propertyChangedEventArgs.PropertyName);
 
             if (propertyChangedEventArgs.PropertyName == "Title"
                 || propertyChangedEventArgs.PropertyName == "FullName") {
@@ -79,6 +82,7 @@ namespace Telegram.Model.Wrappers {
             } else if (propertyChangedEventArgs.PropertyName == "Status") {
                 OnPropertyChanged("Status");
             } else if (propertyChangedEventArgs.PropertyName == "AvatarPath") {
+                logger.debug("Property is AvatarPath");
                 OnPropertyChanged("AvatarPath");
             }
         }
@@ -113,25 +117,17 @@ namespace Telegram.Model.Wrappers {
         public BitmapImage AvatarPath {
             get {
                 if (dialog.peer.Constructor == Constructor.peerChat) {
-                    PeerChatConstructor peerChat = (PeerChatConstructor) dialog.peer ;
+                    PeerChatConstructor peerChat = (PeerChatConstructor) dialog.peer;
                     ChatModel chat = TelegramSession.Instance.GetChat(peerChat.chat_id);
-                    string avatarPath = chat.AvatarPath;
-                    if (avatarPath == null)
-                        return new BitmapImage(new Uri("/Assets/UI/placeholder.user.blue-WVGA.png", UriKind.Relative));
-
-                    BitmapImage bi = new BitmapImage();
-                    
-                    using (var iso = IsolatedStorageFile.GetUserStoreForApplication()) {
-                        using (var stream = iso.OpenFile(avatarPath, FileMode.Open, FileAccess.Read)) {
-                            bi.SetSource(stream);
-                        }
-                    }
-                    return bi;
+                    return chat.AvatarPath;
                 }
-                
-                return new BitmapImage(new Uri("/Assets/UI/placeholder.user.blue-WVGA.png", UriKind.Relative));
+
+                PeerUserConstructor peerUser = (PeerUserConstructor) dialog.peer;
+                UserModel user = TelegramSession.Instance.GetUser(peerUser.user_id);
+                return user.AvatarPath;
             }
         }
+
 
         public Peer Peer {
             get {
@@ -190,6 +186,35 @@ namespace Telegram.Model.Wrappers {
                 }
 
                 return title;
+            }
+        }
+
+        public string Timestamp {
+            get {
+
+                MessageModel messageModel = messages.Last();
+                if (messageModel.Delivered == false) {
+                    return Formatters.FormatDialogDateTimestamp(((MessageModelUndelivered)messageModel).Timestamp);
+                }
+
+                string timestamp = "";
+                var topMessage = ((MessageModelDelivered)messageModel).RawMessage;
+
+                switch (topMessage.Constructor) {
+                    case Constructor.message:
+                        timestamp = Formatters.FormatDialogDateTimestampUnix(((MessageConstructor)topMessage).date);
+                        break;
+                    case Constructor.messageForwarded:
+                        timestamp = Formatters.FormatDialogDateTimestampUnix(((MessageForwardedConstructor)topMessage).date);
+                        break;
+                    case Constructor.messageService:
+                        timestamp = Formatters.FormatDialogDateTimestampUnix(((MessageServiceConstructor)topMessage).date);
+                        break;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+
+                return timestamp;
             }
         }
 
