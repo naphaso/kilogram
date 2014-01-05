@@ -97,8 +97,8 @@
 		<!--TitlePanel contains the name of the application and page title-->
 		<Grid Name="DialogHeader" Tap="OnHeaderTap" Grid.Row="0" Margin="12,17,0,10" Height="70">
 			<StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                <TextBlock Name="DialogNameTextBlock" Text="{Binding Title, TargetNullValue=Loading}" Style="{StaticResource PhoneTextNormalStyle}" Margin="0,0,-82,0" FontSize="32" FontFamily="Segoe WP Light" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-				<TextBlock Name="DialogStatusTextBlock" Text="{Binding Status, TargetNullValue='dialog is loading'}" Style="{StaticResource TextBlockFieldHint}" Margin="0,0,-82,0" FontSize="18.667" FontFamily="Segoe WP SemiLight" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Name="DialogNameTextBlock" Text="{Binding Title}" Style="{StaticResource PhoneTextNormalStyle}" Margin="0,0,-82,0" FontSize="32" FontFamily="Segoe WP Light" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				<TextBlock Name="DialogStatusTextBlock" Text="{Binding Status}" Style="{StaticResource TextBlockFieldHint}" Margin="0,0,-82,0" FontSize="18.667" FontFamily="Segoe WP SemiLight" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 			</StackPanel>
 			<Image Margin="396,0,10,0" Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Width="55" Height="55" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 			<Rectangle Margin="0" Canvas.ZIndex="2" StrokeThickness="5"/>

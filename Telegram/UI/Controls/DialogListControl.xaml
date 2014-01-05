@@ -26,7 +26,7 @@
                             </toolkit:ContextMenu>
                         </toolkit:ContextMenuService.ContextMenu>
                         <Grid VerticalAlignment="Top" Margin="90,48,0,0">
-                            <TextBlock Text="{Binding Preview}" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Left" MaxWidth="300" />
+                            <TextBlock Foreground="{Binding StatusObject, Converter={StaticResource ColorConverter}}" Text="{Binding StatusObject, Converter={StaticResource StringConverter}}" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Left" MaxWidth="300" />
                             <TextBlock Text="{Binding Timestamp}" TextWrapping="Wrap" FontFamily="Segoe WP Semibold" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Right" />
                         </Grid>
                         <Image Margin="12,12,0,12" VerticalAlignment="Top" Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" HorizontalAlignment="Left"/>

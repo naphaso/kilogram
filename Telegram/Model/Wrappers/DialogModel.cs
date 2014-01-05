@@ -165,6 +165,7 @@ namespace Telegram.Model.Wrappers {
             get {
                 if (dialog.peer.Constructor == Constructor.peerUser) {
                     if (userTyping != null) {
+                        logger.debug("StatusObject typing");
                         _currentStatus.String = "typing...";
                         _currentStatus.Type = StatusType.Activity;
                     }
@@ -174,6 +175,7 @@ namespace Telegram.Model.Wrappers {
                     }
                 } else { // peer chat
                     if (chatTyping.Count != 0) {
+                        logger.debug("StatusObject typing");
                         _currentStatus.String = String.Format("{0} users typing...", chatTyping.Count);
                         _currentStatus.Type = StatusType.Activity;
                     }
@@ -432,7 +434,10 @@ namespace Telegram.Model.Wrappers {
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            if (handler != null) {
+                logger.debug("property [{0}] is changed", propertyName);
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public void ProcessNewMessage(MessageModel messageModel) {
@@ -501,6 +506,7 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void SetTyping(int userid) {
+            logger.debug("user {0} in chat typing in dialog model", userid);
             if(dialog.peer.Constructor == Constructor.peerUser) {
                 logger.warning("invalid chat typing event for user dialog");
                 return;
@@ -515,6 +521,7 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void SetTyping() {
+            logger.debug("user typing in dialog model");
             if(dialog.peer.Constructor == Constructor.peerChat) {
                 logger.warning("invalid user typing event for chat dialog");
                 return;

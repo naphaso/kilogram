@@ -383,9 +383,11 @@ namespace Telegram.MTProto.Components {
 
         }
         private void ProcessUpdate(UpdateUserTypingConstructor update) {
+            logger.debug("user typing update");
             UserTypingEvent(update.user_id);
         }
         private void ProcessUpdate(UpdateChatUserTypingConstructor update) {
+            logger.debug("chat typing update");
             ChatTypingEvent(update.chat_id, update.user_id);
         }
         private void ProcessUpdate(UpdateChatParticipantsConstructor update) {

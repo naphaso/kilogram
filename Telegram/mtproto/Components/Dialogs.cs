@@ -75,10 +75,12 @@ namespace Telegram.MTProto.Components {
         }
 
         public void SetUserTyping(int userid) {
+            logger.debug("user {0} typing in dialog", userid);
             Deployment.Current.Dispatcher.BeginInvoke(() => model.SetUserTyping(userid));
         }
 
         public void SetChatTyping(int chatid, int userid) {
+            logger.debug("user {0} typing in chat {1}", userid, chatid);
             Deployment.Current.Dispatcher.BeginInvoke(() => model.SetUserTyping(chatid, userid));
         }
 
