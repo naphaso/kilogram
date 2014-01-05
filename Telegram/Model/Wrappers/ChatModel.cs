@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -65,15 +66,20 @@ namespace Telegram.Model.Wrappers {
                 FileLocation avatarFileLocation = null;
 
                 if (avatarPhoto.Constructor != Constructor.chatPhoto) {
-                    _avatarPath = "/Assets/UI/placeholder.user.blue-WVGA.png";
-                    return _avatarPath;
+                    return null;
                 }
 
                 avatarFileLocation = ((ChatPhotoConstructor)avatarPhoto).photo_small;
 
-                TelegramSession.Instance.Files.GetAvatar(avatarFileLocation).ContinueWith((path) => SetAvatarPath(path.Result));
-                _avatarPath = "/Assets/UI/placeholder.user.blue-WVGA.png";
-                return _avatarPath;
+                Task<string> getFileTask = TelegramSession.Instance.Files.GetAvatar(avatarFileLocation);
+                if (getFileTask.IsCompleted) {
+                    return getFileTask.Result;
+                }
+                else {
+                    getFileTask.ContinueWith((path) => SetAvatarPath(path.Result));
+                }
+
+                return null;
             }
         }
 

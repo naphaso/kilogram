@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Telegram.Core.Logging;
@@ -116,19 +117,27 @@ namespace Telegram.MTProto {
             set { authKey = value; }
         }
 
+        SemaphoreSlim _lock = new SemaphoreSlim(1);
         public async Task<MTProtoGateway> GetFileGateway() {
-            fileGateway = new MTProtoGateway(this, fileSession);
-            if(fileGateway != null) {
+            await _lock.WaitAsync();
+//            fileGateway = new MTProtoGateway(this, fileSession);
+            try {
+                if (fileGateway != null) {
+                    return fileGateway;
+                }
+
+                if (fileSession == null) {
+                    fileSession = new TelegramFileSession(Helpers.GenerateRandomUlong(), 0);
+                }
+
+                fileGateway = new MTProtoGateway(this, fileSession);
+                await fileGateway.ConnectAsync();
+
                 return fileGateway;
             }
-
-            if(fileSession == null) {
-                fileSession = new TelegramFileSession(Helpers.GenerateRandomUlong(), 0);
+            finally {
+                _lock.Release();
             }
-
-            fileGateway = new MTProtoGateway(this, fileSession);
-            await fileGateway.ConnectAsync();
-            return fileGateway;
         }
 
         public bool FileAuthorized {
@@ -536,6 +545,7 @@ namespace Telegram.MTProto {
         }
 
         public async Task<TLApi> GetFileSession(int dc) {
+            logger.debug("Getting file session for dc {0}", dc);
             await Established;
             ConfigConstructor config = (ConfigConstructor) gateway.Config;
 
@@ -554,8 +564,9 @@ namespace Telegram.MTProto {
 
                 dcs[dc] = targetDc;
             }
-
+            
             MTProtoGateway fileGateway = await targetDc.GetFileGateway();
+            
             TLApi fileGatewayApi = new TLApi(fileGateway);
 
             if(targetDc.FileAuthorized || dc == mainDcId) {
