@@ -30,10 +30,9 @@
 
         <!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-			    <StackPanel Orientation="Horizontal" toolkit:TiltEffect.IsTiltEnabled="True" Height="82">
-                        <Rectangle Fill="#FF333333" VerticalAlignment="Center" Stroke="Black" Width="62" Height="62"/>
-						<TextBlock Text="Binding DisplayName" TextWrapping="Wrap" VerticalAlignment="Center" Style="{StaticResource PhoneTextLargeStyle}"  FontSize="34.667"/>
-                </StackPanel>
+                <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
+
+            </StackPanel>
         </Grid>
 	</Grid>
 
