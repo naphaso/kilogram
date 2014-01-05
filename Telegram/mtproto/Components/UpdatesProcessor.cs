@@ -15,12 +15,18 @@ namespace Telegram.MTProto.Components {
 
     public delegate void UserStatusHandler(int userId, UserStatus status);
 
+    public delegate void UserTypingHandler(int userId);
+
+    public delegate void ChatTypingHandler(int chatId, int userId);
+
     public class UpdatesProcessor {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(UpdatesProcessor));
         private TelegramSession session;
 
         public event NewMessageHandler NewMessageEvent;
         public event UserStatusHandler UserStatusEvent;
+        public event UserTypingHandler UserTypingEvent;
+        public event ChatTypingHandler ChatTypingEvent;
 
         // update state
         private int pts;
@@ -371,10 +377,10 @@ namespace Telegram.MTProto.Components {
 
         }
         private void ProcessUpdate(UpdateUserTypingConstructor update) {
-            
+            UserTypingEvent(update.user_id);
         }
         private void ProcessUpdate(UpdateChatUserTypingConstructor update) {
-            
+            ChatTypingEvent(update.chat_id, update.user_id);
         }
         private void ProcessUpdate(UpdateChatParticipantsConstructor update) {
             

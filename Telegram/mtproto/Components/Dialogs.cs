@@ -73,6 +73,22 @@ namespace Telegram.MTProto.Components {
                 model = null;
             }
         }
+
+        public void SetUserTyping(int userid) {
+            Deployment.Current.Dispatcher.BeginInvoke(() => model.SetUserTyping(userid));
+        }
+
+        public void SetChatTyping(int chatid, int userid) {
+            Deployment.Current.Dispatcher.BeginInvoke(() => model.SetUserTyping(chatid, userid));
+        }
+
+        public void UpdateTypings() {
+            Deployment.Current.Dispatcher.BeginInvoke(delegate {
+                foreach (var dialogModel in model.Dialogs) {
+                    dialogModel.UpdateTypings();
+                }
+            });
+        }
     }
 
 }
