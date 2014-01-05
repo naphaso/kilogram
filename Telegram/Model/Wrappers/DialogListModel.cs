@@ -18,6 +18,10 @@ namespace Telegram.Model.Wrappers {
             this.session = session;
         }
 
+        public DialogListModel(TelegramSession session, BinaryReader reader) : this(session) {
+            Read(reader);
+        }
+
         public ObservableCollection<DialogModel> Dialogs {
             get { return dialogs; }
         }
@@ -96,7 +100,7 @@ namespace Telegram.Model.Wrappers {
             targetDialogModel.ProcessNewMessage(messageModel);
         }
 
-        public void save(BinaryWriter writer) {
+        public void Write(BinaryWriter writer) {
             // dialogs
             writer.Write(dialogs.Count);
             foreach (var dialog in dialogs) {
@@ -104,7 +108,7 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public void load(BinaryReader reader) {
+        private void Read(BinaryReader reader) {
             logger.info("loading dialog list model");
             // dialogs
             int dialogsCount = reader.ReadInt32();
