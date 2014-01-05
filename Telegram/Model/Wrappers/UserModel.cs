@@ -1,8 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.IO.IsolatedStorage;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.Imaging;
 using Windows.Storage.FileProperties;
 using Telegram.Annotations;
 using Telegram.Core.Logging;
@@ -14,7 +17,7 @@ namespace Telegram.Model.Wrappers {
 
     public delegate void UserModelChangeHandler();
     public class UserModel : INotifyPropertyChanged {
-        private static readonly Logger logger = LoggerFactory.getLogger(typeof(StartPage));
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(UserModel));
 
         private User user;
 
@@ -29,6 +32,7 @@ namespace Telegram.Model.Wrappers {
             ChangeEvent();
             OnPropertyChanged("FullName");
             OnPropertyChanged("Status");
+            OnPropertyChanged("AvatarPath");
         }
 
         public void SetUserStatus(UserStatus status) {
@@ -238,6 +242,86 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        private static string[] userPlaceholders = new string[] {
+            "/Assets/UI/placeholder.user.blue-WVGA.png",
+            "/Assets/UI/placeholder.user.cyan-WVGA.png",
+            "/Assets/UI/placeholder.user.green-WVGA.png",
+            "/Assets/UI/placeholder.user.orange-WVGA.png",
+            "/Assets/UI/placeholder.user.pink-WVGA.png",
+            "/Assets/UI/placeholder.user.purple-WVGA.png",
+            "/Assets/UI/placeholder.user.red-WVGA.png",
+            "/Assets/UI/placeholder.user.yellow-WVGA.png",
+        };
+
+        private Uri GetUserPlaceholderImageUri() {
+            return new Uri(userPlaceholders[Id % userPlaceholders.Length], UriKind.Relative);
+        }
+
+
+
+        public BitmapImage AvatarPath {
+            get {
+                if (_avatarPath != null) {
+                    logger.debug("Returning cached avatar {0}", _avatarPath);
+                    return Utils.Helpers.GetBitmapImageInternal(_avatarPath);
+                }
+
+                UserProfilePhoto avatarPhoto;
+
+                switch (user.Constructor) {
+                    case Constructor.userEmpty:
+                        avatarPhoto = null;
+                        break;
+                    case Constructor.userSelf:
+                        avatarPhoto =((UserSelfConstructor)user).photo;
+                        break;
+                    case Constructor.userContact:
+                        avatarPhoto = ((UserContactConstructor)user).photo;
+                        break;
+                    case Constructor.userRequest:
+                        avatarPhoto = ((UserRequestConstructor)user).photo;
+                        break;
+                    case Constructor.userForeign:
+                        avatarPhoto = ((UserForeignConstructor)user).photo;
+                        break;
+                    case Constructor.userDeleted:
+                        avatarPhoto = null;
+                        break;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+
+                if (avatarPhoto == null)
+                    return new BitmapImage(GetUserPlaceholderImageUri());
+
+                FileLocation avatarFileLocation = null;
+
+                if (avatarPhoto.Constructor != Constructor.userProfilePhoto) {
+                    return new BitmapImage(GetUserPlaceholderImageUri()); ;
+                }
+
+                avatarFileLocation = ((UserProfilePhotoConstructor)avatarPhoto).photo_small;
+
+                Task<string> getFileTask = TelegramSession.Instance.Files.GetAvatar(avatarFileLocation);
+                if (getFileTask.IsCompleted) {
+                    _avatarPath = getFileTask.Result;
+                    return Utils.Helpers.GetBitmapImageInternal(_avatarPath);
+                }
+
+                logger.debug("File receive in progress {0}", avatarFileLocation);
+                getFileTask.ContinueWith((path) => SetAvatarPath(path.Result));
+
+                return new BitmapImage(GetUserPlaceholderImageUri());
+            }
+        }
+
+        private string _avatarPath = null;
+        public void SetAvatarPath(string path) {
+            _avatarPath = path;
+            logger.debug("Path saved {0}", _avatarPath);
+            Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("AvatarPath"));
+        }
+
         private bool _updateInProgress = false;
 
         private async Task UpdateUserSettings() {
@@ -307,7 +391,11 @@ namespace Telegram.Model.Wrappers {
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            if (handler != null) {
+                logger.debug("Invoking on propery changed for {0}", user);
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        
         }
     }
 }

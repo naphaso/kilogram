@@ -38,13 +38,14 @@ namespace Telegram.MTProto.Components {
 
                     Upload_fileConstructor file = (Upload_fileConstructor) await api.upload_getFile(TL.inputFileLocation(location.volume_id, location.local_id, location.secret), 0, int.MaxValue);
 
-                    logger.debug("File constructor {0}", file);
+                    logger.debug("File constructor found");
 
                     using (Stream fileStream = new IsolatedStorageFileStream(filePath, FileMode.OpenOrCreate,
                                                                           FileAccess.Write, storage)) {
                         await fileStream.WriteAsync(file.bytes, 0, file.bytes.Length);
                     }
 
+                    logger.debug("File saved successfully");
                     return filePath;
                 }
             } else {

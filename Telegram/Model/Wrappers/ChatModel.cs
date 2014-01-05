@@ -1,14 +1,22 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.IO.IsolatedStorage;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.Imaging;
+using Microsoft.Phone.Logging;
 using Telegram.Annotations;
+using Telegram.Core.Logging;
 using Telegram.MTProto;
+using Logger = Telegram.Core.Logging.Logger;
 
 namespace Telegram.Model.Wrappers {
     public delegate void ChatModelChangeHandler();
     public class ChatModel : INotifyPropertyChanged {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(ChatModel));
+
         private Chat chat;
         public event ChatModelChangeHandler ChangeEvent;
         public ChatModel(Chat chat) {
@@ -20,6 +28,7 @@ namespace Telegram.Model.Wrappers {
             ChangeEvent();
             OnPropertyChanged("Title");
             OnPropertyChanged("Status");
+            OnPropertyChanged("AvatarPath");
         }
 
         public int Id {
@@ -43,10 +52,27 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public string AvatarPath {
+        private static string[] chatPlaceholders = new string[] {
+            "/Assets/UI/placeholder.group.blue-WVGA.png",
+            "/Assets/UI/placeholder.group.cyan-WVGA.png",
+            "/Assets/UI/placeholder.group.green-WVGA.png",
+            "/Assets/UI/placeholder.group.orange-WVGA.png",
+            "/Assets/UI/placeholder.group.pink-WVGA.png",
+            "/Assets/UI/placeholder.group.purple-WVGA.png",
+            "/Assets/UI/placeholder.group.red-WVGA.png",
+            "/Assets/UI/placeholder.group.yellow-WVGA.png",
+        };
+
+        private Uri GetChatPlaceholderImageUri() {
+            return new Uri(chatPlaceholders[Id % chatPlaceholders.Length], UriKind.Relative);
+        }
+
+        public BitmapImage AvatarPath {
             get {
-                if (_avatarPath != null)
-                    return _avatarPath;
+                if (_avatarPath != null) { 
+                    logger.debug("Returning cached avatar {0}", _avatarPath);
+                    return Utils.Helpers.GetBitmapImageInternal(_avatarPath);
+                }
 
                 ChatPhoto avatarPhoto;
                 switch (chat.Constructor) {
@@ -66,27 +92,28 @@ namespace Telegram.Model.Wrappers {
                 FileLocation avatarFileLocation = null;
 
                 if (avatarPhoto.Constructor != Constructor.chatPhoto) {
-                    return null;
+                    return new BitmapImage(GetChatPlaceholderImageUri());
                 }
 
                 avatarFileLocation = ((ChatPhotoConstructor)avatarPhoto).photo_small;
 
                 Task<string> getFileTask = TelegramSession.Instance.Files.GetAvatar(avatarFileLocation);
                 if (getFileTask.IsCompleted) {
-                    return getFileTask.Result;
-                }
-                else {
-                    getFileTask.ContinueWith((path) => SetAvatarPath(path.Result));
+                    return Utils.Helpers.GetBitmapImageInternal(getFileTask.Result);
                 }
 
-                return null;
+                logger.debug("File receive in progress {0}", avatarFileLocation);
+                getFileTask.ContinueWith((path) => SetAvatarPath(path.Result));
+
+                return new BitmapImage(GetChatPlaceholderImageUri()); ;
             }
         }
 
         private string _avatarPath = null;
         public void SetAvatarPath(string path) {
             _avatarPath = path;
-            OnPropertyChanged("AvatarPath");
+            logger.debug("Path saved {0}", _avatarPath);
+            Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("AvatarPath"));
         }
 
         public string Title {
@@ -124,7 +151,11 @@ namespace Telegram.Model.Wrappers {
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            if (handler != null) {
+                logger.debug("Invoking on propery changed for {0}", chat);
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        
         }
     }
 }
