@@ -14,39 +14,42 @@
              d:DesignWidth="480">
     <UserControl.Resources>
         <DataTemplate x:Key="DialogTemplate">
-            <ListBoxItem>
+            <ListBoxItem HorizontalContentAlignment="Stretch">
                 <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
                     <Grid>
-                    <toolkit:ContextMenuService.ContextMenu>
-                        <toolkit:ContextMenu Name="DialogContextMenu" Opened="DialogContextMenuOpened" >
-                            <toolkit:MenuItem Name="DeleteDialog" Header="Delete" Click="OnDeleteDialog"/>
-                        </toolkit:ContextMenu>
-                    </toolkit:ContextMenuService.ContextMenu>
-                    <TextBlock Text="{Binding Preview}" Margin="90,54,50,20" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP Light" FontSize="18" Style="{StaticResource TextBlockFieldHint}"/>
-                        <TextBlock Text="{Binding Timestamp}" Margin="0,54,-1,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top" FontFamily="Segoe WP" FontSize="18" Style="{StaticResource TextBlockFieldHint}"/>
-                    <Image Margin="12,19,0,0" Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                    <TextBlock Text="{Binding Title}" Margin="90,10,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
-                </Grid>
-            </StackPanel>
+                        <toolkit:ContextMenuService.ContextMenu>
+                            <toolkit:ContextMenu Name="DialogContextMenu" Opened="DialogContextMenuOpened" >
+                                <toolkit:MenuItem Name="DeleteDialog" Header="Delete" Click="OnDeleteDialog"/>
+                            </toolkit:ContextMenu>
+                        </toolkit:ContextMenuService.ContextMenu>
+                        <Grid VerticalAlignment="Top" Margin="90,48,0,0">
+                            <TextBlock Text="{Binding Preview}" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Left" MaxWidth="300" />
+                            <TextBlock Text="{Binding Timestamp}" TextWrapping="Wrap" FontFamily="Segoe WP Semibold" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Right" />
+                        </Grid>
+                        <Image Margin="12,12,0,12" VerticalAlignment="Top" Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding Title}" LineStackingStrategy="BlockLineHeight" Margin="90,6,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42.5"/>
+                    </Grid>
+                </StackPanel>
             </ListBoxItem>
         </DataTemplate>
         <DataTemplate x:Key="ChatTemplate">
-            <ListBoxItem>
+            <ListBoxItem HorizontalContentAlignment="Stretch">
                 <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
-                    <Grid>
+                    <Grid MinHeight="105">
                     <toolkit:ContextMenuService.ContextMenu>
                         <toolkit:ContextMenu Name="ChatContextMenu" Opened="ChatContextMenuOpened" >
                             <toolkit:MenuItem Name="ClearHistory" Header="clear history" Click="OnClearChatHistory"/>
                             <toolkit:MenuItem Name="ClearAndExit" Header="delete and exit" Click="OnClearAndExit"/>
                         </toolkit:ContextMenu>
                     </toolkit:ContextMenuService.ContextMenu>
-                    <TextBlock Margin="90,73,50,0" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" Text="{Binding Preview}" FontSize="18" FontFamily="Segoe WP Light" Style="{StaticResource TextBlockFieldHint}"/>
-                        <TextBlock Text="{Binding Timestamp}" Margin="0,52,-1,0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="27" VerticalAlignment="Top" FontSize="18" Style="{StaticResource TextBlockFieldHint}"/>
-<!--                        utils:ImageByteArrayAttachedProperty.ByteArraySource-->
-                        <Image Margin="12,19,0,0" Source="{Binding AvatarPath}"  Stretch="Fill" Height="62" Width="62" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                    <TextBlock Margin="90,10,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42" Text="{Binding Title}"/>
-                    <TextBlock Text="{Binding LastActivityUserName}" HorizontalAlignment="Left" Margin="90,52,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe WP Semibold" Style="{StaticResource TextBlockFieldHint}"/>
-                </Grid>
+                    <Grid VerticalAlignment="Top" Margin="90,48,0,0" >
+                            <TextBlock Text="{Binding LastActivityUserName}" Height="24.8" LineStackingStrategy="BlockLineHeight" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP Semibold" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Left" MaxWidth="300" />
+                            <TextBlock Text="{Binding Timestamp}" TextWrapping="Wrap" FontFamily="Segoe WP Semibold" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" />
+                    </Grid>
+                        <TextBlock Text="{Binding Preview}" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" LineStackingStrategy="BlockLineHeight" HorizontalAlignment="Left" MaxWidth="300" Margin="90,73,0,-12" Height="25" />
+                    <Image Margin="12,12,0,12" VerticalAlignment="Top" Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding Title}" LineStackingStrategy="BlockLineHeight" Height="42.5" Margin="90,6,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}"/>
+                    </Grid>
             </StackPanel>
             </ListBoxItem>
         </DataTemplate>
@@ -68,6 +71,7 @@
                             ItemsSource="{Binding DialogData}" 
                             Name="DialogList" LayoutMode="List" 
                             IsGroupingEnabled="False" 
+                            HorizontalContentAlignment="Stretch"
                             VerticalAlignment="Top">
         </phone:LongListSelector>
     </Grid>
