@@ -60,7 +60,7 @@ namespace Telegram.Model.Wrappers {
                     throw new InvalidDataException("invalid constructor");   
             }
 
-            Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("Status"));
+            OnPropertyChanged("Status");
         }
 
         public int Id {
@@ -400,6 +400,62 @@ namespace Telegram.Model.Wrappers {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         
+        }
+
+        public void SetName(string firstName, string lastName) {
+            switch(user.Constructor) {
+                case Constructor.userEmpty:
+                    return;
+                case Constructor.userSelf:
+                    ((UserSelfConstructor) user).first_name = firstName;
+                    ((UserSelfConstructor) user).last_name = lastName;
+                    break;
+                case Constructor.userContact:
+                    ((UserContactConstructor) user).first_name = firstName;
+                    ((UserContactConstructor) user).last_name = lastName;
+                    break;
+                case Constructor.userRequest:
+                    ((UserRequestConstructor) user).first_name = firstName;
+                    ((UserRequestConstructor) user).last_name = lastName;
+                    break;
+                case Constructor.userForeign:
+                    ((UserForeignConstructor) user).first_name = firstName;
+                    ((UserForeignConstructor) user).last_name = lastName;
+                    break;
+                case Constructor.userDeleted:
+                    ((UserDeletedConstructor) user).first_name = firstName;
+                    ((UserDeletedConstructor) user).last_name = lastName;
+                    break;
+                default:
+                    return;
+            }
+
+            OnPropertyChanged("FullName");
+        }
+
+        public void SetPhoto(UserProfilePhoto photo) {
+            switch (user.Constructor) {
+                case Constructor.userEmpty:
+                    return;
+                case Constructor.userSelf:
+                    ((UserSelfConstructor)user).photo = photo;
+                    break;
+                case Constructor.userContact:
+                    ((UserContactConstructor)user).photo = photo;
+                    break;
+                case Constructor.userRequest:
+                    ((UserRequestConstructor)user).photo = photo;
+                    break;
+                case Constructor.userForeign:
+                    ((UserForeignConstructor)user).photo = photo;
+                    break;
+                case Constructor.userDeleted:
+                    return;
+                default:
+                    return;
+            }
+
+            OnPropertyChanged("AvatarPath");
         }
     }
 }

@@ -262,11 +262,29 @@ namespace Telegram.MTProto {
             updates.UserStatusEvent += SetUserStatus;
             updates.UserTypingEvent += dialogs.SetUserTyping;
             updates.ChatTypingEvent += dialogs.SetChatTyping;
+            updates.UserNameEvent += SetUserName;
+            updates.UserPhotoEvent += SetUserPhoto;
+        }
+
+        private void SetUserPhoto(int userId, int date, UserProfilePhoto photo, bool previous) {
+            if(users.ContainsKey(userId)) {
+                Deployment.Current.Dispatcher.BeginInvoke(() => users[userId].SetPhoto(photo));
+            } else {
+                logger.warning("update photo for unknown user {0}", userId);
+            }
+        }
+
+        private void SetUserName(int userId, string firstName, string lastName) {
+            if(users.ContainsKey(userId)) {
+                Deployment.Current.Dispatcher.BeginInvoke(() => users[userId].SetName(firstName, lastName));
+            } else {
+                logger.warning("update name for unknown user {0} to {1} {2}", userId, firstName, lastName);
+            }
         }
 
         private void SetUserStatus(int userId, UserStatus status) {
             if(users.ContainsKey(userId)) {
-                users[userId].SetUserStatus(status);
+                Deployment.Current.Dispatcher.BeginInvoke(() => users[userId].SetUserStatus(status));
             } else {
                 logger.warning("set user status {0} to unknown user {1}", status, userId);
             }
