@@ -58,7 +58,7 @@ namespace Telegram.MTProto.Components {
         }
 
         public async Task<string> GetAvatar(FileLocation location) {
-            return await GetFile(location);
+            return await Task.Run(() => GetFile(location));
         }
     }
 }

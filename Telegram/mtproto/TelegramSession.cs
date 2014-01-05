@@ -343,9 +343,6 @@ namespace Telegram.MTProto {
                 authorization.Write(writer);
             }
 
-            updates.Write(writer);
-            dialogs.Write(writer);
-
             writer.Write(users.Count);
             foreach (var userModel in users) {
                 writer.Write(userModel.Key);
@@ -357,6 +354,11 @@ namespace Telegram.MTProto {
                 writer.Write(chatModel.Key);
                 chatModel.Value.RawChat.Write(writer);
             }
+
+            updates.Write(writer);
+            dialogs.Write(writer);
+
+
             logger.info("saving session complete");
         }
 
@@ -377,6 +379,18 @@ namespace Telegram.MTProto {
                 authorization = (Auth_authorizationConstructor) TL.Parse<auth_Authorization>(reader);
             }
 
+            int usersCount = reader.ReadInt32();
+            users = new Dictionary<int, UserModel>(usersCount + 10);
+            for (int i = 0; i < usersCount; i++) {
+                users.Add(reader.ReadInt32(), new UserModel(TL.Parse<User>(reader)));
+            }
+
+            int chatsCount = reader.ReadInt32();
+            chats = new Dictionary<int, ChatModel>(chatsCount + 10);
+            for (int i = 0; i < chatsCount; i++) {
+                chats.Add(reader.ReadInt32(), new ChatModel(TL.Parse<Chat>(reader)));
+            }
+
             logger.info("reading updates state....");
             updates = new UpdatesProcessor(this, reader);
 
@@ -385,17 +399,7 @@ namespace Telegram.MTProto {
             
             files = new Files(this);
 
-            int usersCount = reader.ReadInt32();
-            users = new Dictionary<int, UserModel>(usersCount + 10);
-            for(int i = 0; i < usersCount; i++) {
-                users.Add(reader.ReadInt32(), new UserModel(TL.Parse<User>(reader)));
-            }
 
-            int chatsCount = reader.ReadInt32();
-            chats = new Dictionary<int, ChatModel>(chatsCount + 10);
-            for(int i = 0; i < chatsCount; i++) {
-                chats.Add(reader.ReadInt32(), new ChatModel(TL.Parse<Chat>(reader)));
-            }
             logger.info("session readed complete");
         }
 

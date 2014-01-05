@@ -63,6 +63,13 @@ namespace Telegram.Model.Wrappers {
             SubscribeToDialog();
         }
 
+        public DialogModel(TelegramSession session, BinaryReader reader) {
+            this.session = session;
+            Read(reader);
+
+            SubscribeToDialog();
+        }
+
         private void SubscribeToDialog() {
             switch (dialog.peer.Constructor) {
                 case Constructor.peerChat:
@@ -98,11 +105,6 @@ namespace Telegram.Model.Wrappers {
                 logger.debug("Property is AvatarPath");
                 OnPropertyChanged("AvatarPath");
             }
-        }
-
-        public DialogModel(TelegramSession session, BinaryReader reader) {
-            this.session = session;
-            Read(reader);
         }
 
         private Dialog RawDialog {

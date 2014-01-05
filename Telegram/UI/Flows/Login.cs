@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 using Telegram.Core.Logging;
 using Telegram.MTProto;
 using Telegram.MTProto.Exceptions;
@@ -22,9 +24,9 @@ namespace Telegram.UI.Flows {
 
         private TelegramSession session;
         private string langCode;
-        private TaskCompletionSource<string> phoneSource = new TaskCompletionSource<string>();
-        private TaskCompletionSource<string> codeSource = new TaskCompletionSource<string>();
-        private TaskCompletionSource<SignUpData> signupSource = new TaskCompletionSource<SignUpData>(); 
+        private TaskCompletionSource<string> phoneSource;
+        private TaskCompletionSource<string> codeSource;
+        private TaskCompletionSource<SignUpData> signupSource;
         public Login(TelegramSession session, string langCode) {
             this.langCode = langCode;
             this.session = session;
@@ -36,114 +38,147 @@ namespace Telegram.UI.Flows {
         public event LoginLoginSuccess LoginSuccessEvent;
 
         public async Task Start() {
-            await session.ConnectAsync();
+            try {
+                phoneSource = new TaskCompletionSource<string>();
+                codeSource = new TaskCompletionSource<string>();
+                signupSource = new TaskCompletionSource<SignUpData>(); 
 
-            string phone = await phoneSource.Task;
+                await session.ConnectAsync();
 
-            Auth_sentCodeConstructor sendCodeResponse = null;
+                string phone = await phoneSource.Task;
 
-            for(int i = 0; i < 5; i++) {
-                // 5 migration tries
-                bool sendCodeSuccess;
-                int migrateDc = -1;
-                try {
-                    sendCodeResponse = (Auth_sentCodeConstructor) await session.Api.auth_sendCode(phone, 0, 1097, "712986b054dc1311bec3c2dd92e843e7", langCode);
-                    sendCodeSuccess = true;
-                } catch(MTProtoErrorException e) {
-                    logger.warning("connect exception: {0}", e);
-                    sendCodeSuccess = false;
-                    if (e.ErrorMessage.StartsWith("PHONE_MIGRATE_") || e.ErrorMessage.StartsWith("NETWORK_MIGRATE_")) {
-                        migrateDc = Convert.ToInt32(e.ErrorMessage.Replace("PHONE_MIGRATE_", "").Replace("NETWORK_MIGRATE_", ""), 10);
+                Auth_sentCodeConstructor sendCodeResponse = null;
+
+                for (int i = 0; i < 5; i++) {
+                    // 5 migration tries
+                    bool sendCodeSuccess;
+                    int migrateDc = -1;
+                    try {
+                        sendCodeResponse =
+                            (Auth_sentCodeConstructor)
+                                await
+                                    session.Api.auth_sendCode(phone, 0, 1097, "712986b054dc1311bec3c2dd92e843e7",
+                                        langCode);
+                        sendCodeSuccess = true;
+                    }
+                    catch (MTProtoErrorException e) {
+                        logger.warning("connect exception: {0}", e);
+                        sendCodeSuccess = false;
+                        if (e.ErrorMessage.StartsWith("PHONE_MIGRATE_") || e.ErrorMessage.StartsWith("NETWORK_MIGRATE_")) {
+                            migrateDc =
+                                Convert.ToInt32(
+                                    e.ErrorMessage.Replace("PHONE_MIGRATE_", "").Replace("NETWORK_MIGRATE_", ""), 10);
+                        }
+                    }
+
+                    if (sendCodeSuccess) {
+                        break;
+                    }
+                    else if (migrateDc != -1) {
+                        await session.Migrate(migrateDc);
                     }
                 }
 
-                if(sendCodeSuccess) {
-                    break;
-                } else if(migrateDc != -1) {
-                    await session.Migrate(migrateDc);
+                if (sendCodeResponse == null) {
+                    logger.error("login failed");
+                    return;
                 }
-            }
 
-            if(sendCodeResponse == null) {
-                logger.error("login failed");
-                return;
-            }
+                if (sendCodeResponse.phone_registered) {
+                    // sign in
+                    string code;
 
-            if(sendCodeResponse.phone_registered) { // sign in
-                string code;
+                    Deployment.Current.Dispatcher.BeginInvoke(() => NeedCodeEvent(this));
+                    while (true) {
 
-                NeedCodeEvent(this);
-                while (true) {
+                        // wait 30 seconds and send phone call
+                        if (await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(60))) == codeSource.Task) {
+                            code = codeSource.Task.Result;
+                        }
+                        else {
+                            session.Api.auth_sendCall(phone, sendCodeResponse.phone_code_hash);
+                            code = await codeSource.Task;
+                        }
+
+                        try {
+                            Auth_authorizationConstructor authorization =
+                                (Auth_authorizationConstructor)
+                                    await session.Api.auth_signIn(phone, sendCodeResponse.phone_code_hash, code);
+                            await session.SaveAuthorization(authorization);
+                            Deployment.Current.Dispatcher.BeginInvoke(() => LoginSuccessEvent(this));
+                            break;
+                        }
+                        catch (MTProtoErrorException e) {
+                            codeSource = new TaskCompletionSource<string>();
+                            Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                        }
+                    }
+
+                }
+                else {
+                    // sign up
+                    string code;
+                    Deployment.Current.Dispatcher.BeginInvoke(() => NeedCodeEvent(this));
 
                     // wait 30 seconds and send phone call
-                    if(await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(60))) == codeSource.Task) {
+                    if (await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(60))) == codeSource.Task) {
                         code = codeSource.Task.Result;
-                    } else {
+                    }
+                    else {
                         session.Api.auth_sendCall(phone, sendCodeResponse.phone_code_hash);
                         code = await codeSource.Task;
                     }
 
-                    try {
-                        Auth_authorizationConstructor authorization = (Auth_authorizationConstructor)await session.Api.auth_signIn(phone, sendCodeResponse.phone_code_hash, code);
-                        await session.SaveAuthorization(authorization);
-                        LoginSuccessEvent(this);
-                        break;
-                    } catch(MTProtoErrorException e) {
-                        codeSource = new TaskCompletionSource<string>();
-                        WrongCodeEvent(this);
+                    while (true) {
+                        try {
+                            await session.Api.auth_signIn(phone, sendCodeResponse.phone_code_hash, code);
+                            codeSource = new TaskCompletionSource<string>();
+                            Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                        }
+                        catch (MTProtoErrorException e) {
+                            if (e.ErrorMessage.StartsWith("PHONE_NUMBER_UNOCCUPIED")) {
+                                // Код верен, но пользователя с таким номером телефона не существует
+                                break;
+                            }
+                            else if (e.ErrorMessage.StartsWith("PHONE_CODE_INVALID")) {
+                                codeSource = new TaskCompletionSource<string>();
+                                Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                            }
+                            else if (e.ErrorMessage.StartsWith("PHONE_CODE_EXPIRED")) {
+                                codeSource = new TaskCompletionSource<string>();
+                                Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                            }
+                            else if (e.ErrorMessage.StartsWith("PHONE_CODE_EMPTY")) {
+                                codeSource = new TaskCompletionSource<string>();
+                                Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                            }
+                        }
                     }
-                }
 
-            } else { // sign up
-                string code;
-                NeedCodeEvent(this);
+                    Deployment.Current.Dispatcher.BeginInvoke(() => NeedSignupEvent(this));
+                    SignUpData signUpData = await signupSource.Task;
 
-                // wait 30 seconds and send phone call
-                if (await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(60))) == codeSource.Task) {
-                    code = codeSource.Task.Result;
-                }
-                else {
-                    session.Api.auth_sendCall(phone, sendCodeResponse.phone_code_hash);
-                    code = await codeSource.Task;
-                }
+                    while (true) {
+                        try {
+                            Auth_authorizationConstructor authorization =
+                                (Auth_authorizationConstructor)
+                                    await
+                                        session.Api.auth_signUp(phone, sendCodeResponse.phone_code_hash, code,
+                                            signUpData.firstname, signUpData.lastname);
+                            await session.SaveAuthorization(authorization);
 
-                while(true) {
-                    try {
-                        await session.Api.auth_signIn(phone, sendCodeResponse.phone_code_hash, code);
-                        codeSource = new TaskCompletionSource<string>();
-                        WrongCodeEvent(this);
-                    } catch(MTProtoErrorException e) {
-                        if(e.ErrorMessage.StartsWith("PHONE_NUMBER_UNOCCUPIED")) {
-                            // Код верен, но пользователя с таким номером телефона не существует
+                            Deployment.Current.Dispatcher.BeginInvoke(() => LoginSuccessEvent(this));
                             break;
-                        } else if(e.ErrorMessage.StartsWith("PHONE_CODE_INVALID")) {
+                        }
+                        catch (MTProtoErrorException e) {
                             codeSource = new TaskCompletionSource<string>();
-                            WrongCodeEvent(this);
-                        } else if(e.ErrorMessage.StartsWith("PHONE_CODE_EXPIRED")) {
-                            codeSource = new TaskCompletionSource<string>();
-                            WrongCodeEvent(this);
-                        } else if(e.ErrorMessage.StartsWith("PHONE_CODE_EMPTY")) {
-                            codeSource = new TaskCompletionSource<string>();
-                            WrongCodeEvent(this);
+                            Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
                         }
                     }
                 }
-
-                NeedSignupEvent(this);
-                SignUpData signUpData = await signupSource.Task;
-
-                while(true) {
-                    try {
-                        Auth_authorizationConstructor authorization = (Auth_authorizationConstructor) await session.Api.auth_signUp(phone, sendCodeResponse.phone_code_hash, code, signUpData.firstname, signUpData.lastname);
-                        await session.SaveAuthorization(authorization);
-
-                        LoginSuccessEvent(this);
-                        break;
-                    } catch(MTProtoErrorException e) {
-                        codeSource = new TaskCompletionSource<string>();
-                        WrongCodeEvent(this);
-                    }
-                }
+            }
+            catch (Exception ex) {
+                logger.error("login flow exception {0}", ex);
             }
         }
 

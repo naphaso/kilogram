@@ -110,6 +110,7 @@ namespace Telegram.Model.Wrappers {
         }
 
         private string _avatarPath = null;
+
         public void SetAvatarPath(string path) {
             _avatarPath = path;
             logger.debug("Path saved {0}", _avatarPath);
@@ -151,8 +152,8 @@ namespace Telegram.Model.Wrappers {
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChangedEventHandler handler = PropertyChanged;
+            logger.debug("Invoking on propery changed for {0}, handler == null is {1}", chat, handler == null);
             if (handler != null) {
-                logger.debug("Invoking on propery changed for {0}", chat);
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         

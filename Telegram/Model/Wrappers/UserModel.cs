@@ -395,8 +395,8 @@ namespace Telegram.Model.Wrappers {
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChangedEventHandler handler = PropertyChanged;
+            logger.debug("Invoking on propery changed for {0}, handler == null is {1}", user, handler == null);
             if (handler != null) {
-                logger.debug("Invoking on propery changed for {0}", user);
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         
