@@ -31,6 +31,32 @@ namespace Telegram.Model.Wrappers {
             OnPropertyChanged("Status");
         }
 
+        public void SetUserStatus(UserStatus status) {
+            logger.debug("set status {0} to user {1}", status, FullName);
+            switch(user.Constructor) {
+                case Constructor.userEmpty:
+                    break;
+                case Constructor.userSelf:
+                    ((UserSelfConstructor) user).status = status;
+                    break;
+                case Constructor.userContact:
+                    ((UserContactConstructor) user).status = status;
+                    break;
+                case Constructor.userRequest:
+                    ((UserRequestConstructor) user).status = status;
+                    break;
+                case Constructor.userForeign:
+                    ((UserForeignConstructor) user).status = status;
+                    break;
+                case Constructor.userDeleted:
+                    break;
+                default:
+                    throw new InvalidDataException("invalid constructor");   
+            }
+
+            OnPropertyChanged("Status");
+        }
+
         public int Id {
             get {
                 switch (user.Constructor) {

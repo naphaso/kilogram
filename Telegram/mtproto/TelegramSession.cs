@@ -235,6 +235,8 @@ namespace Telegram.MTProto {
         
         public TelegramSession(BinaryReader reader) {
             read(reader);
+
+            SubscribeToUpdates();
         }
         public TelegramSession(ulong id, int sequence) {
             this.id = id;
@@ -245,6 +247,20 @@ namespace Telegram.MTProto {
             files = new Files(this);
             users = new Dictionary<int, UserModel>();
             chats = new Dictionary<int, ChatModel>();
+
+            SubscribeToUpdates();
+        }
+
+        private void SubscribeToUpdates() {
+            updates.UserStatusEvent += SetUserStatus;
+        }
+
+        private void SetUserStatus(int userId, UserStatus status) {
+            if(users.ContainsKey(userId)) {
+                users[userId].SetUserStatus(status);
+            } else {
+                logger.warning("set user status {0} to unknown user {1}", status, userId);
+            }
         }
 
         public ulong Id {

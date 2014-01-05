@@ -13,12 +13,14 @@ using Telegram.Core.Logging;
 namespace Telegram.MTProto.Components {
     public delegate void NewMessageHandler(Message message);
 
+    public delegate void UserStatusHandler(int userId, UserStatus status);
 
     public class UpdatesProcessor {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(UpdatesProcessor));
         private TelegramSession session;
 
         public event NewMessageHandler NewMessageEvent;
+        public event UserStatusHandler UserStatusEvent;
 
         // update state
         private int pts;
