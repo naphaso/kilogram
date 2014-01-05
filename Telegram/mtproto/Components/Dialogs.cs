@@ -25,7 +25,7 @@ namespace Telegram.MTProto.Components {
 
         public Dialogs(TelegramSession session, BinaryReader reader) {
             this.session = session;
-            load(reader);
+            Read(reader);
             session.Updates.NewMessageEvent += model.ProcessNewMessage;
         }
 
@@ -53,22 +53,21 @@ namespace Telegram.MTProto.Components {
             }
         }
 
-        public void save(BinaryWriter writer) {
+        public void Write(BinaryWriter writer) {
             if(model == null) {
                 writer.Write(0);
             } else {
                 writer.Write(1);
-                model.save(writer);
+                model.Write(writer);
             }
         }
 
-        public void load(BinaryReader reader) {
+        private void Read(BinaryReader reader) {
             logger.info("loading dialogs");
             int stateExists = reader.ReadInt32();
             if(stateExists != 0) {
                 logger.info("dialog model found");
-                model = new DialogListModel(session);
-                model.load(reader);
+                model = new DialogListModel(session, reader);
             } else {
                 logger.info("dialogs model not found");
                 model = null;

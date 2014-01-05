@@ -288,9 +288,9 @@ namespace Telegram.MTProto {
             writer.Write(sequence);
             writer.Write(mainDcId);
             writer.Write(dcs.Count);
-            foreach(var telegramEndpoint in dcs) {
-                writer.Write(telegramEndpoint.Key);
-                telegramEndpoint.Value.write(writer);
+            foreach(var dc in dcs) {
+                writer.Write(dc.Key);
+                dc.Value.write(writer);
             }
 
             if(authorization == null) {
@@ -300,7 +300,8 @@ namespace Telegram.MTProto {
                 authorization.Write(writer);
             }
 
-            dialogs.save(writer);
+            updates.Write(writer);
+            dialogs.Write(writer);
 
             writer.Write(users.Count);
             foreach (var userModel in users) {
@@ -330,13 +331,15 @@ namespace Telegram.MTProto {
 
             int authorizationExists = reader.ReadInt32();
             if(authorizationExists != 0) {
-                authorization = new Auth_authorizationConstructor();
-                reader.ReadUInt32();
-                authorization.Read(reader);
+                authorization = (Auth_authorizationConstructor) TL.Parse<auth_Authorization>(reader);
             }
-            updates = new UpdatesProcessor(this);
+
+            logger.info("reading updates state....");
+            updates = new UpdatesProcessor(this, reader);
+
             logger.info("reading dialogs...");
             dialogs = new Dialogs(this, reader);
+            
             files = new Files(this);
 
             int usersCount = reader.ReadInt32();
@@ -370,26 +373,29 @@ namespace Telegram.MTProto {
 
         private static TelegramSession loadIfExists() {
             TelegramSession session;
-            try {
-                using(IsolatedStorageFile fileStorage = IsolatedStorageFile.GetUserStoreForApplication())
-                using(Stream fileStream = new IsolatedStorageFileStream("session.dat", FileMode.Open, fileStorage))
-                using(BinaryReader fileReader = new BinaryReader(fileStream)) {
-                    session = new TelegramSession(fileReader);
-                    logger.info("loaded telegram session: {0}", session);
-                }
-            } catch(Exception e) {
-                logger.info("error loading session, create new...: {0}", e);
-                ulong sessionId = Helpers.GenerateRandomUlong();
-                session = new TelegramSession(sessionId, 0);
-                // prod 173.240.5.1 
-                // test 173.240.5.253
-                TelegramEndpoint endpoint = new TelegramEndpoint("173.240.5.1", 443);
-                TelegramDC dc = new TelegramDC();
-                dc.Endpoints.Add(endpoint);
-                session.Dcs.Add(1, dc);
-                session.SetMainDcId(1);
+            lock(typeof(TelegramSession)) {
+                try {
+                    using(IsolatedStorageFile fileStorage = IsolatedStorageFile.GetUserStoreForApplication())
+                    using(Stream fileStream = new IsolatedStorageFileStream("session.dat", FileMode.Open, fileStorage))
+                    using(BinaryReader fileReader = new BinaryReader(fileStream)) {
+                        session = new TelegramSession(fileReader);
+                        logger.info("loaded telegram session: {0}", session);
+                    }
+                } catch(Exception e) {
+                    logger.info("error loading session, create new...: {0}", e);
+                    ulong sessionId = Helpers.GenerateRandomUlong();
+                    session = new TelegramSession(sessionId, 0);
+                    // prod 173.240.5.1 
+                    // test 173.240.5.253
+                    TelegramEndpoint endpoint = new TelegramEndpoint("173.240.5.1", 443);
+                    TelegramDC dc = new TelegramDC();
+                    dc.Endpoints.Add(endpoint);
+                    session.Dcs.Add(1, dc);
+                    session.SetMainDcId(1);
 
-                logger.info("created new telegram session: {0}", session);
+
+                    logger.info("created new telegram session: {0}", session);
+                }
             }
 
             return session;
@@ -398,14 +404,20 @@ namespace Telegram.MTProto {
         public void save() {
             logger.debug("Saving session instance");
             try {
-                lock(typeof(TelegramSession))
-                    using(IsolatedStorageFile fileStorage = IsolatedStorageFile.GetUserStoreForApplication())
-                    using(
-                        Stream fileStream = new IsolatedStorageFileStream("session.dat", FileMode.OpenOrCreate,
-                                                                          FileAccess.Write, fileStorage))
-                    using(BinaryWriter fileWriter = new BinaryWriter(fileStream)) {
-                        write(fileWriter);
+                lock(typeof(TelegramSession)) {
+                    using(IsolatedStorageFile fileStorage = IsolatedStorageFile.GetUserStoreForApplication()) {
+                        using(Stream fileStream = new IsolatedStorageFileStream("session.dat.tmp", FileMode.OpenOrCreate, FileAccess.Write, fileStorage))
+                        using(BinaryWriter fileWriter = new BinaryWriter(fileStream)) {
+                            write(fileWriter);
+                        }
+                        
+                        if(fileStorage.FileExists("/session.dat")) {
+                            fileStorage.DeleteFile("/session.dat");
+                        }
+
+                        fileStorage.MoveFile("/session.dat.tmp", "/session.dat");
                     }
+                }
             } catch(Exception e) {
                 logger.info("failed to save session: {0}", e);
             }
@@ -449,8 +461,7 @@ namespace Telegram.MTProto {
                     } catch(MTProtoBrokenSessionException e) {
                         logger.info("creating new session... TODO: destroy old session");
                         // creating new session
-                        Random random = new Random();
-                        id = (((ulong) random.Next()) << 32) | ((ulong) random.Next());
+                        id = Helpers.GenerateRandomUlong();
                         sequence = 0;
                         gateway.Dispose();
                         gateway = new MTProtoGateway(MainDc, this);
@@ -466,7 +477,9 @@ namespace Telegram.MTProto {
 
         public async Task SaveAuthorization(auth_Authorization authorization) {
             this.authorization = (Auth_authorizationConstructor) authorization;
-            await dialogs.DialogsRequest();
+            Task dialogsTask = dialogs.DialogsRequest();
+            Task updateTask = updates.GetStateRequest();
+            await Task.WhenAll(dialogsTask, updateTask);
             save();
         }
 
@@ -545,6 +558,7 @@ namespace Telegram.MTProto {
                     DcOptionConstructor optionConstructor = (DcOptionConstructor) dcOption;
                     if(optionConstructor.id == dc) {
                         TelegramEndpoint endpoint = new TelegramEndpoint(optionConstructor.ip_address, optionConstructor.port);
+                        targetDc.Endpoints.Add(endpoint);
                     }
                 }
 

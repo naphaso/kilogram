@@ -25,14 +25,30 @@ namespace Telegram.MTProto.Components {
         private int qts;
         private int date;
         private int seq;
-        private int unread_count; // needed? 
-        private int friends_unread_count;  // needed?
+        //private int unread_count; // needed? 
+        //private int friends_unread_count;  // needed?
 
         public UpdatesProcessor(TelegramSession session) {
             this.session = session;
             DifferenceExecutor = new RequestTask(async delegate {
                 await this.session.Api.updates_getDifference(pts, date, qts);
             });
+        }
+
+        public UpdatesProcessor(TelegramSession session, BinaryReader reader) : this(session) {
+            Read(reader);
+        }
+
+        // retreiving state
+        public async Task GetStateRequest() {
+            Updates_stateConstructor state = (Updates_stateConstructor)await session.Api.updates_getState();
+            lock (this) {
+                logger.debug("setting update state: pts {0}, qts {1}, seq {2}, date {3}", state.pts, state.qts, state.seq, state.date);
+                this.pts = state.pts;
+                this.qts = state.qts;
+                this.seq = state.seq;
+                this.date = state.date;
+            }
         }
 
         // update request
@@ -253,18 +269,6 @@ namespace Telegram.MTProto.Components {
 
             foreach(var innerUpdate in update.updates) {
                 ProcessUpdate(innerUpdate);
-            }
-        }
-
-        // retreiving state
-        private async Task GetStateRequest() {
-            Updates_stateConstructor state = (Updates_stateConstructor) await session.Api.updates_getState();
-            lock(this) {
-                logger.debug("setting update state: pts {0}, qts {1}, seq {2}, date {3}", state.pts, state.qts, state.seq, state.date);
-                this.pts = state.pts;
-                this.qts = state.qts;
-                this.seq = state.seq;
-                this.date = state.date;
             }
         }
 
