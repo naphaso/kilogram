@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 ﻿using System.Windows;
 ﻿using System.Windows.Media.Imaging;
 ﻿using Coding4Fun.Toolkit.Controls.Common;
+﻿using Microsoft.Phone.Maps.Controls;
 ﻿using Microsoft.Phone.Reactive;
 ﻿using System.IO;
 ﻿using Telegram.Annotations;
@@ -378,6 +379,16 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public string Typing {
+            get {
+                if(dialog.peer.Constructor == Constructor.peerUser) {
+                    return userTyping == null ? "" : "Typing...";
+                } else {
+                    return chatTyping.Count == 0 ? "" : String.Format("{0} users typing...", chatTyping.Count);
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -440,5 +451,65 @@ namespace Telegram.Model.Wrappers {
 
             // TODO: handle pts and seq
         }
+
+        private UserTyping userTyping;
+        private Dictionary<int, UserTyping> chatTyping = new Dictionary<int,UserTyping>();
+
+        private class UserTyping {
+            public DateTime lastUpdate;
+            public UserTyping(DateTime lastUpdate) {
+                this.lastUpdate = lastUpdate;
+            }
+        }
+
+        public void SetTyping(int userid) {
+            if(dialog.peer.Constructor == Constructor.peerUser) {
+                logger.warning("invalid chat typing event for user dialog");
+                return;
+            }
+
+            if(chatTyping.ContainsKey(userid)) {
+                chatTyping[userid].lastUpdate = DateTime.Now;
+            } else {
+                chatTyping.Add(userid, new UserTyping(DateTime.Now));
+            }
+        }
+
+        public void SetTyping() {
+            if(dialog.peer.Constructor == Constructor.peerChat) {
+                logger.warning("invalid user typing event for chat dialog");
+                return;
+            }
+
+            if(userTyping == null) {
+                userTyping = new UserTyping(DateTime.Now);
+            } else {
+                userTyping.lastUpdate = DateTime.Now;
+            }
+        }
+
+        public void UpdateTypings() {
+            if(dialog.peer.Constructor == Constructor.peerUser) {
+                if(userTyping != null && DateTime.Now - userTyping.lastUpdate > TimeSpan.FromSeconds(5)) {
+                    userTyping = null;
+
+                    OnPropertyChanged("Typing");
+                }
+            } else if(dialog.peer.Constructor == Constructor.peerChat) {
+                var toRemove = (from typing in chatTyping where DateTime.Now - typing.Value.lastUpdate > TimeSpan.FromSeconds(5) select typing.Key).ToList();
+
+                if(toRemove.Count != 0) {
+                    foreach(var i in toRemove) {
+                        chatTyping.Remove(i);
+                    }
+
+                    OnPropertyChanged("Typing");
+                }
+            }
+        }
+
+
+
+
     }
 }

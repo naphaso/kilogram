@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
@@ -232,9 +233,13 @@ namespace Telegram.MTProto {
         private Dialogs dialogs = null;
         private UpdatesProcessor updates = null;
         private Files files = null;
+
+        private Timer timer = null;
         
         public TelegramSession(BinaryReader reader) {
             read(reader);
+
+            SubscribeToUpdates();
         }
         public TelegramSession(ulong id, int sequence) {
             this.id = id;
@@ -245,6 +250,26 @@ namespace Telegram.MTProto {
             files = new Files(this);
             users = new Dictionary<int, UserModel>();
             chats = new Dictionary<int, ChatModel>();
+
+            SubscribeToUpdates();
+        }
+
+        private void SubscribeToUpdates() {
+            timer = new Timer(delegate {
+                Deployment.Current.Dispatcher.BeginInvoke(() => dialogs.UpdateTypings());
+            }, this, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+
+            updates.UserStatusEvent += SetUserStatus;
+            updates.UserTypingEvent += dialogs.SetUserTyping;
+            updates.ChatTypingEvent += dialogs.SetChatTyping;
+        }
+
+        private void SetUserStatus(int userId, UserStatus status) {
+            if(users.ContainsKey(userId)) {
+                users[userId].SetUserStatus(status);
+            } else {
+                logger.warning("set user status {0} to unknown user {1}", status, userId);
+            }
         }
 
         public ulong Id {

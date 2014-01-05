@@ -30,9 +30,37 @@ namespace Telegram.Model.Wrappers {
         public void SetUser(User user) {
             this.user = user;
             ChangeEvent();
-            OnPropertyChanged("FullName");
-            OnPropertyChanged("Status");
-            OnPropertyChanged("AvatarPath");
+            Deployment.Current.Dispatcher.BeginInvoke(delegate {
+                OnPropertyChanged("FullName");
+                OnPropertyChanged("Status");
+                OnPropertyChanged("AvatarPath"); 
+            });
+        }
+
+        public void SetUserStatus(UserStatus status) {
+            logger.debug("set status {0} to user {1}", status, FullName);
+            switch(user.Constructor) {
+                case Constructor.userEmpty:
+                    break;
+                case Constructor.userSelf:
+                    ((UserSelfConstructor) user).status = status;
+                    break;
+                case Constructor.userContact:
+                    ((UserContactConstructor) user).status = status;
+                    break;
+                case Constructor.userRequest:
+                    ((UserRequestConstructor) user).status = status;
+                    break;
+                case Constructor.userForeign:
+                    ((UserForeignConstructor) user).status = status;
+                    break;
+                case Constructor.userDeleted:
+                    break;
+                default:
+                    throw new InvalidDataException("invalid constructor");   
+            }
+
+            Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("Status"));
         }
 
         public int Id {
@@ -136,17 +164,19 @@ namespace Telegram.Model.Wrappers {
 
             if (peerNotifySettings == null) {
                 peerNotifySettings = newSettings;
-                OnPropertyChanged("NotificationSound");
-                OnPropertyChanged("NotificationsEnabled");
+                Deployment.Current.Dispatcher.BeginInvoke(delegate {
+                    OnPropertyChanged("NotificationSound");
+                    OnPropertyChanged("NotificationsEnabled");
+                });
                 return;
             }
 
             if (peerNotifySettings.sound != newSettings.sound) {
                 peerNotifySettings = newSettings;
-                OnPropertyChanged("NotificationSound");
+                Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("NotificationSound"));
             } else if (peerNotifySettings.mute_until != newSettings.mute_until) {
                 peerNotifySettings = newSettings;
-                OnPropertyChanged("NotificationsEnabled");
+                Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("NotificationsEnabled"));
             }
         }
 
@@ -212,7 +242,7 @@ namespace Telegram.Model.Wrappers {
                     peerNotifySettings.mute_until = 0;
 
                 UpdateUserSettings();
-                OnPropertyChanged("NotificationsEnabled");
+                Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("NotificationsEnabled"));
             }
         }
 
