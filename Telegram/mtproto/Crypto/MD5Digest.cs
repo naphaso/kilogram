@@ -65,6 +65,22 @@ namespace Telegram.MTProto.Crypto {
 
             return BitConverter.ToString(hash).Replace("-", "").ToLower();
         }
+
+        private MD5Digest digest = new MD5Digest();
+
+        public void Update(byte[] chunk) {
+            digest.BlockUpdate(chunk, 0, chunk.Length);
+        }
+
+        public void Update(byte[] chunk, int offset, int limit) {
+            digest.BlockUpdate(chunk, offset, limit);
+        }
+
+        public string FinalString() {
+            byte[] hash = new byte[16];
+            digest.DoFinal(hash, 0);
+            return BitConverter.ToString(hash).Replace("-", "").ToLower();
+        }
     }
 
     public abstract class GeneralDigest
