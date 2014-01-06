@@ -74,6 +74,7 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void ProcessNewMessage(Message message) {
+
             logger.info("process new message: {0}", message);
             MessageModelDelivered messageModel = new MessageModelDelivered(message);
             Peer targetPeer = messageModel.Peer;

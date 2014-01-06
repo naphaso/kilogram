@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -23,11 +25,25 @@ namespace Telegram.Model.Wrappers {
 
         //public event UserModelChangeHandler ChangeEvent;
 
+        public static string GetCurrentMethod() {
+            string trace = "";
+            StackTrace st = new StackTrace();
+
+            foreach(StackFrame frame in st.GetFrames()) {
+                trace += " " + frame.GetMethod().Name;
+            }
+
+            return trace;
+        }
+
         public UserModel(User user) {
+             
             this.user = user;
         }
 
         public void SetUser(User user) {
+             
+
             this.user = user;
             //ChangeEvent();
             OnPropertyChanged("FullName");
@@ -36,6 +52,8 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void SetUserStatus(UserStatus status) {
+             
+
             logger.debug("set status {0} to user {1}", status, FullName);
             switch(user.Constructor) {
                 case Constructor.userEmpty:
@@ -62,7 +80,10 @@ namespace Telegram.Model.Wrappers {
         }
 
         public int Id {
+
             get {
+                 
+
                 switch (user.Constructor) {
                     case Constructor.userEmpty:
                         return ((UserEmptyConstructor)user).id;
@@ -84,12 +105,16 @@ namespace Telegram.Model.Wrappers {
 
         public User RawUser {
             get {
+                 
+
                 return user;
             }
         }
 
         public string FullName {
             get {
+                 
+
                 switch (user.Constructor) {
                     case Constructor.userEmpty:
                         return "empty";
@@ -111,6 +136,8 @@ namespace Telegram.Model.Wrappers {
 
         public string FirstName {
             get {
+                 
+
                 switch (user.Constructor) {
                     case Constructor.userEmpty:
                         return "empty";
@@ -132,6 +159,8 @@ namespace Telegram.Model.Wrappers {
 
         public string LastName {
             get {
+                 
+
                 switch (user.Constructor) {
                     case Constructor.userEmpty:
                         return "empty";
@@ -153,6 +182,8 @@ namespace Telegram.Model.Wrappers {
 
         public string Status {
             get {
+                 
+
                 switch (user.Constructor) {
                     case Constructor.userEmpty:
                         return "loading";
@@ -173,6 +204,8 @@ namespace Telegram.Model.Wrappers {
         }
 
         public static string GetStatusString(UserStatus status) {
+             
+
             string statusString = "unknown";
             switch (status.Constructor) {
                 case Constructor.userStatusEmpty:
@@ -190,6 +223,8 @@ namespace Telegram.Model.Wrappers {
         }
 
         public static string GetLastOnlineTime(int lastOnline) {
+             
+
             return "last online 14:88a";
         }
 
@@ -197,6 +232,8 @@ namespace Telegram.Model.Wrappers {
         private PeerNotifySettingsConstructor peerNotifySettings = null;
 
         private void UpdatePeerNotifySettings(PeerNotifySettingsConstructor newSettings) {
+             
+
             if (newSettings == null) {
                 logger.error("Strange shit is happened, newSettings == null");
                 return;
@@ -222,10 +259,14 @@ namespace Telegram.Model.Wrappers {
 
         public string NotificationSound {
             get {
+                 
+
                 GetUserSettings();
                 return peerNotifySettings == null ? "Default" : peerNotifySettings.sound;
             }
             set {
+                 
+
                 peerNotifySettings.sound = value;
                 UpdateUserSettings();
                 OnPropertyChanged("NotificationSound");
@@ -234,6 +275,8 @@ namespace Telegram.Model.Wrappers {
 
         public InputPeer InputPeer {
             get {
+                 
+
                 switch (user.Constructor) {
                     case Constructor.userEmpty:
                         return TL.inputPeerEmpty();
@@ -255,6 +298,8 @@ namespace Telegram.Model.Wrappers {
 
         public bool NotificationsEnabled {
             get {
+                 
+
                 GetUserSettings();
 
                 if(peerNotifySettings == null)
@@ -269,6 +314,8 @@ namespace Telegram.Model.Wrappers {
                 return false;
             }
             set {
+                 
+
                 logger.debug("NotificationsEnabled " + value);
                 
                 if (peerNotifySettings == null) {
@@ -298,12 +345,16 @@ namespace Telegram.Model.Wrappers {
         };
 
         private Uri GetUserPlaceholderImageUri() {
+             
+
             return new Uri(userPlaceholders[Id % userPlaceholders.Length], UriKind.Relative);
         }
 
 
         public string PhoneNumber {
             get {
+                 
+
                 string formattedNumber = "";
                 switch (user.Constructor) {
                     case Constructor.userEmpty:
@@ -338,6 +389,8 @@ namespace Telegram.Model.Wrappers {
 
         public BitmapImage AvatarPath {
             get {
+                 
+
                 if (_avatarPath != null) {
                     logger.debug("Returning cached avatar {0}", _avatarPath);
                     return Utils.Helpers.GetBitmapImageInternal(_avatarPath);
@@ -394,6 +447,8 @@ namespace Telegram.Model.Wrappers {
 
         private string _avatarPath = null;
         public void SetAvatarPath(string path) {
+             
+
             _avatarPath = path;
             logger.debug("Path saved {0}", _avatarPath);
             OnPropertyChanged("AvatarPath");
@@ -402,6 +457,8 @@ namespace Telegram.Model.Wrappers {
         private bool _updateInProgress = false;
 
         private async Task UpdateUserSettings() {
+             
+
             if (_updateInProgress)
                 return;
 
@@ -430,6 +487,8 @@ namespace Telegram.Model.Wrappers {
         private volatile bool _getInProgress = false;
 
         private async Task GetUserSettings() {
+             
+
             if (_getInProgress)
                 return;
 
@@ -467,6 +526,8 @@ namespace Telegram.Model.Wrappers {
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+             
+
             PropertyChangedEventHandler handler = PropertyChanged;
             logger.debug("Invoking on propery changed for {0}, handler == null is {1}", user, handler == null);
             if (handler != null) {
@@ -476,6 +537,8 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void SetName(string firstName, string lastName) {
+             
+
             switch(user.Constructor) {
                 case Constructor.userEmpty:
                     return;
@@ -507,6 +570,8 @@ namespace Telegram.Model.Wrappers {
         }
 
         public void SetPhoto(UserProfilePhoto photo) {
+             
+
             switch (user.Constructor) {
                 case Constructor.userEmpty:
                     return;

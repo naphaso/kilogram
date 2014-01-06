@@ -656,23 +656,29 @@ namespace Telegram.MTProto {
         }
 
         public void SaveUser(User user) {
-            UserModel model = new UserModel(user);
-            if(users.ContainsKey(model.Id)) {
-                Deployment.Current.Dispatcher.BeginInvoke(delegate {
-                    users[model.Id].SetUser(user);
-                });
-            } else {
-                users[model.Id] = model;    
-            }
+                UserModel model = new UserModel(user);
+                if (users.ContainsKey(model.Id)) {
+                    Deployment.Current.Dispatcher.BeginInvoke(delegate {
+                        users[model.Id].SetUser(user);
+                    });
+                }
+                else {
+                    users[model.Id] = model;
+                }
+
         }
 
         public void SaveChat(Chat chat) {
             ChatModel model = new ChatModel(chat);
-            if(chats.ContainsKey(model.Id)) {
-                chats[model.Id].SetChat(chat);
-            } else {
+            if (chats.ContainsKey(model.Id)) {
+                Deployment.Current.Dispatcher.BeginInvoke(delegate {
+                    chats[model.Id].SetChat(chat);
+                });
+            }
+            else {
                 chats[model.Id] = model;
             }
+
         }
     }
 }

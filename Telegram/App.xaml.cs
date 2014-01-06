@@ -70,6 +70,7 @@ namespace Telegram
             if (TelegramSession.Instance.AuthorizationExists()) {
                 ContactManager cm = new ContactManager();
                 Task.Run(() => cm.SyncContacts());
+                Task.Run(() => TelegramSettings.Instance.Notifications().RegisterPushNotifications());
             }
         }
 

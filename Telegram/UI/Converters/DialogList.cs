@@ -24,14 +24,13 @@ namespace Telegram.UI.Converters {
             object parameter, System.Globalization.CultureInfo culture) {
 
             DialogModel.DialogStatus status = (DialogModel.DialogStatus)value;
-            logger.debug("converter string is {0}", status.String);
             return status.String;
 
         }
 
         public object ConvertBack(object value, Type targetType,
             object parameter, System.Globalization.CultureInfo culture) {
-            throw new NotImplementedException();
+            return "";
         }
 
         #endregion
@@ -53,14 +52,13 @@ namespace Telegram.UI.Converters {
                 color = Color.FromArgb(255, 153, 153, 153);
             }
 
-            logger.debug("converter color is {0}", color);
 
             return new SolidColorBrush(color);
         }
 
         public object ConvertBack(object value, Type targetType,
             object parameter, System.Globalization.CultureInfo culture) {
-            throw new NotImplementedException();
+            return "";
         }
 
         #endregion

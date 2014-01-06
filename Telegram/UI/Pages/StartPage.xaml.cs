@@ -66,8 +66,6 @@ namespace Telegram.UI
             };
 
             ContactList.AddressbookUserSelected += ContactListOnAddressbookUserSelected;
-
-            TelegramSettings.Instance.Notifications().RegisterPushNotifications();
         }
 
         private void ContactListOnAddressbookUserSelected(object sender, Contact contact) {

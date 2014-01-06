@@ -111,6 +111,7 @@
     <Compile Include="SecretChatNotice.xaml.cs">
       <DependentUpon>SecretChatNotice.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Controls\ExtendedSelector.cs" />
     <Compile Include="UI\Controls\FormLatterEditPhoneControl.xaml.cs">
       <DependentUpon>FormLatterEditPhoneControl.xaml</DependentUpon>
     </Compile>

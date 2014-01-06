@@ -10,6 +10,7 @@
     xmlns:Controls="clr-namespace:Coding4Fun.Toolkit.Controls;assembly=Coding4Fun.Toolkit.Controls"
     xmlns:Telegram="clr-namespace:Telegram"
     xmlns:converters="clr-namespace:Telegram.UI.Converters"
+    xmlns:controls="clr-namespace:Telegram.UI.Controls"
     x:Class="Telegram.UI.DialogPage"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
@@ -107,7 +108,7 @@
 		</Grid>
 		<StackPanel x:Name="ContentPanel"  Grid.Row="1" Margin="0">
 
-			<phone:LongListSelector
+            <controls:ExtendedSelector
 				ItemTemplate="{StaticResource UserSelectingTemplate}"
 				ItemsSource="{Binding Items}" 
 				x:Name="MessageLongListSelector" LayoutMode="List" 

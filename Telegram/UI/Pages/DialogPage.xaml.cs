@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -50,11 +51,13 @@ namespace Telegram.UI {
         private void UpdateDataContext() {
             this.DataContext = model;
             MessageLongListSelector.ItemsSource = model.Messages;
-            model.NewMessageReceived += ModelOnNewMessageReceived;
+//            model.NewMessageReceived += ModelOnNewMessageReceived;
+            
         }
 
         private void ModelOnNewMessageReceived(object sender, object args) {
-            MessageLongListSelector.ScrollTo(model.Messages.Last());
+//            logger.debug("usermodel marker {0}", UserModel.GetCurrentMethod());
+//            MessageLongListSelector.ScrollTo(model.Messages.LastOrDefault());
         }
 
         public DialogPage() {
