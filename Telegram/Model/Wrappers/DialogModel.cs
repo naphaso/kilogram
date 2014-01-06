@@ -474,11 +474,14 @@ namespace Telegram.Model.Wrappers {
         public async Task SendMessage(string message) {
             long randomId = Helpers.GenerateRandomLong();
 
-            messages.Add(new MessageModelUndelivered() {
+            MessageModelUndelivered undeliveredMessage = new MessageModelUndelivered() {
                 MessageType = MessageModelUndelivered.Type.Text,
                 Text = message,
-                Timestamp = DateTime.Now
-            });
+                Timestamp = DateTime.Now,
+                RandomId = randomId
+            };
+
+            messages.Add(undeliveredMessage);
 
             messages_SentMessage sentMessage = await TelegramSession.Instance.Api.messages_sendMessage(InputPeer, message, randomId);
             int date, id, pts, seq;
@@ -496,9 +499,19 @@ namespace Telegram.Model.Wrappers {
                 date = sent.date;
                 List<contacts_Link> links = sent.links;
                 // TODO: process links
+            } else {
+                logger.error("unknown sentMessage constructor");
+                return;
             }
 
-            
+            int messageIndex = messages.IndexOf(undeliveredMessage);
+            if(messageIndex != -1) {
+                messages[messageIndex] = new MessageModelDelivered(TL.message(id, session.SelfId, dialog.peer, true, true, date, message, TL.messageMediaEmpty()));
+            } else {
+                logger.error("not found undelivered message to confirmation");
+            }
+
+            session.Updates.processUpdatePtsSeqDate(pts, seq, date);
         }
 
         public async Task RemoveAndClearDialog() {

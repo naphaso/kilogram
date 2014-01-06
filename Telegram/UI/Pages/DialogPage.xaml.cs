@@ -116,9 +116,9 @@ namespace Telegram.UI {
             var dialogMessageItem = new DialogMessageItem() { Sender = "editor", Text = text, Time = "14:88", IsOut = true};
             MessageModel.Items.Add(dialogMessageItem);
             messageEditor.Text = "";
-            MessageLongListSelector.ScrollTo(dialogMessageItem);
-
-            Toaster.Show("Igor Glotov", text);
+            //MessageLongListSelector.ScrollTo(dialogMessageItem);
+            model.SendMessage(text);
+            //Toaster.Show("Igor Glotov", text);
         }
 
         private void Dialog_Attach(object sender, EventArgs e) {

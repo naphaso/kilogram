@@ -44,10 +44,20 @@ namespace Telegram.MTProto.Components {
 
         public UpdatesProcessor(TelegramSession session) {
             this.session = session;
+            InitDifferenceExecutor();
+        }
+
+        public UpdatesProcessor(TelegramSession session, BinaryReader reader) : this(session) {
+            Read(reader);
+        }
+
+
+        private void InitDifferenceExecutor() {
             DifferenceExecutor = new RequestTask(async delegate {
+                await session.Established;
                 logger.info("get difference from state: pts {0}, qts {1}, date {2}", pts, qts, date);
                 updates_Difference difference = await this.session.Api.updates_getDifference(pts, date, qts);
-                while(difference.Constructor == Constructor.updates_differenceSlice || difference.Constructor == Constructor.updates_difference) {
+                while (difference.Constructor == Constructor.updates_differenceSlice || difference.Constructor == Constructor.updates_difference) {
                     List<Message> new_messages;
                     List<Update> other_updates;
                     List<Chat> chats;
@@ -56,24 +66,25 @@ namespace Telegram.MTProto.Components {
 
                     logger.debug("processing difference: {0}", difference);
 
-                    if(difference.Constructor == Constructor.updates_difference) {
-                        Updates_differenceConstructor diff = (Updates_differenceConstructor) difference;
+                    if (difference.Constructor == Constructor.updates_difference) {
+                        Updates_differenceConstructor diff = (Updates_differenceConstructor)difference;
                         new_messages = diff.new_messages;
                         other_updates = diff.other_updates;
                         chats = diff.chats;
                         users = diff.users;
-                        state = (Updates_stateConstructor) diff.state;
+                        state = (Updates_stateConstructor)diff.state;
 
                         ProcessUpdatesDifference(new_messages, other_updates, chats, users, state);
 
                         break;
-                    } else {
-                        Updates_differenceSliceConstructor diff = (Updates_differenceSliceConstructor) difference;
+                    }
+                    else {
+                        Updates_differenceSliceConstructor diff = (Updates_differenceSliceConstructor)difference;
                         new_messages = diff.new_messages;
                         other_updates = diff.other_updates;
                         chats = diff.chats;
                         users = diff.users;
-                        state = (Updates_stateConstructor) diff.intermediate_state;
+                        state = (Updates_stateConstructor)diff.intermediate_state;
 
                         ProcessUpdatesDifference(new_messages, other_updates, chats, users, state);
 
@@ -120,9 +131,6 @@ namespace Telegram.MTProto.Components {
             }
         }
 
-        public UpdatesProcessor(TelegramSession session, BinaryReader reader) : this(session) {
-            Read(reader);
-        }
 
         // retreiving state
         public async Task GetStateRequest() {
