@@ -73,17 +73,13 @@
                 </phone:LongListSelector.ItemTemplate>
             </phone:LongListSelector>
         </StackPanel>
-		<Button Content="log out" HorizontalAlignment="Left" Width="252" Margin="0,40,0,0"/>
+		<Button Content="log out" Tap="OnLogout"  HorizontalAlignment="Left" Width="252" Margin="0,40,0,0"/>
 	</StackPanel>
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
 
             <shell:ApplicationBarIconButton Click="Edit_Click" IconUri="/Assets/UI/appbar.edit.png" Text="edit info" />
-
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Click="Dummy_Click" Text="dummy" />
-            </shell:ApplicationBar.MenuItems>
 
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

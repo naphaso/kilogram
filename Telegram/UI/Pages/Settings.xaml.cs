@@ -15,6 +15,7 @@ using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using Telegram.Core.Logging;
 using Telegram.Model;
+using Telegram.Model.Wrappers;
 using Telegram.MTProto;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
@@ -39,11 +40,7 @@ namespace Telegram.UI
         }
 
         private void Edit_Click(object sender, EventArgs e) {
-            throw new NotImplementedException();
-        }
 
-        private void Dummy_Click(object sender, EventArgs e) {
-            throw new NotImplementedException();
         }
 
         private void SettingsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -116,6 +113,23 @@ namespace Telegram.UI
         private void PhotoUploadProgressHandler(float progress) {
             Deployment.Current.Dispatcher.BeginInvoke(() => {
                 UploadProgressBar.Value = (double) progress;
+            });
+        }
+
+        private void OnLogout(object sender, GestureEventArgs e) {
+            MessageBoxResult result = MessageBox.Show("This will clear all your saved data. Continue?",
+"Confirm action", MessageBoxButton.OKCancel);
+
+            if (result == MessageBoxResult.OK) {
+                Task.Run(() => DoLogout());
+            }
+        }
+
+        private async Task DoLogout() {
+            await TelegramSettings.Instance.Notifications().UnregisterPushNotifications();
+            TelegramSession.Instance.clear();
+            Deployment.Current.Dispatcher.BeginInvoke(() => {
+                NavigationService.Navigate(new Uri("/UI/Pages/Signup.xaml", UriKind.Relative));
             });
         }
     }

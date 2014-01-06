@@ -467,6 +467,17 @@ namespace Telegram.MTProto {
             return session;
         }
 
+        public void clear() {
+            lock (typeof (TelegramSession)) {
+                using (IsolatedStorageFile fileStorage = IsolatedStorageFile.GetUserStoreForApplication()) {
+                    if (fileStorage.FileExists("/session.dat")) {
+                        fileStorage.DeleteFile("/session.dat");
+                    }
+                }
+                instance = loadIfExists();
+            }
+        }
+
         public void save() {
             logger.debug("Saving session instance");
             try {

@@ -17,7 +17,23 @@ namespace Telegram.Notifications {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(NotificationManager));
         private static string ChannelName = "UndefwareTelegram";
         private static string AppVersion = "1.0";
-        public async void RegisterPushNotifications() {
+
+        public async Task UnregisterPushNotifications() {
+            try {
+                var pushChannel = HttpNotificationChannel.Find(ChannelName);
+
+                if (pushChannel != null) {
+                    bool register =
+                        await
+                            TelegramSession.Instance.Api.account_unregisterDevice(3, pushChannel.ChannelUri.ToString());
+                }
+            }
+            catch (Exception ex) {
+                logger.error("exception {0}", ex);
+            }
+        }
+
+        public async Task RegisterPushNotifications() {
             try {
                 await TelegramSession.Instance.Established;
 
