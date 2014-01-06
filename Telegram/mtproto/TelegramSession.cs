@@ -312,6 +312,16 @@ namespace Telegram.MTProto {
             mainDcId = id;
         }
 
+        private string _stateMarker;
+        public string ContactsStateMarker {
+            get {
+                return _stateMarker ?? "";
+            }
+            set {
+                _stateMarker = value;
+            }
+        }
+
         public Dictionary<int, TelegramDC> Dcs {
             get { return dcs; }
             set { dcs = value; }
@@ -331,6 +341,10 @@ namespace Telegram.MTProto {
             writer.Write(sequence);
             writer.Write(mainDcId);
             writer.Write(dcs.Count);
+
+            // contacts sync marker
+            Serializers.String.write(writer, ContactsStateMarker);
+
             foreach(var dc in dcs) {
                 writer.Write(dc.Key);
                 dc.Value.write(writer);
@@ -368,6 +382,10 @@ namespace Telegram.MTProto {
             sequence = reader.ReadInt32();
             mainDcId = reader.ReadInt32();
             int count = reader.ReadInt32();
+
+            // contacts sync marker
+            ContactsStateMarker = Serializers.String.read(reader);
+
             dcs = new Dictionary<int, TelegramDC>(count);
             for(int i = 0; i < count; i++) {
                 int endpointId = reader.ReadInt32();
@@ -378,6 +396,7 @@ namespace Telegram.MTProto {
             if(authorizationExists != 0) {
                 authorization = (Auth_authorizationConstructor) TL.Parse<auth_Authorization>(reader);
             }
+
 
             int usersCount = reader.ReadInt32();
             users = new Dictionary<int, UserModel>(usersCount + 10);

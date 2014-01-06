@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Resources;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
@@ -9,6 +10,7 @@ using Microsoft.Phone.Shell;
 using Telegram.Core.Logging;
 using Telegram.Model;
 using Telegram.MTProto;
+using Telegram.Platform;
 using Telegram.Resources;
 
 namespace Telegram
@@ -65,6 +67,10 @@ namespace Telegram
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            if (TelegramSession.Instance.AuthorizationExists()) {
+                ContactManager cm = new ContactManager();
+                Task.Run(() => cm.SyncContacts());
+            }
         }
 
         // Code to execute when the application is activated (brought to foreground)

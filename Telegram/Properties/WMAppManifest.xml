@@ -20,14 +20,16 @@
       <Capability Name="ID_CAP_PHONEDIALER" />
     </Capabilities>
     <Tasks>
-      <DefaultTask Name="_default" NavigationPage="MainPage.xaml" />
+      <DefaultTask Name="_default" NavigationPage="UI/Pages/StartPage.xaml" />
     </Tasks>
     <Tokens>
       <PrimaryToken TokenID="TelegramToken" TaskName="_default">
         <TemplateFlip>
-          <SmallImageURI IsRelative="true" IsResource="false">Assets\UI\chat.nomessages-WXGA.png</SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">
+          </SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsRelative="true" IsResource="false">Assets\UI\chat.nomessages-WVGA.png</BackgroundImageURI>
+          <BackgroundImageURI IsRelative="true" IsResource="false">
+          </BackgroundImageURI>
           <Title>Telegram</Title>
           <BackContent>
           </BackContent>

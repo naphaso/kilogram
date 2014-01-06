@@ -13,6 +13,7 @@ using Microsoft.Phone.Tasks;
 using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto;
+using Telegram.Platform;
 using Telegram.UI.Controls;
 using Telegram.UI.Models;
 using Telegram.UI.Models.Users;
@@ -38,10 +39,22 @@ namespace Telegram.UI
             base.OnNavigatedTo(e);
         }
 
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs) {
+            if (TelegramSession.Instance.AuthorizationExists()) {
+                TelegramSession.Instance.ConnectAsync();
+            } else {
+                NavigationService.Navigate(new Uri("/UI/Pages/Signup.xaml", UriKind.Relative));
+            }
+        }
+
         public StartPage()
         {
-            InitializeComponent();
+            this.Loaded += OnLoaded;
+            if (!TelegramSession.Instance.AuthorizationExists()) {
+                return;
+            }
 
+            InitializeComponent();
             this.BackKeyPress += delegate {
                 TelegramSession.Instance.save();
                 Application.Current.Terminate();
