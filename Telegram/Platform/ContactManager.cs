@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Phone.PersonalInformation;
+using Microsoft.Phone.Tasks;
 using Microsoft.Phone.UserData;
 using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
@@ -16,8 +17,9 @@ namespace Telegram.Platform {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(ContactManager));
 
         public async Task SyncContacts() {
-            Contacts contacts = new Contacts();
+            await TelegramSession.Instance.Established;
 
+            Contacts contacts = new Contacts();
             contacts.SearchCompleted += ContactsOnSearchCompleted;
             contacts.SearchAsync(String.Empty, FilterKind.None, "Addressbook Contacts Sync");
 
@@ -27,15 +29,17 @@ namespace Telegram.Platform {
             List<InputContact> contacts = new List<InputContact>();
 
             foreach (Contact contact in e.Results) {
-                if (!contact.PhoneNumbers.Any())
+                if (contact.PhoneNumbers.Count() == 0)
                     continue;
 
-                string phoneNumber = contact.PhoneNumbers.ToList()[0].PhoneNumber;
-                string firstName = contact.CompleteName.FirstName;
-                string lastName = contact.CompleteName.LastName;
+                string phoneNumber = contact.PhoneNumbers.ToList()[0].PhoneNumber ?? "";
+                string firstName = contact.CompleteName.FirstName ?? "";
+                string lastName = contact.CompleteName.LastName ?? "";
 
                 InputContact inputPhoneContact = TL.inputPhoneContact(0, phoneNumber, firstName,
                     lastName);
+
+                contacts.Add(inputPhoneContact);
 
             }
 
@@ -71,6 +75,7 @@ namespace Telegram.Platform {
                 logger.debug("user hash string for ids: {0}", hashStr);
                 contacts_Contacts serverContacts = await TelegramSession.Instance.Api.contacts_getContacts(hashStr);
                 if (serverContacts.Constructor == Constructor.contacts_contactsNotModified) {
+                    logger.debug("Contacts not modified, finishing sync.");
                     return;
                 }
 
@@ -106,7 +111,8 @@ namespace Telegram.Platform {
 
             if (sortedStr != "") { 
                 sortedStr = sortedStr.Substring(0, sortedStr.Length - 1);
-                return sortedStr;
+                logger.debug("sorted str is {0}", sortedStr);
+                return MD5.GetMd5String(sortedStr);
             }
 
             return "";

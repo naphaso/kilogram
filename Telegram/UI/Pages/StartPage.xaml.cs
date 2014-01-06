@@ -53,10 +53,6 @@ namespace Telegram.UI
             if (!TelegramSession.Instance.AuthorizationExists()) {
                 return;
             }
-            else {
-                ContactManager cm = new ContactManager();
-                Task.Run(() => cm.SyncContacts());
-            }
 
             InitializeComponent();
             this.BackKeyPress += delegate {

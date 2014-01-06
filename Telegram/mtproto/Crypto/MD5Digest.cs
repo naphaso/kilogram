@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Telegram.MTProto.Crypto {
     public interface IDigest {
@@ -56,15 +57,9 @@ namespace Telegram.MTProto.Crypto {
 
     public class MD5 {
 
-        static byte[] GetBytes(string str) {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
-            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
-        }
-
         public static string GetMd5String(string data) {
             MD5Digest digest = new MD5Digest();
-            digest.BlockUpdate(GetBytes(data), 0, data.Length);
+            digest.BlockUpdate(Encoding.UTF8.GetBytes(data), 0, data.Length);
             byte[] hash = new byte[16];
             digest.DoFinal(hash, 0);
 
