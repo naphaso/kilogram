@@ -30,11 +30,9 @@ namespace Telegram.Model.Wrappers {
         public void SetUser(User user) {
             this.user = user;
             //ChangeEvent();
-            Deployment.Current.Dispatcher.BeginInvoke(delegate {
-                OnPropertyChanged("FullName");
-                OnPropertyChanged("Status");
-                OnPropertyChanged("AvatarPath"); 
-            });
+            OnPropertyChanged("FullName");
+            OnPropertyChanged("Status");
+            OnPropertyChanged("AvatarPath"); 
         }
 
         public void SetUserStatus(UserStatus status) {
@@ -206,19 +204,19 @@ namespace Telegram.Model.Wrappers {
 
             if (peerNotifySettings == null) {
                 peerNotifySettings = newSettings;
-                Deployment.Current.Dispatcher.BeginInvoke(delegate {
-                    OnPropertyChanged("NotificationSound");
-                    OnPropertyChanged("NotificationsEnabled");
-                });
+
+                OnPropertyChanged("NotificationSound");
+                OnPropertyChanged("NotificationsEnabled");
+
                 return;
             }
 
             if (peerNotifySettings.sound != newSettings.sound) {
                 peerNotifySettings = newSettings;
-                Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("NotificationSound"));
+                OnPropertyChanged("NotificationSound");
             } else if (peerNotifySettings.mute_until != newSettings.mute_until) {
                 peerNotifySettings = newSettings;
-                Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("NotificationsEnabled"));
+                OnPropertyChanged("NotificationsEnabled");
             }
         }
 
@@ -284,7 +282,7 @@ namespace Telegram.Model.Wrappers {
                     peerNotifySettings.mute_until = 0;
 
                 UpdateUserSettings();
-                Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("NotificationsEnabled"));
+                OnPropertyChanged("NotificationsEnabled");
             }
         }
 
@@ -388,7 +386,7 @@ namespace Telegram.Model.Wrappers {
                 }
 
                 logger.debug("File receive in progress {0}", avatarFileLocation);
-                getFileTask.ContinueWith((path) => SetAvatarPath(path.Result),TaskScheduler.FromCurrentSynchronizationContext());
+                getFileTask.ContinueWith((path) => SetAvatarPath(path.Result), TaskScheduler.FromCurrentSynchronizationContext());
 
                 return new BitmapImage(GetUserPlaceholderImageUri());
             }
@@ -398,7 +396,7 @@ namespace Telegram.Model.Wrappers {
         public void SetAvatarPath(string path) {
             _avatarPath = path;
             logger.debug("Path saved {0}", _avatarPath);
-            Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("AvatarPath"));
+            OnPropertyChanged("AvatarPath");
         }
 
         private bool _updateInProgress = false;

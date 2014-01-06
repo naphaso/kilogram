@@ -103,7 +103,7 @@ namespace Telegram.Model.Wrappers {
                 }
 
                 logger.debug("File receive in progress {0}", avatarFileLocation);
-                getFileTask.ContinueWith((path) => SetAvatarPath(path.Result));
+                getFileTask.ContinueWith((path) => SetAvatarPath(path.Result), TaskScheduler.FromCurrentSynchronizationContext());
 
                 return new BitmapImage(GetChatPlaceholderImageUri()); ;
             }
@@ -114,7 +114,7 @@ namespace Telegram.Model.Wrappers {
         public void SetAvatarPath(string path) {
             _avatarPath = path;
             logger.debug("Path saved {0}", _avatarPath);
-            Deployment.Current.Dispatcher.BeginInvoke(() => OnPropertyChanged("AvatarPath"));
+            OnPropertyChanged("AvatarPath");
         }
 
         public string Title {

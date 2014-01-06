@@ -658,7 +658,9 @@ namespace Telegram.MTProto {
         public void SaveUser(User user) {
             UserModel model = new UserModel(user);
             if(users.ContainsKey(model.Id)) {
-                users[model.Id].SetUser(user);
+                Deployment.Current.Dispatcher.BeginInvoke(delegate {
+                    users[model.Id].SetUser(user);
+                });
             } else {
                 users[model.Id] = model;    
             }

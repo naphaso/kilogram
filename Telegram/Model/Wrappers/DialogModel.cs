@@ -26,7 +26,7 @@ namespace Telegram.Model.Wrappers {
         private DialogConstructor dialog;
         private ObservableCollectionUI<MessageModel> messages;
         private TelegramSession session;
-
+        public event OnNewMessageReceived NewMessageReceived;
         public enum StatusType {
             Static,
             Activity
@@ -469,6 +469,9 @@ namespace Telegram.Model.Wrappers {
         public void ProcessNewMessage(MessageModel messageModel) {
             logger.info("processing message and adding to observable collection");
             messages.Add(messageModel);
+            
+            if (NewMessageReceived != null)
+                NewMessageReceived(this, messageModel);
         }
 
         public async Task SendMessage(string message) {
@@ -481,7 +484,7 @@ namespace Telegram.Model.Wrappers {
                 RandomId = randomId
             };
 
-            messages.Add(undeliveredMessage);
+            ProcessNewMessage(undeliveredMessage);
 
             messages_SentMessage sentMessage = await TelegramSession.Instance.Api.messages_sendMessage(InputPeer, message, randomId);
             int date, id, pts, seq;
@@ -606,8 +609,7 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-
-
-
     }
+
+    public delegate void OnNewMessageReceived(object sender, object args);
 }

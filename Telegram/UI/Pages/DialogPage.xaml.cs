@@ -22,7 +22,6 @@ namespace Telegram.UI {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogListControl));
         private TelegramSession session;
 
-        public static DialogMessageModel MessageModel = null; // FIXME testing purpose only
         private bool keyboardWasShownBeforeEmojiPanelIsAppeared;
 
         private DialogModel model;
@@ -51,6 +50,11 @@ namespace Telegram.UI {
         private void UpdateDataContext() {
             this.DataContext = model;
             MessageLongListSelector.ItemsSource = model.Messages;
+            model.NewMessageReceived += ModelOnNewMessageReceived;
+        }
+
+        private void ModelOnNewMessageReceived(object sender, object args) {
+            MessageLongListSelector.ScrollTo(model.Messages.Last());
         }
 
         public DialogPage() {
@@ -59,11 +63,6 @@ namespace Telegram.UI {
             };
 
             session = TelegramSession.Instance;
-
-            if (MessageModel == null)
-                MessageModel = new DialogMessageModel();
-
-            MessageModel.Init();
 
 //            this.DataContext = MessageModel;
 
@@ -113,10 +112,8 @@ namespace Telegram.UI {
 
         private void Dialog_Message_Send(object sender, EventArgs e) {
             var text = messageEditor.Text;
-            var dialogMessageItem = new DialogMessageItem() { Sender = "editor", Text = text, Time = "14:88", IsOut = true};
-            MessageModel.Items.Add(dialogMessageItem);
+
             messageEditor.Text = "";
-            //MessageLongListSelector.ScrollTo(dialogMessageItem);
             model.SendMessage(text);
             //Toaster.Show("Igor Glotov", text);
         }
