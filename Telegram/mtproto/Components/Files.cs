@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Core.Logging;
+using Telegram.MTProto.Crypto;
 using Telegram.MTProto.Exceptions;
 using Telegram.Utils;
 
@@ -66,9 +67,11 @@ namespace Telegram.MTProto.Components {
 
         // upload
 
-        public async Task<long> UploadFile(Stream stream, FileUploadProcessHandler handler) {
+        public async Task<InputFile> UploadFile(string filename, Stream stream, FileUploadProcessHandler handler) {
             TLApi api = await session.GetFileSessionMain();
             long fileId = Helpers.GenerateRandomLong();
+            MD5 hash = new MD5();
+            
             if(stream.Length < 128*1024) {
                 handler(0.0f);
                 byte[] data = new byte[stream.Length];
@@ -77,8 +80,10 @@ namespace Telegram.MTProto.Components {
                 while(result != true) {
                     result = await api.upload_saveFilePart(fileId, 0, data);
                 }
+                hash.Update(data);
                 handler(1.0f);
-                return fileId;
+
+                return TL.inputFile(fileId, 1, filename, hash.FinalString());
             }
 
             float allStreamLength = stream.Length;
@@ -94,19 +99,26 @@ namespace Telegram.MTProto.Components {
                 while(result != true) {
                     result = await api.upload_saveFilePart(fileId, i, data);
                 }
+                hash.Update(data);
             }
 
-            handler((float)chunkCount * (float)chunkSize / allStreamLength);
-            byte[] lastChunkData = new byte[lastChunkSize];
-            stream.Read(lastChunkData, 0, lastChunkSize);
-            bool lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
-            while (lastChunkResult != true) {
-                lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
+            int allChunksCount = chunkCount;
+
+            if(lastChunkSize != 0) {
+                allChunksCount++;
+                handler((float) chunkCount*(float) chunkSize/allStreamLength);
+                byte[] lastChunkData = new byte[lastChunkSize];
+                stream.Read(lastChunkData, 0, lastChunkSize);
+                bool lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
+                while(lastChunkResult != true) {
+                    lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
+                }
+                hash.Update(lastChunkData);
             }
 
             handler(1.0f);
             
-            return fileId;
+            return TL.inputFile(fileId, allChunksCount, filename, hash.FinalString());
         }
 
 
