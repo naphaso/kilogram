@@ -251,10 +251,15 @@ namespace Telegram.MTProto {
             }
 
             logger.info("connection established, config: {0}", config);
-            timer = new DispatcherTimer();
-            timer.Tick += new EventHandler(timerDispatcher);
-            timer.Interval = new TimeSpan(0, 0, 2);
-            timer.Start();
+            //timer = new DispatcherTimer();
+            //timer.Tick += new EventHandler(timerDispatcher);
+            //timer.Interval = new TimeSpan(0, 0, 2);
+            //timer.Start();
+
+            while (gateway != null) {
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                timerDispatcher(this, new EventArgs());
+            }
         }
 
 
@@ -549,6 +554,8 @@ namespace Telegram.MTProto {
             using (BinaryReader compressedReader = new BinaryReader(zipStream)) {
                 processMessage(messageId, sequence, messageReader);
             }
+
+            return true;
         }
 
         private bool HandleRpcResult(ulong messageId, int sequence, BinaryReader messageReader) {
@@ -681,10 +688,11 @@ namespace Telegram.MTProto {
         }
 
         public void Dispose() {
-            if(timer != null) {
-                timer.Stop();
-            }
+            //if(timer != null) {
+            //    timer.Stop();
+            //}
             gateway.Dispose();
+            gateway = null;
         }
     }
 }

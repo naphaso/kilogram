@@ -390,7 +390,6 @@ namespace Telegram.Model.Wrappers {
         public BitmapImage AvatarPath {
             get {
                  
-
                 if (_avatarPath != null) {
                     logger.debug("Returning cached avatar {0}", _avatarPath);
                     return Utils.Helpers.GetBitmapImageInternal(_avatarPath);

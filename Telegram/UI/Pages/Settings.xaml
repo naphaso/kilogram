@@ -40,7 +40,8 @@
         <!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Margin="12,0,12,0">
 			<Grid Height="133" VerticalAlignment="Top" Margin="0,0,0,20">
-				<Image Margin="0,10,0,0" Source="{Binding SelfUser.AvatarPath}" Stretch="Fill" Height="112" VerticalAlignment="Top" HorizontalAlignment="Left" Width="112"/>
+                <Image Tap="OnChangeAvatar" Margin="0,10,0,0" Source="/Assets/UI/appbar.edit.png" Stretch="Fill" Height="112" VerticalAlignment="Top" HorizontalAlignment="Left" Width="112"/>
+				<ProgressBar Name="UploadProgressBar" Visibility="Collapsed" HorizontalAlignment="Left" Height="10" VerticalAlignment="Bottom" Width="112" Margin="0,0,0,11"/>
 				<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="130,0,0,0" Width="311">
 					<TextBlock HorizontalAlignment="Left" Margin="0,0,-30,0" TextWrapping="Wrap" VerticalAlignment="Center" Style="{StaticResource PhoneTextLargeStyle}">
 						<Run Text="{Binding SelfUser.FullName}"/>
