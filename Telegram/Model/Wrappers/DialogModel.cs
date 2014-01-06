@@ -468,7 +468,7 @@ namespace Telegram.Model.Wrappers {
 
         public void ProcessNewMessage(MessageModel messageModel) {
             logger.info("processing message and adding to observable collection");
-                messages.Add(messageModel);
+            messages.Add(messageModel);
         }
 
         public async Task SendMessage(string message) {
@@ -481,16 +481,24 @@ namespace Telegram.Model.Wrappers {
             });
 
             messages_SentMessage sentMessage = await TelegramSession.Instance.Api.messages_sendMessage(InputPeer, message, randomId);
-
-            switch (sentMessage.Constructor) {
-                case Constructor.messages_sentMessage:
-                    
-                    // replace Undelivered with delivered
-                    break;
-                case Constructor.messages_sentMessageLink:
-                    // ???
-                    break;
+            int date, id, pts, seq;
+            if(sentMessage.Constructor == Constructor.messages_sentMessage) {
+                Messages_sentMessageConstructor sent = (Messages_sentMessageConstructor) sentMessage;
+                id = sent.id;
+                pts = sent.pts;
+                seq = sent.seq;
+                date = sent.date;
+            } else if(sentMessage.Constructor == Constructor.messages_sentMessageLink) {
+                Messages_sentMessageLinkConstructor sent = (Messages_sentMessageLinkConstructor) sentMessage;
+                id = sent.id;
+                pts = sent.pts;
+                seq = sent.seq;
+                date = sent.date;
+                List<contacts_Link> links = sent.links;
+                // TODO: process links
             }
+
+            
         }
 
         public async Task RemoveAndClearDialog() {

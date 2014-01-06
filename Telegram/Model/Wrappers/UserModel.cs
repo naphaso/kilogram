@@ -21,7 +21,7 @@ namespace Telegram.Model.Wrappers {
 
         private User user;
 
-        public event UserModelChangeHandler ChangeEvent;
+        //public event UserModelChangeHandler ChangeEvent;
 
         public UserModel(User user) {
             this.user = user;
@@ -29,7 +29,7 @@ namespace Telegram.Model.Wrappers {
 
         public void SetUser(User user) {
             this.user = user;
-            ChangeEvent();
+            //ChangeEvent();
             Deployment.Current.Dispatcher.BeginInvoke(delegate {
                 OnPropertyChanged("FullName");
                 OnPropertyChanged("Status");
