@@ -111,6 +111,48 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public string FirstName {
+            get {
+                switch (user.Constructor) {
+                    case Constructor.userEmpty:
+                        return "empty";
+                    case Constructor.userSelf:
+                        return ((UserSelfConstructor)user).first_name;
+                    case Constructor.userContact:
+                        return ((UserContactConstructor)user).first_name;
+                    case Constructor.userRequest:
+                        return ((UserRequestConstructor)user).first_name;
+                    case Constructor.userForeign:
+                        return ((UserForeignConstructor)user).first_name;
+                    case Constructor.userDeleted:
+                        return ((UserDeletedConstructor)user).first_name;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+            }
+        }
+
+        public string LastName {
+            get {
+                switch (user.Constructor) {
+                    case Constructor.userEmpty:
+                        return "empty";
+                    case Constructor.userSelf:
+                        return ((UserSelfConstructor)user).last_name;
+                    case Constructor.userContact:
+                        return ((UserContactConstructor)user).last_name;
+                    case Constructor.userRequest:
+                        return ((UserRequestConstructor)user).last_name;
+                    case Constructor.userForeign:
+                        return ((UserForeignConstructor)user).last_name;
+                    case Constructor.userDeleted:
+                        return ((UserDeletedConstructor)user).last_name;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+            }
+        }
+
         public string Status {
             get {
                 switch (user.Constructor) {

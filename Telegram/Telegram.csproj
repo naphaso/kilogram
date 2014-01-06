@@ -104,6 +104,7 @@
     <Compile Include="Model\Wrappers\UserModel.cs" />
     <Compile Include="MTProto\Components\Files.cs" />
     <Compile Include="MTProto\Components\UpdatesProcessor.cs" />
+    <Compile Include="MTProto\Crypto\MD5Digest.cs" />
     <Compile Include="MTProto\TLStuff.cs" />
     <Compile Include="Platform\ContactManager.cs" />
     <Compile Include="Platform\NotificationManager.cs" />

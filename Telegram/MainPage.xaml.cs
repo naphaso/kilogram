@@ -19,17 +19,9 @@ namespace Telegram
         public MainPage()
         {
             InitializeComponent();
-            this.Loaded += OnLoaded;
 
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs) {
-            if (TelegramSession.Instance.AuthorizationExists()) {
-                TelegramSession.Instance.ConnectAsync();
-                NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
-            } else {
-                NavigationService.Navigate(new Uri("/UI/Pages/Signup.xaml", UriKind.Relative));
-            }
-        }
+
     }
 }
