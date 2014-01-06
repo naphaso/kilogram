@@ -41,37 +41,42 @@
 
     </phone:PhoneApplicationPage.Resources>
     <!--LayoutRoot is the root grid where all page content is placed-->
-	<Grid x:Name="LayoutRoot" Background="Transparent">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
+    <StackPanel x:Name="LayoutRoot" Height="696">
 
-		<phone:Pivot Name="UserProfilePivot" SelectionChanged="Pivot_OnSelectionChanged" Grid.Row="1" Title="{Binding FullName}">
-			<phone:PivotItem  CacheMode="{x:Null}" Header="profile">
-				<ScrollViewer>
-					<Grid Width="456" Height="836">
-						<Image Margin="10,10,0,0" Source="{Binding AvatarPath}" Stretch="Fill" Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-						<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Status}" VerticalAlignment="Top" Margin="148,10,0,0" Style="{StaticResource TextBlockFieldHint}" FontSize="21.333"/>
-						<StackPanel Margin="0,156,0,-103" VerticalAlignment="Top">
-							<Button Content="send message" BorderThickness="0" FontSize="40" HorizontalContentAlignment="Left" FontFamily="Segoe WP SemiLight" Padding="0,5,10,6"/>
-							<Button Content="create secret chat" BorderThickness="0" FontSize="40" HorizontalContentAlignment="Left" FontFamily="Segoe WP SemiLight" Padding="0,5,10,6"/>
-							<Telegram:PhoneButtonUserControl Name="PhoneButtonUserControl" Padding="0"/>
-                            <toolkit:ToggleSwitch Header="Notifications" IsChecked="{Binding NotificationsEnabled, Mode=TwoWay}"/>
-							<TextBlock TextWrapping="Wrap" Text="Sound" Style="{StaticResource TextBlockFieldHint}" Margin="12,20,6,-5" Height="27"/>
+        <phone:Pivot Name="UserProfilePivot" SelectionChanged="Pivot_OnSelectionChanged" Grid.Row="1" Title="{Binding FullName}" Height="696">
+			<phone:PivotItem Header="profile">
+				<ScrollViewer Background="{x:Null}">
+                        <StackPanel>
+                            <Grid Margin="12,0,0,0">
+							    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="140,0,0,0" Style="{StaticResource TextBlockFieldHint}" FontSize="21.333" Text="{Binding Status}" Height="28.5"/>
+							    <Image Margin="0" Source="{Binding AvatarPath}" Stretch="Fill" Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+						    </Grid>
+                            <StackPanel Margin="0" VerticalAlignment="Top">
+                            <ListBoxItem HorizontalContentAlignment="Stretch">
+                                <TextBlock Tap="OnSendMessage" toolkit:TiltEffect.IsTiltEnabled="True" Text="send message" FontSize="40" Margin="12,10,0,10" FontFamily="Segoe WP SemiLight" />
+                            </ListBoxItem>
+                            <ListBoxItem HorizontalContentAlignment="Stretch">
+                                <TextBlock Tap="OnCreateSecretChat" toolkit:TiltEffect.IsTiltEnabled="True" Text="create secret chat" Margin="12,10,0,10" FontSize="40" FontFamily="Segoe WP SemiLight"/>
+                            </ListBoxItem>
+                            <ListBoxItem HorizontalContentAlignment="Stretch">
+                                <Telegram:PhoneButtonUserControl Tap="OnCallMobile" x:Name="PhoneButtonUserControl" Padding="0"/>
+                            </ListBoxItem>
+
+                            <toolkit:ToggleSwitch  toolkit:TiltEffect.IsTiltEnabled="True" Header="Notifications" IsChecked="{Binding NotificationsEnabled, Mode=TwoWay}"/>
+							<TextBlock TextWrapping="Wrap" Text="Sound" Style="{StaticResource TextBlockFieldHint}" Margin="12,0,6,-5" Height="27"/>
 							<toolkit:ListPicker Margin="12,0,12,10"/>
 						</StackPanel>
-					</Grid>
+					</StackPanel>
 				</ScrollViewer>
 			</phone:PivotItem>
-			<phone:PivotItem CacheMode="{x:Null}" Header="media">
+			<phone:PivotItem Header="media">
 				<Grid Margin="8,0" HorizontalAlignment="Center">
                     <phone:LongListSelector Name="GalleryListSelector" ItemTemplate="{StaticResource ThumbSelectingTemplate}" ItemsSource="{Binding}"  LayoutMode="Grid" GridCellSize="102,102" Width="432"/>
 				</Grid>
 			</phone:PivotItem>
 		</phone:Pivot>
 
-	</Grid>
+	</StackPanel>
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
 

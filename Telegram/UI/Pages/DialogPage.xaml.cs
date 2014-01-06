@@ -54,6 +54,10 @@ namespace Telegram.UI {
         }
 
         public DialogPage() {
+            this.BackKeyPress += delegate {
+                NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
+            };
+
             session = TelegramSession.Instance;
 
             if (MessageModel == null)
