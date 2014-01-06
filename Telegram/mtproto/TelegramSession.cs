@@ -610,6 +610,9 @@ namespace Telegram.MTProto {
             await ConnectAsync();
         }
 
+        public async Task<TLApi> GetFileSessionMain() {
+            return await GetFileSession(mainDcId);
+        }
         public async Task<TLApi> GetFileSession(int dc) {
             logger.debug("Getting file session for dc {0}", dc);
             await Established;
