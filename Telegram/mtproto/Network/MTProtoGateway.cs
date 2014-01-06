@@ -543,7 +543,12 @@ namespace Telegram.MTProto {
 
 
         private bool HandleGzipPacked(ulong messageId, int sequence, BinaryReader messageReader) {
-            return false;
+            byte[] packedData = Serializers.Bytes.read(messageReader);
+            using (MemoryStream packedStream = new MemoryStream(packedData, false))
+            using (GZipStream zipStream = new GZipStream(packedStream, CompressionMode.Decompress))
+            using (BinaryReader compressedReader = new BinaryReader(zipStream)) {
+                processMessage(messageId, sequence, messageReader);
+            }
         }
 
         private bool HandleRpcResult(ulong messageId, int sequence, BinaryReader messageReader) {
