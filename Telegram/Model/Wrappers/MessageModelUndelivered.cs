@@ -18,6 +18,7 @@ namespace Telegram.Model.Wrappers {
         };
 
         public Type MessageType { get; set; }
+        public long RandomId { get; set; }
 
         public MessageModelUndelivered(BinaryReader reader) {
             Read(reader);
@@ -46,12 +47,14 @@ namespace Telegram.Model.Wrappers {
             Serializers.String.write(writer, _text);
             writer.Write(DateTimeExtensions.GetUnixTimestampSeconds(Timestamp));
             writer.Write((int) MessageType);
+            writer.Write(RandomId);
         }
 
         public void Read(BinaryReader reader) {
             _text = Serializers.String.read(reader);
             Timestamp = DateTimeExtensions.DateTimeFromUnixTimestampSeconds(reader.ReadInt64());
             MessageType = (Type) reader.ReadInt32();
+            RandomId = reader.ReadInt64();
         }
     }
 }

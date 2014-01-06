@@ -45,8 +45,79 @@ namespace Telegram.MTProto.Components {
         public UpdatesProcessor(TelegramSession session) {
             this.session = session;
             DifferenceExecutor = new RequestTask(async delegate {
-                await this.session.Api.updates_getDifference(pts, date, qts);
+                logger.info("get difference from state: pts {0}, qts {1}, date {2}", pts, qts, date);
+                updates_Difference difference = await this.session.Api.updates_getDifference(pts, date, qts);
+                while(difference.Constructor == Constructor.updates_differenceSlice || difference.Constructor == Constructor.updates_difference) {
+                    List<Message> new_messages;
+                    List<Update> other_updates;
+                    List<Chat> chats;
+                    List<User> users;
+                    Updates_stateConstructor state;
+
+                    logger.debug("processing difference: {0}", difference);
+
+                    if(difference.Constructor == Constructor.updates_difference) {
+                        Updates_differenceConstructor diff = (Updates_differenceConstructor) difference;
+                        new_messages = diff.new_messages;
+                        other_updates = diff.other_updates;
+                        chats = diff.chats;
+                        users = diff.users;
+                        state = (Updates_stateConstructor) diff.state;
+
+                        ProcessUpdatesDifference(new_messages, other_updates, chats, users, state);
+
+                        break;
+                    } else {
+                        Updates_differenceSliceConstructor diff = (Updates_differenceSliceConstructor) difference;
+                        new_messages = diff.new_messages;
+                        other_updates = diff.other_updates;
+                        chats = diff.chats;
+                        users = diff.users;
+                        state = (Updates_stateConstructor) diff.intermediate_state;
+
+                        ProcessUpdatesDifference(new_messages, other_updates, chats, users, state);
+
+                        difference = await this.session.Api.updates_getDifference(pts, date, qts);
+                    }
+                }
+
+                logger.info("get difference completed successfully");
             });
+        }
+
+        private void ProcessUpdatesDifference(List<Message> new_messages, List<Update> other_updates, List<Chat> chats, List<User> users, Updates_stateConstructor state) {
+            ProcessUsers(users);
+            ProcessChats(chats);
+            ProcessNewMessages(new_messages);
+            ProcessUpdates(other_updates);
+
+            lock(this) {
+                logger.debug("saving new updates state: pts {0}, qts {1}, seq {2}, date {3}", state.pts, state.qts, state.seq, state.date);
+
+                pts = state.pts;
+                qts = state.qts;
+                date = state.date;
+                seq = state.seq;
+                // TODO: unread count
+            }
+        }
+
+        private void ProcessUsers(List<User> users) {
+            foreach(var user in users) {
+                session.SaveUser(user);
+            }
+        }
+
+        private void ProcessChats(List<Chat> chats) {
+            foreach(var chat in chats) {
+                session.SaveChat(chat);
+            }
+        }
+
+        private void ProcessNewMessages(List<Message> messages) {
+            foreach(var message in messages) {
+                NewMessageEvent(message);
+            }
         }
 
         public UpdatesProcessor(TelegramSession session, BinaryReader reader) : this(session) {
@@ -111,7 +182,7 @@ namespace Telegram.MTProto.Components {
 
                 if(seq - this.seq > 1) {
                     logger.warning("lost updates! skip and force get difference");
-                    // TODO: get difference request
+                    DifferenceExecutor.Request();
                     return false;
                 }
 
@@ -137,7 +208,7 @@ namespace Telegram.MTProto.Components {
 
                 if(startSeq - this.seq > 1) {
                     logger.warning("lost updates! skip and force get difference");
-                    // TODO: get difference
+                    DifferenceExecutor.Request();
                     return false;
                 }
 
@@ -231,7 +302,8 @@ namespace Telegram.MTProto.Components {
         }
 
         private void ProcessUpdate(UpdatesTooLongConstructor update) {
-            // TODO: force get difference
+            logger.debug("updates too long, force get difference");
+            DifferenceExecutor.Request();
         }
 
         private void ProcessUpdate(UpdateShortMessageConstructor update) {
@@ -267,7 +339,8 @@ namespace Telegram.MTProto.Components {
                 return;
             }
 
-            // TODO: process users,chats
+            ProcessUsers(update.users);
+            ProcessChats(update.chats);
             
             foreach(var innerUpdate in update.updates) {
                 ProcessUpdate(innerUpdate);
@@ -279,9 +352,14 @@ namespace Telegram.MTProto.Components {
                 return;
             }
 
-            // TODO: process users, chats, date, seq
+            ProcessUsers(update.users);
+            ProcessChats(update.chats);
 
-            foreach(var innerUpdate in update.updates) {
+            ProcessUpdates(update.updates);
+        }
+
+        private void ProcessUpdates(List<Update> updates) {
+            foreach (var innerUpdate in updates) {
                 ProcessUpdate(innerUpdate);
             }
         }

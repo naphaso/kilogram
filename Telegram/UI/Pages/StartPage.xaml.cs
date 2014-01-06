@@ -60,6 +60,7 @@ namespace Telegram.UI
 
             InitializeComponent();
             this.BackKeyPress += delegate {
+                TelegramSession.Instance.save();
                 Application.Current.Terminate();
             };
 

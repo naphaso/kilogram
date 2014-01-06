@@ -73,7 +73,7 @@ namespace Telegram.MTProto {
         private TaskCompletionSource<Config> responseCompletionSource = new TaskCompletionSource<Config>();
 
         public override void OnSend(BinaryWriter writer) {
-            writer.Write(0x39620c41); // invokeWithLayer10
+            writer.Write(0xa6b88fdf); // invokeWithLayer10#39620c41, invokeWithLayer11#a6b88fdf
             writer.Write(0x69796de9); // initConnection
             writer.Write(1097); // api id
             Serializers.String.write(writer, "WinPhone Emulator"); // device model
