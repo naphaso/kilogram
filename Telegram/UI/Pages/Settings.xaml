@@ -31,7 +31,7 @@
 		<StaticResource ResourceKey="PhoneForegroundBrush"/>
 	</phone:PhoneApplicationPage.Foreground>
 <!--LayoutRoot is the root grid where all page content is placed-->
-	<StackPanel x:Name="LayoutRoot" Background="Transparent" Margin="5,0">
+	<StackPanel x:Name="LayoutRoot" Margin="5,0" Height="696">
 <!--TitlePanel contains the name of the application and page title-->
 		<StackPanel Margin="12,0,0,0">
 			<TextBlock Text="SETTINGS" Style="{StaticResource PhoneTextNormalStyle}" Margin="0,0,12,10"/>
@@ -40,20 +40,21 @@
         <!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Margin="12,0,12,0">
 			<Grid Height="133" VerticalAlignment="Top" Margin="0,0,0,20">
-				<Image Margin="0,10,0,0" Source="/Assets/UI/placeholder.user.green-720p.png" Stretch="Fill" Height="112" VerticalAlignment="Top" HorizontalAlignment="Left" Width="112"/>
-				<TextBlock HorizontalAlignment="Left" Margin="137,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}">
-					<Run Text="John Doe"/>
-				</TextBlock>
-				<TextBlock HorizontalAlignment="Left" Margin="137,43,0,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" Style="{StaticResource TextBlockStatus}"/>
-				<TextBlock HorizontalAlignment="Left" Margin="137,70,0,0" TextWrapping="Wrap" Text="+7 923 412 49 40" VerticalAlignment="Top" Style="{StaticResource TextBlockPhoneNumber}"/>
+				<Image Margin="0,10,0,0" Source="{Binding SelfUser.AvatarPath}" Stretch="Fill" Height="112" VerticalAlignment="Top" HorizontalAlignment="Left" Width="112"/>
+				<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="130,0,0,0" Width="311">
+					<TextBlock HorizontalAlignment="Left" Margin="0,0,-30,0" TextWrapping="Wrap" VerticalAlignment="Center" Style="{StaticResource PhoneTextLargeStyle}">
+						<Run Text="{Binding SelfUser.FullName}"/>
+					</TextBlock>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding SelfUser.Status}" VerticalAlignment="Center" Style="{StaticResource TextBlockStatus}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="0,0,-53,0" TextWrapping="Wrap" Text="{Binding SelfUser.PhoneNumber}" VerticalAlignment="Center" Style="{StaticResource TextBlockPhoneNumber}"/>
+				</StackPanel>
 			</Grid>
 
 		</Grid>
 		<StackPanel VerticalAlignment="Top">
 			<toolkit:ToggleSwitch 
+                IsChecked="{Binding SavePhoto, Mode=TwoWay}"
 				Header="Save incoming photos"
-                Checked="SavePhotos_Checked"
-                Unchecked="SavePhotos_Unchecked"
 				VerticalAlignment="Top"/>
             <phone:LongListSelector 
                     x:Name="SettingsList"             

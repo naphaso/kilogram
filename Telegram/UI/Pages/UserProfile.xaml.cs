@@ -45,6 +45,7 @@ namespace Telegram.UI {
 
         private void UpdateDataContext() {
             this.DataContext = model;
+            PhoneButtonUserControl.Content.Text = model.PhoneNumber;
         }
 
         public UserProfile() {

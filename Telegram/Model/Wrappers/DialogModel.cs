@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 ﻿using Telegram.Annotations;
 ﻿using Telegram.Core.Logging;
 ﻿using Telegram.MTProto;
+﻿using Telegram.MTProto.Components;
 ﻿using Telegram.Utils;
 
 namespace Telegram.Model.Wrappers {
@@ -101,6 +102,7 @@ namespace Telegram.Model.Wrappers {
                 OnPropertyChanged("Title");
             } else if (propertyChangedEventArgs.PropertyName == "Status") {
                 OnPropertyChanged("Status");
+                OnPropertyChanged("StatusOrAction");
             } else if (propertyChangedEventArgs.PropertyName == "AvatarPath") {
                 logger.debug("Property is AvatarPath");
                 OnPropertyChanged("AvatarPath");
@@ -163,11 +165,10 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public DialogStatus StatusObject {
+        public DialogStatus PreviewOrAction {
             get {
                 if (dialog.peer.Constructor == Constructor.peerUser) {
                     if (userTyping != null) {
-                        logger.debug("StatusObject typing");
                         _currentStatus.String = "typing...";
                         _currentStatus.Type = StatusType.Activity;
                     }
@@ -177,12 +178,35 @@ namespace Telegram.Model.Wrappers {
                     }
                 } else { // peer chat
                     if (chatTyping.Count != 0) {
-                        logger.debug("StatusObject typing");
                         _currentStatus.String = String.Format("{0} users typing...", chatTyping.Count);
                         _currentStatus.Type = StatusType.Activity;
                     }
                     else {
                         _currentStatus.String = Preview;
+                        _currentStatus.Type = StatusType.Static;
+                    }
+                }
+
+                return _currentStatus;
+            }
+        }
+
+        public DialogStatus StatusOrAction {
+            get {
+                if (dialog.peer.Constructor == Constructor.peerUser) {
+                    if (userTyping != null) {
+                        _currentStatus.String = "typing...";
+                        _currentStatus.Type = StatusType.Activity;
+                    } else {
+                        _currentStatus.String = Status;
+                        _currentStatus.Type = StatusType.Static;
+                    }
+                } else { // peer chat
+                    if (chatTyping.Count != 0) {
+                        _currentStatus.String = String.Format("{0} users typing...", chatTyping.Count);
+                        _currentStatus.Type = StatusType.Activity;
+                    } else {
+                        _currentStatus.String = Status;
                         _currentStatus.Type = StatusType.Static;
                     }
                 }
@@ -518,7 +542,8 @@ namespace Telegram.Model.Wrappers {
                 chatTyping[userid].lastUpdate = DateTime.Now;
             } else {
                 chatTyping.Add(userid, new UserTyping(DateTime.Now));
-                OnPropertyChanged("StatusObject");
+                OnPropertyChanged("PreviewOrAction");
+                OnPropertyChanged("StatusOrAction");
             }
         }
 
@@ -531,7 +556,8 @@ namespace Telegram.Model.Wrappers {
 
             if(userTyping == null) {
                 userTyping = new UserTyping(DateTime.Now);
-                OnPropertyChanged("StatusObject");
+                OnPropertyChanged("PreviewOrAction");
+                OnPropertyChanged("StatusOrAction");
             } else {
                 userTyping.lastUpdate = DateTime.Now;
             }
@@ -542,7 +568,8 @@ namespace Telegram.Model.Wrappers {
                 if(userTyping != null && DateTime.Now - userTyping.lastUpdate > TimeSpan.FromSeconds(5)) {
                     userTyping = null;
 
-                    OnPropertyChanged("StatusObject");
+                    OnPropertyChanged("PreviewOrAction");
+                    OnPropertyChanged("StatusOrAction");
                 }
             } else if(dialog.peer.Constructor == Constructor.peerChat) {
                 var toRemove = (from typing in chatTyping where DateTime.Now - typing.Value.lastUpdate > TimeSpan.FromSeconds(5) select typing.Key).ToList();
@@ -552,7 +579,8 @@ namespace Telegram.Model.Wrappers {
                         chatTyping.Remove(i);
                     }
 
-                    OnPropertyChanged("StatusObject");
+                    OnPropertyChanged("PreviewOrAction");
+                    OnPropertyChanged("StatusOrAction");
                 }
             }
         }

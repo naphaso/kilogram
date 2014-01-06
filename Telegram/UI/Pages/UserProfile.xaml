@@ -47,17 +47,16 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
-		<phone:Pivot Name="UserProfilePivot" SelectionChanged="Pivot_OnSelectionChanged" Grid.Row="1" Title="USER NAME">
+		<phone:Pivot Name="UserProfilePivot" SelectionChanged="Pivot_OnSelectionChanged" Grid.Row="1" Title="{Binding FullName}">
 			<phone:PivotItem  CacheMode="{x:Null}" Header="profile">
 				<ScrollViewer>
 					<Grid Width="456" Height="836">
-						<Image Margin="10,10,0,0" Source="/Assets/UI/placeholder.user.orange-WXGA.png" Stretch="Fill" Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-						<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="last seen today at 12:43p" VerticalAlignment="Top" Margin="148,10,0,0" Style="{StaticResource TextBlockFieldHint}" FontSize="21.333"/>
+						<Image Margin="10,10,0,0" Source="{Binding AvatarPath}" Stretch="Fill" Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+						<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Status}" VerticalAlignment="Top" Margin="148,10,0,0" Style="{StaticResource TextBlockFieldHint}" FontSize="21.333"/>
 						<StackPanel Margin="0,156,0,-103" VerticalAlignment="Top">
 							<Button Content="send message" BorderThickness="0" FontSize="40" HorizontalContentAlignment="Left" FontFamily="Segoe WP SemiLight" Padding="0,5,10,6"/>
 							<Button Content="create secret chat" BorderThickness="0" FontSize="40" HorizontalContentAlignment="Left" FontFamily="Segoe WP SemiLight" Padding="0,5,10,6"/>
-							<Telegram:PhoneButtonUserControl Padding="0"/>
-							<Telegram:PhoneButtonUserControl Padding="0"/>
+							<Telegram:PhoneButtonUserControl Name="PhoneButtonUserControl" Padding="0"/>
                             <toolkit:ToggleSwitch Header="Notifications" IsChecked="{Binding NotificationsEnabled, Mode=TwoWay}"/>
 							<TextBlock TextWrapping="Wrap" Text="Sound" Style="{StaticResource TextBlockFieldHint}" Margin="12,20,6,-5" Height="27"/>
 							<toolkit:ListPicker Margin="12,0,12,10"/>

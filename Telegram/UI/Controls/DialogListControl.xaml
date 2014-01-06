@@ -26,7 +26,7 @@
                             </toolkit:ContextMenu>
                         </toolkit:ContextMenuService.ContextMenu>
                         <Grid VerticalAlignment="Top" Margin="90,48,0,0">
-                            <TextBlock Foreground="{Binding StatusObject, Converter={StaticResource ColorConverter}}" Text="{Binding StatusObject, Converter={StaticResource StringConverter}}" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Left" MaxWidth="300" />
+                            <TextBlock Foreground="{Binding PreviewOrAction, Converter={StaticResource ColorConverter}}" Text="{Binding PreviewOrAction, Converter={StaticResource StringConverter}}" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Left" MaxWidth="300" />
                             <TextBlock Text="{Binding Timestamp}" TextWrapping="Wrap" FontFamily="Segoe WP Semibold" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Right" />
                         </Grid>
                         <Image Margin="12,12,0,12" VerticalAlignment="Top" Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" HorizontalAlignment="Left"/>
@@ -49,7 +49,7 @@
                             <TextBlock Text="{Binding LastActivityUserName}" Height="24.8" LineStackingStrategy="BlockLineHeight" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP Semibold" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Left" MaxWidth="300" />
                             <TextBlock Text="{Binding Timestamp}" TextWrapping="Wrap" FontFamily="Segoe WP Semibold" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" />
                     </Grid>
-                        <TextBlock Text="{Binding StatusObject, Converter={StaticResource StringConverter}}" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" LineStackingStrategy="BlockLineHeight" HorizontalAlignment="Left" MaxWidth="300" Margin="90,73,0,-12" Height="25" Foreground="{Binding StatusObject, Converter={StaticResource ColorConverter}}" />
+                        <TextBlock Text="{Binding PreviewOrAction, Converter={StaticResource StringConverter}}" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" LineStackingStrategy="BlockLineHeight" HorizontalAlignment="Left" MaxWidth="300" Margin="90,73,0,-12" Height="25" Foreground="{Binding PreviewOrAction, Converter={StaticResource ColorConverter}}" />
                     <Image Margin="12,12,0,12" VerticalAlignment="Top" Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" HorizontalAlignment="Left"/>
                     <TextBlock Text="{Binding Title}" LineStackingStrategy="BlockLineHeight" Height="42.5" Margin="90,6,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}"/>
                     </Grid>

@@ -96,7 +96,7 @@ namespace Telegram.Model.Wrappers {
                     case Constructor.userEmpty:
                         return "empty";
                     case Constructor.userSelf:
-                        return ((UserSelfConstructor)user).first_name + " " + ((UserSelfConstructor)user).first_name;
+                        return ((UserSelfConstructor)user).first_name + " " + ((UserSelfConstructor)user).last_name;
                     case Constructor.userContact:
                         return ((UserContactConstructor)user).first_name + " " + ((UserContactConstructor)user).last_name;
                     case Constructor.userRequest:
@@ -262,6 +262,39 @@ namespace Telegram.Model.Wrappers {
         }
 
 
+        public string PhoneNumber {
+            get {
+                string formattedNumber = "";
+                switch (user.Constructor) {
+                    case Constructor.userEmpty:
+                        formattedNumber = "no phone number";
+                        break;
+                    case Constructor.userSelf:
+                        formattedNumber = "+" + ((UserSelfConstructor)user).phone;
+                        break;
+
+                    case Constructor.userContact:
+                        formattedNumber = "+" + ((UserContactConstructor)user).phone;
+                        break;
+
+                    case Constructor.userRequest:
+                        formattedNumber = "+" + ((UserRequestConstructor)user).phone;
+                        break;
+
+                    case Constructor.userForeign:
+                        formattedNumber = "hidden";
+                        break;
+
+                    case Constructor.userDeleted:
+                        formattedNumber = "deleted";
+                        break;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+
+                return formattedNumber;
+            }
+        }
 
         public BitmapImage AvatarPath {
             get {
@@ -313,7 +346,7 @@ namespace Telegram.Model.Wrappers {
                 }
 
                 logger.debug("File receive in progress {0}", avatarFileLocation);
-                getFileTask.ContinueWith((path) => SetAvatarPath(path.Result));
+                getFileTask.ContinueWith((path) => SetAvatarPath(path.Result),TaskScheduler.FromCurrentSynchronizationContext());
 
                 return new BitmapImage(GetUserPlaceholderImageUri());
             }

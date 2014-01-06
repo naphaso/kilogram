@@ -82,7 +82,7 @@ namespace Telegram.UI
         }
 
         private void New_Click(object sender, EventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/ChatCreate.xaml", UriKind.Relative));
         }
 
         private void Search_Click(object sender, EventArgs e) {
