@@ -21,6 +21,21 @@ namespace Telegram.MTProto {
         ulong Id { get; }
         int GenerateSequence(bool confirmed);
     }
+
+    public class TelegramSalt {
+        private ulong value;
+        private int validSince;
+        private int validUntil;
+
+        public TelegramSalt(ulong value, int validSince, int validUntil) {
+            this.value = value;
+            this.validSince = validSince;
+            this.validUntil = validUntil;
+        }
+
+        public ulong Value { get { return value; } }
+        
+    }
     
     public class TelegramEndpoint {
         private string host;
@@ -219,11 +234,14 @@ namespace Telegram.MTProto {
         private ulong id;
         private int sequence;
         private int mainDcId;
+        private int timeOffset;
         private Dictionary<int, TelegramDC> dcs;
         private Auth_authorizationConstructor authorization = null;
         private Dictionary<int, UserModel> users = null;
-        private Dictionary<int, ChatModel> chats = null; 
-        
+        private Dictionary<int, ChatModel> chats = null;
+
+        private ulong cachedSalt;
+
         // transient
         public static TelegramSession instance = loadIfExists();
 
@@ -345,6 +363,8 @@ namespace Telegram.MTProto {
             writer.Write(id);
             writer.Write(sequence);
             writer.Write(mainDcId);
+            writer.Write(timeOffset);
+            writer.Write(gateway != null ? gateway.Salt : (ulong)0);
             writer.Write(dcs.Count);
 
             // contacts sync marker
@@ -386,6 +406,8 @@ namespace Telegram.MTProto {
             id = reader.ReadUInt64();
             sequence = reader.ReadInt32();
             mainDcId = reader.ReadInt32();
+            timeOffset = reader.ReadInt32();
+            cachedSalt = reader.ReadUInt64();
             int count = reader.ReadInt32();
 
             // contacts sync marker
@@ -544,7 +566,7 @@ namespace Telegram.MTProto {
             try {
                 if (gateway == null) {
                     logger.info("creating new mtproto gateway...");
-                    gateway = new MTProtoGateway(MainDc, this, true);
+                    gateway = new MTProtoGateway(MainDc, this, true, cachedSalt);
                     gateway.UpdatesEvent += updates.ProcessUpdates;
                     while (true) {
                         try {
@@ -557,7 +579,7 @@ namespace Telegram.MTProto {
                             id = Helpers.GenerateRandomUlong();
                             sequence = 0;
                             gateway.Dispose();
-                            gateway = new MTProtoGateway(MainDc, this, true);
+                            gateway = new MTProtoGateway(MainDc, this, true, cachedSalt);
                             gateway.UpdatesEvent += updates.ProcessUpdates;
                         }
                     }
@@ -612,6 +634,15 @@ namespace Telegram.MTProto {
         
         public TLApi Api {
             get { return api; }
+        }
+
+        public int TimeOffset {
+            get {
+                return timeOffset;
+            }
+            set {
+                timeOffset = value;
+            }
         }
 
         public async Task Migrate(int dc) {

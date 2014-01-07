@@ -314,7 +314,7 @@ namespace Telegram.MTProto {
 
                         logger.info("generated new auth key: {0}", gab);
                         logger.info("saving time offset: {0}", timeOffset);
-                        TelegramSettings.Instance.TimeOffset = timeOffset;
+                        TelegramSession.Instance.TimeOffset = timeOffset;
                         return authKey;
                     }
                     else if(code == 0x46dc1fb9) { // dh_gen_retry

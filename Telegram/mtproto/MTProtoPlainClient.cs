@@ -20,7 +20,7 @@ namespace Telegram.MTProto {
 
         private long GetNewMessageId() {
             long time = Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds);
-            long newMessageId = ((time/1000 + TelegramSettings.Instance.TimeOffset) << 32) |
+            long newMessageId = ((time/1000 + TelegramSession.Instance.TimeOffset) << 32) |
                                 ((time%1000) << 22) |
                                 (random.Next(524288) << 2); // 2^19
             // [ unix timestamp : 32 bit] [ milliseconds : 10 bit ] [ buffer space : 1 bit ] [ random : 19 bit ] [ msg_id type : 2 bit ] = [ msg_id : 64 bit ]
