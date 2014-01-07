@@ -265,7 +265,11 @@ namespace Telegram.MTProto {
             updates.UserNameEvent += SetUserName;
             updates.UserPhotoEvent += SetUserPhoto;
             updates.MessagesReadEvent += dialogs.MessagesRead;
+
+
         }
+
+        
 
         private void SetUserPhoto(int userId, int date, UserProfilePhoto photo, bool previous) {
             if(users.ContainsKey(userId)) {
@@ -527,6 +531,15 @@ namespace Telegram.MTProto {
             }
         }
 
+        // save timer
+        private static bool saveSessionTimerInitialized = false;
+        private static async Task SaveSessionTimer() {
+            await Task.Delay(TimeSpan.FromSeconds(5));
+            Instance.save();
+            SaveSessionTimer();
+        }
+        // save timer end
+
         public async Task ConnectAsync() {
             try {
                 if (gateway == null) {
@@ -551,6 +564,11 @@ namespace Telegram.MTProto {
                     api = new TLApi(gateway);
                     logger.info("connection established, notifying");
                     establishedTask.SetResult(null);
+
+                    if(!saveSessionTimerInitialized) {
+                        SaveSessionTimer();
+                        saveSessionTimerInitialized = true;
+                    }
                 }
             }
             catch (Exception ex) {
@@ -558,6 +576,8 @@ namespace Telegram.MTProto {
                 throw ex;
             }
         }
+
+        
 
 
         public async Task SaveAuthorization(auth_Authorization authorization) {

@@ -187,6 +187,10 @@ namespace Telegram.MTProto {
             get { return salt; }
         }
 
+        public bool Connected {
+            get { return gateway.Connected; }
+        }
+
         private void GatewayOnInput(object sender, byte[] data) {
 
             ulong remoteSalt;
