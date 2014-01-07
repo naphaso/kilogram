@@ -277,7 +277,8 @@ namespace Telegram.MTProto {
 //                if (!gatewayConnected.Task.IsCompleted)
 //                    gatewayConnected.SetResult(true);
 
-                ReconnectEvent();
+                var handler = ReconnectEvent;
+                if(handler != null) ReconnectEvent();
 
                 DelayTask();
             }
