@@ -165,12 +165,12 @@ namespace Telegram.MTProto {
                 Serializers.Bytes.write(writer, authKey.Data);    
             }
 
-            if(fileSession == null) {
-                writer.Write(0);
-            } else {
-                writer.Write(1);
-                fileSession.Write(writer);
-            }
+            //if(fileSession == null) {
+            //    writer.Write(0);
+            //} else {
+            //    writer.Write(1);
+            //    fileSession.Write(writer);
+            //}
 
             if(fileAuthorization == null) {
                 writer.Write(0);
@@ -194,12 +194,12 @@ namespace Telegram.MTProto {
                 authKey = new AuthKey(Serializers.Bytes.read(reader));    
             }
 
-            int fileSessionExists = reader.ReadInt32();
-            if(fileSessionExists == 0) {
-                fileSession = null;
-            } else {
-                fileSession = new TelegramFileSession(reader);
-            }
+            //int fileSessionExists = reader.ReadInt32();
+            //if(fileSessionExists == 0) {
+            //    fileSession = null;
+            //} else {
+            //    fileSession = new TelegramFileSession(reader);
+            //}
 
             int fileAuthExists = reader.ReadInt32();
             if(fileAuthExists == 0) {
