@@ -30,7 +30,7 @@
 
         <!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-                     		<Grid Width="336" Height="Auto" VerticalAlignment="Top">
+                     		<Grid Width="336" Height="Auto" VerticalAlignment="Top" Margin="0">
         			<Grid Opacity="0.7">
         				<Rectangle Fill="{StaticResource PhoneAccentBrush}" Margin="0,7,0,-1" />
         				<es:RegularPolygon Fill="{StaticResource PhoneAccentBrush}" InnerRadius="1" Margin="0,0,12,-8" PointCount="3" Stretch="Fill" Stroke="Black" UseLayoutRounding="False" RenderTransformOrigin="0.5,0.5" StrokeThickness="0" HorizontalAlignment="Right" Width="28" Height="16" VerticalAlignment="Bottom">
@@ -41,11 +41,12 @@
         			</Grid>
         			<StackPanel Margin="10,19,10,10">
                         <TextBlock Text="Binding ForwardedFrom}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        <Image Source="/Assets/train.jpg" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        				<TextBlock Text="Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        				<TextBlock Text="Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
                         <StackPanel  HorizontalAlignment="Right" Orientation="Horizontal">
-						<TextBlock Text="Binding TimeString}" TextWrapping="Wrap" Margin="24,0,0,0" VerticalAlignment="Top" Opacity="0.6"/>
-                        <Image Height="24" Width="24" Margin="5,0,0,0" VerticalAlignment="Center" Source="/Assets/UI/message.state.sending-WVGA.png" HorizontalAlignment="Right" />
+						<TextBlock Text="7:40" TextWrapping="Wrap" Margin="24,0,0,0" VerticalAlignment="Top" Opacity="0.6"/>
+                        <Image Height="24" Width="24" Margin="5,2,0,0" VerticalAlignment="Center" Source="/Assets/UI/message.state.sending-WVGA.png" HorizontalAlignment="Right" />
         				</StackPanel>
 					</StackPanel>
         		</Grid>  
