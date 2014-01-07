@@ -4,7 +4,10 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Navigation;
+using Windows.UI.Core;
+using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
@@ -64,15 +67,14 @@ namespace Telegram.UI {
             DisableEditBox();
 
             messageEditor.GotFocus += delegate {
-                if (emojiPanelShowing == false)
-                    keyboardWasShownBeforeEmojiPanelIsAppeared = true;
-                else 
-                    HideEmojiPanel();
-
+                AttachPopup.IsOpen = false;
+                EmojiPopup.IsOpen = false;
+                MainPanel.Margin = new Thickness(0, 0, 0, -20);
             };
+
             messageEditor.LostFocus += delegate {
-                if (emojiPanelShowing == false)
-                    keyboardWasShownBeforeEmojiPanelIsAppeared = false;
+                if (!EmojiPopup.IsOpen && !AttachPopup.IsOpen)
+                    MainPanel.Margin = new Thickness(0, 0, 0, 0);
             };
 
             EmojiPanelControl.EmojiGridListSelector.SelectionChanged += EmojiGridListSelectorOnSelectionChanged;
@@ -153,38 +155,26 @@ namespace Telegram.UI {
         }
 
         private void Dialog_Attach(object sender, EventArgs e) {
-//            Toaster.Show("Igor Glotov", "Hello");
-
-            new PhoneFlipMenu(new PhoneFlipMenuAction("photo", PickAndSendPhoto),
-                    new PhoneFlipMenuAction("video", () => { MessageBox.Show("sorry, not impelmented"); }),
-                    new PhoneFlipMenuAction("location", () => { MessageBox.Show("sorry, not impelmented"); }),
-                    new PhoneFlipMenuAction("document", () => { MessageBox.Show("sorry, not impelmented"); }),
-                    new PhoneFlipMenuAction("contact", () => { MessageBox.Show("sorry, not impelmented"); })).Show();
+            this.Focus();
+            EmojiPopup.IsOpen = false;
+//            AttachPopup.SetValue(Popup.VerticalOffsetProperty, windowCenter.Y - (yourPopup.ActualHeight / 2.0));
+            AttachPopup.IsOpen = !AttachPopup.IsOpen;
+            if (AttachPopup.IsOpen)
+                MainPanel.Margin = new Thickness(0, 0, 0, AttachPopup.Height);
+            else
+                MainPanel.Margin = new Thickness(0, 0, 0, 0);
         }
 
 
-        private bool emojiPanelShowing = false;
         private void Dialog_Emoji(object sender, EventArgs e) {
-            if (emojiPanelShowing) {
-                if (keyboardWasShownBeforeEmojiPanelIsAppeared)
-                    messageEditor.Focus();
-                HideEmojiPanel();
-            }
-            else {
-                if (keyboardWasShownBeforeEmojiPanelIsAppeared)
-                    this.Focus();
-                ShowEmojiPanel();
-            }
-        }
-
-        private void HideEmojiPanel() {
-            MessageLongListSelector.Height = ContentPanel.Height - GetEditorTotalHeight();
-            emojiPanelShowing = false;
-        }
-
-        private void ShowEmojiPanel() {
-            MessageLongListSelector.Height = ContentPanel.Height - EditorEmojiPanel.Height;
-            emojiPanelShowing = true;
+            this.Focus();
+//            EmojiPopup.VerticalOffset = ActualHeight - EmojiPopup.Height;
+            AttachPopup.IsOpen = false;
+            EmojiPopup.IsOpen = !EmojiPopup.IsOpen;
+            if (EmojiPopup.IsOpen)
+                MainPanel.Margin = new Thickness(0, 0, 0, EmojiPopup.Height);
+            else
+                MainPanel.Margin = new Thickness(0,0,0,0);
         }
 
         private int GetEditorTotalHeight() {

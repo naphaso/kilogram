@@ -98,29 +98,24 @@
     </phone:PhoneApplicationPage.ApplicationBar>
 
 <!--LayoutRoot is the root grid where all page content is placed-->
-	<Grid x:Name="LayoutRoot" Background="Transparent">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
+    <Grid x:Name="LayoutRoot" Background="Transparent">
 
-		<!--TitlePanel contains the name of the application and page title-->
-		<Grid Name="DialogHeader" Tap="OnHeaderTap" Grid.Row="0" Margin="12,17,0,10" Height="70">
-			<StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                <TextBlock Name="DialogNameTextBlock" Text="{Binding Title}" Style="{StaticResource PhoneTextNormalStyle}" Margin="0,0,-82,0" FontSize="32" FontFamily="Segoe WP Light" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock Name="DialogStatusTextBlock" Text="{Binding StatusOrAction, Converter={StaticResource StringConverter}}" Style="{StaticResource TextBlockFieldHint}" Margin="0,0,-82,0" FontSize="18.667" FontFamily="Segoe WP SemiLight" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-			</StackPanel>
-			<Image Margin="396,0,10,0" Source="{Binding AvatarPath}" Stretch="Fill" Width="55" Height="55" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-			<Rectangle Margin="0" Canvas.ZIndex="2" StrokeThickness="5"/>
-		</Grid>
-		<StackPanel x:Name="ContentPanel"  Grid.Row="1" Margin="0">
-
-            <controls:ExtendedSelector
-				ItemTemplate="{StaticResource UserSelectingTemplate}"
-				ItemsSource="{Binding Items}" 
-				x:Name="MessageLongListSelector" LayoutMode="List" 
-				IsGroupingEnabled="False" BorderThickness="0" Margin="12,0,12,6" Height="521"/>
-			<StackPanel x:Name="EditorEmojiPanel" Margin="0" Height="485">
+        <!--TitlePanel contains the name of the application and page title-->
+		<StackPanel x:Name="MainPanel" Margin="0" VerticalAlignment="Bottom">
+			<Grid x:Name="DialogHeader" Tap="OnHeaderTap" VerticalAlignment="Top" Height="70">
+				<StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0,0,0">
+					<TextBlock x:Name="DialogNameTextBlock" Text="{Binding Title}" Style="{StaticResource PhoneTextNormalStyle}" Margin="0,0,-82,0" FontSize="32" FontFamily="Segoe WP Light" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+					<TextBlock x:Name="DialogStatusTextBlock" Text="{Binding StatusOrAction, Converter={StaticResource StringConverter}}" Style="{StaticResource TextBlockFieldHint}" Margin="0,0,-82,0" FontSize="18.667" FontFamily="Segoe WP SemiLight" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				</StackPanel>
+				<Image Margin="396,0,10,0" Source="{Binding AvatarPath}" Stretch="Fill" Width="55" Height="55" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+				<Rectangle Margin="0" Canvas.ZIndex="2" StrokeThickness="5"/>
+			</Grid>
+			<StackPanel x:Name="ContentPanel" Height="634">
+				<controls:ExtendedSelector
+					ItemTemplate="{StaticResource UserSelectingTemplate}"
+					ItemsSource="{Binding Items}" 
+					x:Name="MessageLongListSelector" LayoutMode="List" 
+					IsGroupingEnabled="False" BorderThickness="0" Margin="12,0" Height="544"/>
 				<Controls:ChatBubbleTextBox 
 					x:Name="messageEditor" 
 					TextWrapping="Wrap" 
@@ -128,15 +123,40 @@
 					ChatBubbleDirection="LowerRight" 
 					BorderThickness="0,2" 
 					Height="60"
-					TextChanged="Dialog_Message_Change"
-					VerticalAlignment="Bottom" 
-					Margin="119,0,12,12" SelectionBackground="White"/>
-				<Telegram:EmojiPhoneControl x:Name="EmojiPanelControl" Width="489" />
-
+					TextChanged="Dialog_Message_Change" 
+					Margin="119,6,12,0" SelectionBackground="White" VerticalAlignment="Bottom"/>
 			</StackPanel>
 		</StackPanel>
-		<Telegram:SecretChatNotice Name="SecretChatNoticeControl" Margin="0" Grid.Row="1" Canvas.ZIndex="-1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
-		<Telegram:ChatNotice Name="ChatNoticeControl" Margin="0" Grid.Row="1" Width="480" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.ZIndex="-1" Visibility="Collapsed"/>
+
+        <!--TitlePanel contains the name of the application and page title-->
+
+        <Popup x:Name="EmojiPopup" VerticalAlignment="Bottom" Height="390" Canvas.ZIndex="1">
+            <Telegram:EmojiPhoneControl x:Name="EmojiPanelControl" Width="489" />
+        </Popup>
+
+        <Popup x:Name="AttachPopup" VerticalAlignment="Bottom" Height="300" Canvas.ZIndex="1">
+            <Grid x:Name="AttachPopupLayoutRoot" Background="{StaticResource PhoneChromeBrush}" Width="480" Height="300">
+                <StackPanel>
+                    <ListBoxItem>
+                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="photo" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="video" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="location" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="document" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="contact" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                    </ListBoxItem>
+                </StackPanel>
+            </Grid>
+        </Popup>
+        <Telegram:SecretChatNotice x:Name="SecretChatNoticeControl" Margin="0" Grid.Row="1" Canvas.ZIndex="-1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+		<Telegram:ChatNotice x:Name="ChatNoticeControl" Margin="0" Grid.Row="1" Width="480" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.ZIndex="-1" Visibility="Collapsed"/>
 
 	</Grid>
 
