@@ -86,30 +86,32 @@ namespace Telegram.MTProto.Components {
                 return TL.inputFile(fileId, 1, filename, hash.FinalString());
             }
 
+            bool big = stream.Length > 10*1024*1024;
             float allStreamLength = stream.Length;
             int chunkSize = 128*1024;
             int chunkCount = (int) (stream.Length/chunkSize);
             int lastChunkSize = (int) (stream.Length - chunkSize*chunkCount);
+            int allChunksCount = chunkCount + (lastChunkSize != 0 ? 1 : 0);
 
             for(int i = 0; i < chunkCount; i++) {
                 handler((float) i*(float) chunkSize/allStreamLength);
                 byte[] data = new byte[chunkSize];
                 stream.Read(data, 0, chunkSize);
-                bool result = await api.upload_saveFilePart(fileId, i, data);
+                bool result = big ? await api.upload_saveBigFilePart(fileId, i, allChunksCount, data) : await api.upload_saveFilePart(fileId, i, data);
+                
                 //while(result != true) {
                 //    result = await api.upload_saveFilePart(fileId, i, data);
                 //}
                 hash.Update(data);
             }
 
-            int allChunksCount = chunkCount;
+            
 
             if(lastChunkSize != 0) {
-                allChunksCount++;
                 handler((float) chunkCount*(float) chunkSize/allStreamLength);
                 byte[] lastChunkData = new byte[lastChunkSize];
                 stream.Read(lastChunkData, 0, lastChunkSize);
-                bool lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
+                bool lastChunkResult = big ? await api.upload_saveBigFilePart(fileId, chunkCount, allChunksCount, lastChunkData) ? await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
                 //while(lastChunkResult != true) {
                 //    lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
                 //}
@@ -118,6 +120,8 @@ namespace Telegram.MTProto.Components {
 
             handler(1.0f);
             
+            
+
             return TL.inputFile(fileId, allChunksCount, filename, hash.FinalString());
         }
 
