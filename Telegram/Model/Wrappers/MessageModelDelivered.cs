@@ -5,11 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using Telegram.Core.Logging;
 using Telegram.MTProto;
 using Telegram.Utils;
 
 namespace Telegram.Model.Wrappers {
     public class MessageModelDelivered : MessageModel {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(MessageModelDelivered));
+
         private Message message;
 
         public MessageModelDelivered(Message message) {
@@ -200,6 +204,76 @@ namespace Telegram.Model.Wrappers {
             get {
                 return GetMessageDeliveryState();
             }
+        }
+
+        // it's OK to return a null, will be handled
+        public override BitmapImage Attachment {
+            get {
+                if (message.Constructor == Constructor.messageService)
+                    return null;
+
+                // media is cached
+                if (_previewPath != null) {
+                    logger.debug("Returning cached preview {0}", _previewPath);
+                    return Utils.Helpers.GetBitmapImageInternal(_previewPath);
+                }
+
+                MessageMedia media = null;
+
+                switch (message.Constructor) {
+                    case Constructor.message:
+                        media = ((MessageConstructor)message).media;
+                        break;
+                    case Constructor.messageForwarded:
+                        media = ((MessageForwardedConstructor)message).media;
+                        break;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+
+                // no media found
+                if (media == null)
+                    return null;
+
+                logger.debug("getting location for media {0}", media);
+
+                FileLocation resultFileLocation = null;
+
+                if (media.Constructor == Constructor.messageMediaPhoto) {
+                    Photo photo = ((MessageMediaPhotoConstructor) media).photo;
+                    
+                    if (photo.Constructor == Constructor.photoEmpty)
+                        return null;
+
+                    PhotoConstructor photoConstructor = (PhotoConstructor) photo;
+                    resultFileLocation = Helpers.GetPreviewFileLocation(photoConstructor);
+                } else if (media.Constructor == Constructor.messageMediaVideo) {
+                    resultFileLocation = null; // not implemented
+                } else if (media.Constructor == Constructor.messageMediaGeo) {
+                    resultFileLocation =  null; // not implemented
+                }
+
+                if (resultFileLocation == null)
+                    return null;
+
+                Task<string> getFileTask = TelegramSession.Instance.Files.GetAvatar(resultFileLocation);
+                if (getFileTask.IsCompleted) {
+                    _previewPath = getFileTask.Result;
+                    return Utils.Helpers.GetBitmapImageInternal(_previewPath);
+                }
+
+                logger.debug("File receive in progress {0}", resultFileLocation);
+                getFileTask.ContinueWith((path) => SetPreviewPath(path.Result), TaskScheduler.FromCurrentSynchronizationContext());
+
+                return new BitmapImage(new Uri("/Assets/UI/placeholder.user.yellow-WVGA.png", UriKind.Relative));
+            }
+        }
+
+        private string _previewPath = null;
+        public void SetPreviewPath(string path) {
+            _previewPath = path;
+            logger.debug("Attachment preview path saved {0}", _previewPath);
+            OnPropertyChanged("Attachment");
         }
 
         private void Read(BinaryReader reader) {

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using Telegram.MTProto;
 
 namespace Telegram.Utils {
     class Helpers {
@@ -29,6 +30,27 @@ namespace Telegram.Utils {
                 }
             }
             return bi;
+        }
+
+        // its OK to be null
+        public static FileLocation GetPreviewFileLocation(PhotoConstructor photo) {
+            List<PhotoSize> photoSizes = photo.sizes;
+
+            FileLocation desiredSize = null;
+            foreach (var photoSize in photoSizes) {
+                if (photoSize.Constructor != Constructor.photoSize)
+                    continue;
+
+                PhotoSizeConstructor photoSizeConstructor = (PhotoSizeConstructor) photoSize;
+                if (photoSizeConstructor.type == "s") {
+                    desiredSize = photoSizeConstructor.location;
+                } else if (photoSizeConstructor.type == "m") {
+                    desiredSize = photoSizeConstructor.location;
+                    break;
+                }
+            }
+
+            return desiredSize;
         }
     }
 }

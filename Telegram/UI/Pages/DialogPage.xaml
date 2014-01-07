@@ -18,10 +18,12 @@
     shell:SystemTray.IsVisible="True">
     <phone:PhoneApplicationPage.Resources>
         <converters:MessageDeliveryStateConverter x:Key="StatusIconConverter"/>
+        <converters:MessageAttachmentSourceConverter x:Key="AttachmentSourceConverter"/>
+        <converters:MessageAttachmentPreviewVisibilityConverter x:Key="VisibilityConverter"/>
 
         <converters:DialogStatusToStringConverter x:Key="StringConverter"/>
         <DataTemplate x:Key="TextInBubbleTemplate">
-            <StackPanel Margin="0,6,0,6" HorizontalAlignment="Left">
+            <StackPanel Margin="0,12,0,6" HorizontalAlignment="Left">
         		<Grid Width="336" Height="Auto">
         			<Rectangle Fill="{StaticResource PhoneAccentBrush}" Margin="0,7,0,-1" />
         			<es:RegularPolygon Fill="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Left" InnerRadius="1" Margin="12,0,0,0" PointCount="3" Stretch="Fill" UseLayoutRounding="False" Width="28" RenderTransformOrigin="0.5,0.5" StrokeThickness="0" Height="16" VerticalAlignment="Top">
@@ -32,15 +34,15 @@
         			<StackPanel Margin="10,19,10,10">
                         <TextBlock Text="{Binding Sender}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap" VerticalAlignment="Top"/>
         				<TextBlock Text="{Binding ForwardedFrom}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
-
-        				<TextBlock Text="{Binding Text}" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        <Image Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"  VerticalAlignment="Top"/>
                         <TextBlock HorizontalAlignment="Right" Text="{Binding TimeString}" TextWrapping="Wrap"  VerticalAlignment="Top" Opacity="0.6"/>
         			</StackPanel>
         		</Grid>
         	</StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="TextOutBubbleTemplate">
-        	<StackPanel Margin="0,6,0,6" HorizontalAlignment="Right" >
+        	<StackPanel Margin="0,6,0,12" HorizontalAlignment="Right" >
 <!--                <TextBlock Text="FUCK"></TextBlock>-->
                 <Grid Width="336" Height="Auto" VerticalAlignment="Top">
                     <Grid Opacity="0.7">

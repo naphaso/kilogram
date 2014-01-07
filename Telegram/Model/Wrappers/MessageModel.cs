@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using Microsoft.Phone.Media;
 using Telegram.Annotations;
 using Telegram.MTProto;
@@ -14,6 +15,15 @@ namespace Telegram.Model.Wrappers {
             Delivered = 1,
             Read = 2
         }
+
+        public class MessageAttachment {
+            public bool IsLoaded { get; set; }
+            public string Placeholder { get; set; }
+            public BitmapImage LoadedImage { get; set; }
+        }
+
+        public abstract BitmapImage Attachment { get; }
+
         public abstract bool IsOut { get; }
         public abstract bool Delivered { get; } 
 

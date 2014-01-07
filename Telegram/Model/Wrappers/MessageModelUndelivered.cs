@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using Telegram.MTProto;
 using Telegram.Utils;
 
@@ -38,6 +39,10 @@ namespace Telegram.Model.Wrappers {
         public override string Text {
             get { return _text; }
             set { _text = value; }
+        }
+
+        public override BitmapImage Attachment {
+            get { return null; }
         }
 
         public override bool IsOut {
