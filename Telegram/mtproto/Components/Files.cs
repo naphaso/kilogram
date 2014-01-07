@@ -77,9 +77,9 @@ namespace Telegram.MTProto.Components {
                 byte[] data = new byte[stream.Length];
                 stream.Read(data, 0, (int) stream.Length);
                 bool result = await api.upload_saveFilePart(fileId, 0, data);
-                while(result != true) {
-                    result = await api.upload_saveFilePart(fileId, 0, data);
-                }
+                //while(result != true) {
+                //    result = await api.upload_saveFilePart(fileId, 0, data);
+                //}
                 hash.Update(data);
                 handler(1.0f);
 
@@ -96,9 +96,9 @@ namespace Telegram.MTProto.Components {
                 byte[] data = new byte[chunkSize];
                 stream.Read(data, 0, chunkSize);
                 bool result = await api.upload_saveFilePart(fileId, i, data);
-                while(result != true) {
-                    result = await api.upload_saveFilePart(fileId, i, data);
-                }
+                //while(result != true) {
+                //    result = await api.upload_saveFilePart(fileId, i, data);
+                //}
                 hash.Update(data);
             }
 
@@ -110,9 +110,9 @@ namespace Telegram.MTProto.Components {
                 byte[] lastChunkData = new byte[lastChunkSize];
                 stream.Read(lastChunkData, 0, lastChunkSize);
                 bool lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
-                while(lastChunkResult != true) {
-                    lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
-                }
+                //while(lastChunkResult != true) {
+                //    lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
+                //}
                 hash.Update(lastChunkData);
             }
 

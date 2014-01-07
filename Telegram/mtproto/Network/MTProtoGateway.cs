@@ -165,11 +165,15 @@ namespace Telegram.MTProto {
 
         private DispatcherTimer timer = null;
 
+        private bool highlevel;
+
         public event UpdatesHandler UpdatesEvent;
 
-        public MTProtoGateway(TelegramDC dc, ISession session) {
+        public MTProtoGateway(TelegramDC dc, ISession session, bool highlevel, ulong salt = 0) {
             this.dc = dc;
             this.session = session;
+            this.highlevel = highlevel;
+            this.salt = salt;
             gateway = new TransportGateway();
             gateway.InputEvent += GatewayOnInput;
             gateway.ConnectedEvent += delegate { CheckSend(); };
@@ -177,6 +181,10 @@ namespace Telegram.MTProto {
 
         public Config Config {
             get { return config; }
+        }
+
+        public ulong Salt {
+            get { return salt; }
         }
 
         private void GatewayOnInput(object sender, byte[] data) {
@@ -207,7 +215,8 @@ namespace Telegram.MTProto {
                     message = plaintextReader.ReadBytes(msgLen);
                 }
 
-                logger.info("salt: {0}, session {1}, msgid {2}, seqno {3}", remoteSalt, remoteSessionId, remoteMessageId, remoteSequence);
+                //logger.info("salt: {0}, session {1}, msgid {2}, seqno {3}", remoteSalt, remoteSessionId, remoteMessageId, remoteSequence);
+                logger.info("gateway on input: {0}", BitConverter.ToString(message).Replace("-", "").ToLower());
             }
 
             using(MemoryStream messageStream = new MemoryStream(message, false))
@@ -228,29 +237,29 @@ namespace Telegram.MTProto {
                     dc.AuthKey = await new Authenticator().Generate(dc, 5);
                 }
 
-                for (int i = 0; i < 5; i++) {
-                    try {
-                        MTProtoInitRequest initRequest = new MTProtoInitRequest();
-                        Submit(initRequest);
-                        config = await initRequest.Task;
-                        break;
-                    }
-                    catch (MTProtoBadMessageException e) {
-                        if (e.ErrorCode == 32) {
-                            // broken seq
-                            throw new MTProtoBrokenSessionException();
-                        }
-                        else {
+                if(highlevel) {
+
+                    for(int i = 0; i < 5; i++) {
+                        try {
+                            MTProtoInitRequest initRequest = new MTProtoInitRequest();
+                            Submit(initRequest);
+                            config = await initRequest.Task;
+                            break;
+                        } catch(MTProtoBadMessageException e) {
+                            if(e.ErrorCode == 32) {
+                                // broken seq
+                                throw new MTProtoBrokenSessionException();
+                            } else {
+                                logger.info("init connection failed: {0}", e);
+                            }
+                        } catch(Exception e) {
                             logger.info("init connection failed: {0}", e);
                         }
                     }
-                    catch (Exception e) {
-                        logger.info("init connection failed: {0}", e);
-                    }
-                }
 
-                if (config == null) {
-                    throw new MTProtoInitException();
+                    if(config == null) {
+                        throw new MTProtoInitException();
+                    }
                 }
 
                 logger.info("connection established, config: {0}", config);
@@ -507,6 +516,8 @@ namespace Telegram.MTProto {
             // TODO: check sessionid
             // TODO: check seqno
 
+            //logger.debug("processMessage: msg_id {0}, sequence {1}, data {2}", BitConverter.ToString(((MemoryStream)messageReader.BaseStream).GetBuffer(), (int) messageReader.BaseStream.Position, (int) (messageReader.BaseStream.Length - messageReader.BaseStream.Position)).Replace("-","").ToLower());
+
             if (sequence % 2 == 1) {
                 needConfirmation.Add(messageId);
             }
@@ -558,6 +569,7 @@ namespace Telegram.MTProto {
                 UpdatesEvent(TL.Parse<Updates>(messageReader));
                 return true;
             } catch(Exception e) {
+                logger.warning("update processing exception: {0}", e);
                 return false;
             }
         }
@@ -696,8 +708,9 @@ namespace Telegram.MTProto {
                 ulong innerMessageId = messageReader.ReadUInt64();
                 int innerSequence = messageReader.ReadInt32();
                 int innerLength = messageReader.ReadInt32();
+                long beginPosition = messageReader.BaseStream.Position;
                 if(!processMessage(innerMessageId, sequence, messageReader)) {
-                    messageReader.BaseStream.Position += innerLength;
+                    messageReader.BaseStream.Position = beginPosition + innerLength;
                 }
             }
 
