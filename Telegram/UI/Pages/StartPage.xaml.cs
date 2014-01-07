@@ -41,7 +41,7 @@ namespace Telegram.UI
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs) {
             if (TelegramSession.Instance.AuthorizationExists()) {
-                TelegramSession.Instance.ConnectAsync();
+                Task.Run(() => TelegramSession.Instance.ConnectAsync());
             } else {
                 NavigationService.Navigate(new Uri("/UI/Pages/Signup.xaml", UriKind.Relative));
             }

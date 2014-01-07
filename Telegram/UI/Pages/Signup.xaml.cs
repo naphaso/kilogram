@@ -45,30 +45,42 @@ namespace Telegram.UI {
 
         private async Task Login() {
             flow.NeedCodeEvent += delegate(Login login) {
-                RestartTimer();
-                ShowCodeScene();
+                Deployment.Current.Dispatcher.BeginInvoke(
+                    delegate {
+                        RestartTimer();
+                        ShowCodeScene();
+                    });
+
             };
 
             flow.WrongCodeEvent += delegate(Login login) {
-                ShowCodeScene();
-                codeControl.SetCodeInvalid();
+                Deployment.Current.Dispatcher.BeginInvoke(
+                    delegate {
+                        ShowCodeScene();
+                        codeControl.SetCodeInvalid();
+                    });
             };
 
             flow.NeedSignupEvent += delegate(Login login) {
-                ShowNameScene();
+                Deployment.Current.Dispatcher.BeginInvoke(
+                    ShowNameScene);
             };
 
             flow.LoginSuccessEvent += delegate(Login login) {
-                HideProgress();
-                TelegramSettings.Instance.Notifications().RegisterPushNotifications();
-                NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
+                Deployment.Current.Dispatcher.BeginInvoke(
+                    delegate {
 
-                ContactManager cm = new ContactManager();
-                Task.Run(() => cm.SyncContacts());
+                        HideProgress();
+                        TelegramSettings.Instance.Notifications().RegisterPushNotifications();
+                        NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
+
+                        ContactManager cm = new ContactManager();
+                        Task.Run(() => cm.SyncContacts());
+                    });
             };
 
-//            Task.Run(() => flow.Start());
-            flow.Start();
+            Task.Run(() => flow.Start());
+//            flow.Start();
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e) {

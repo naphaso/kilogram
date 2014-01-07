@@ -169,7 +169,7 @@ namespace Telegram.Model.Wrappers {
             get {
                 if (dialog.peer.Constructor == Constructor.peerUser) {
                     if (userTyping != null) {
-                        _currentStatus.String = "typing...";
+                        _currentStatus.String = Typing;
                         _currentStatus.Type = StatusType.Activity;
                     }
                     else {
@@ -178,7 +178,7 @@ namespace Telegram.Model.Wrappers {
                     }
                 } else { // peer chat
                     if (chatTyping.Count != 0) {
-                        _currentStatus.String = String.Format("{0} users typing...", chatTyping.Count);
+                        _currentStatus.String = Typing;
                         _currentStatus.Type = StatusType.Activity;
                     }
                     else {
@@ -195,7 +195,7 @@ namespace Telegram.Model.Wrappers {
             get {
                 if (dialog.peer.Constructor == Constructor.peerUser) {
                     if (userTyping != null) {
-                        _currentStatus.String = "typing...";
+                        _currentStatus.String = Typing;
                         _currentStatus.Type = StatusType.Activity;
                     } else {
                         _currentStatus.String = Status;
@@ -203,7 +203,7 @@ namespace Telegram.Model.Wrappers {
                     }
                 } else { // peer chat
                     if (chatTyping.Count != 0) {
-                        _currentStatus.String = String.Format("{0} users typing...", chatTyping.Count);
+                        _currentStatus.String = Typing;
                         _currentStatus.Type = StatusType.Activity;
                     } else {
                         _currentStatus.String = Status;
@@ -448,8 +448,14 @@ namespace Telegram.Model.Wrappers {
         public string Typing {
             get {
                 if(dialog.peer.Constructor == Constructor.peerUser) {
-                    return userTyping == null ? "" : "Typing...";
+                    return userTyping == null ? "" : "typing...";
                 } else {
+                    if (chatTyping.Count == 0)
+                        return "";
+                    else if (chatTyping.Count == 1) {
+                        UserModel user = TelegramSession.Instance.GetUser(chatTyping.First().Key);
+                        return String.Format("{0} is typing...", user.FullName);
+                    }
                     return chatTyping.Count == 0 ? "" : String.Format("{0} users typing...", chatTyping.Count);
                 }
             }
@@ -469,7 +475,23 @@ namespace Telegram.Model.Wrappers {
         public void ProcessNewMessage(MessageModel messageModel) {
             logger.info("processing message and adding to observable collection");
             messages.Add(messageModel);
-            
+
+            if (dialog.peer.Constructor == Constructor.peerUser) {
+                if (userTyping != null) {
+                    userTyping = null;
+
+                    OnPropertyChanged("PreviewOrAction");
+                    OnPropertyChanged("StatusOrAction");
+                }
+            } else if (dialog.peer.Constructor == Constructor.peerChat) {
+                if (chatTyping.Count != 0) { 
+                    chatTyping.Clear();
+
+                    OnPropertyChanged("PreviewOrAction");
+                    OnPropertyChanged("StatusOrAction");
+                }
+            }
+
             if (NewMessageReceived != null)
                 NewMessageReceived(this, messageModel);
         }

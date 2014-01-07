@@ -217,48 +217,65 @@ namespace Telegram.MTProto {
         }
 
 
-
         public async Task ConnectAsync() {
-            logger.info("mtptoto gateway connect async");
+            try {
+                logger.info("mtptoto gateway connect async");
 
-            config = null;
-            await gateway.ConnectAsync(dc, -1);
+                config = null;
+                await gateway.ConnectAsync(dc, -1);
 
-            if(dc.AuthKey == null) {
-                dc.AuthKey = await new Authenticator().Generate(dc, 5);
-            }
+                if (dc.AuthKey == null) {
+                    dc.AuthKey = await new Authenticator().Generate(dc, 5);
+                }
 
-            for(int i = 0; i < 5; i++) {
-                try {
-                    MTProtoInitRequest initRequest = new MTProtoInitRequest();
-                    Submit(initRequest);
-                    config = await initRequest.Task;
-                    break;
-                } catch(MTProtoBadMessageException e) {
-                    if(e.ErrorCode == 32) {
-                        // broken seq
-                        throw new MTProtoBrokenSessionException();
-                    } else {
+                for (int i = 0; i < 5; i++) {
+                    try {
+                        MTProtoInitRequest initRequest = new MTProtoInitRequest();
+                        Submit(initRequest);
+                        config = await initRequest.Task;
+                        break;
+                    }
+                    catch (MTProtoBadMessageException e) {
+                        if (e.ErrorCode == 32) {
+                            // broken seq
+                            throw new MTProtoBrokenSessionException();
+                        }
+                        else {
+                            logger.info("init connection failed: {0}", e);
+                        }
+                    }
+                    catch (Exception e) {
                         logger.info("init connection failed: {0}", e);
                     }
-                } catch(Exception e) {
-                    logger.info("init connection failed: {0}", e);
                 }
+
+                if (config == null) {
+                    throw new MTProtoInitException();
+                }
+
+                logger.info("connection established, config: {0}", config);
+                //timer = new DispatcherTimer();
+                //timer.Tick += new EventHandler(timerDispatcher);
+                //timer.Interval = new TimeSpan(0, 0, 2);
+                //timer.Start();
+
+//                if (!gatewayConnected.Task.IsCompleted)
+//                    gatewayConnected.SetResult(true);
+
+                DelayTask();
             }
-
-            if(config == null) {
-                throw new MTProtoInitException();
+            catch (Exception ex) {
+                logger.error("gateway exception {0}", ex);
+                throw ex;
             }
+        }
 
-            logger.info("connection established, config: {0}", config);
-            //timer = new DispatcherTimer();
-            //timer.Tick += new EventHandler(timerDispatcher);
-            //timer.Interval = new TimeSpan(0, 0, 2);
-            //timer.Start();
+        private async Task DelayTask() {
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            timerDispatcher(this, new EventArgs());
 
-            while (gateway != null) {
-                await Task.Delay(TimeSpan.FromSeconds(2));
-                timerDispatcher(this, new EventArgs());
+            if (gateway != null) {
+                DelayTask();
             }
         }
 

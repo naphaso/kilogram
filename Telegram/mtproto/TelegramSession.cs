@@ -527,27 +527,34 @@ namespace Telegram.MTProto {
         }
 
         public async Task ConnectAsync() {
-            if(gateway == null) {
-                logger.info("creating new mtproto gateway...");
-                gateway = new MTProtoGateway(MainDc, this);
-                gateway.UpdatesEvent += updates.ProcessUpdates;
-                while(true) {
-                    try {
-                        await gateway.ConnectAsync();
-                        break;
-                    } catch(MTProtoBrokenSessionException e) {
-                        logger.info("creating new session... TODO: destroy old session");
-                        // creating new session
-                        id = Helpers.GenerateRandomUlong();
-                        sequence = 0;
-                        gateway.Dispose();
-                        gateway = new MTProtoGateway(MainDc, this);
-                        gateway.UpdatesEvent += updates.ProcessUpdates;
+            try {
+                if (gateway == null) {
+                    logger.info("creating new mtproto gateway...");
+                    gateway = new MTProtoGateway(MainDc, this);
+                    gateway.UpdatesEvent += updates.ProcessUpdates;
+                    while (true) {
+                        try {
+                            await gateway.ConnectAsync();
+                            break;
+                        }
+                        catch (MTProtoBrokenSessionException e) {
+                            logger.info("creating new session... TODO: destroy old session");
+                            // creating new session
+                            id = Helpers.GenerateRandomUlong();
+                            sequence = 0;
+                            gateway.Dispose();
+                            gateway = new MTProtoGateway(MainDc, this);
+                            gateway.UpdatesEvent += updates.ProcessUpdates;
+                        }
                     }
+                    api = new TLApi(gateway);
+                    logger.info("connection established, notifying");
+                    establishedTask.SetResult(null);
                 }
-                api = new TLApi(gateway);
-
-                establishedTask.SetResult(null);
+            }
+            catch (Exception ex) {
+                logger.error("session exception: {0}", ex);
+                throw ex;
             }
         }
 
@@ -618,7 +625,8 @@ namespace Telegram.MTProto {
             gateway.Dispose();
             gateway = null;
             establishedTask = new TaskCompletionSource<object>();
-            await ConnectAsync();
+            ConnectAsync();
+            await Established;
         }
 
         public async Task<TLApi> GetFileSessionMain() {

@@ -133,7 +133,7 @@ namespace Telegram.Model.Wrappers {
 
         public void SetUserTyping(int chatid, int userid) {
             foreach (var dialogModel in dialogs) {
-                if (dialogModel.Peer.Constructor == Constructor.peerUser) {
+                if (dialogModel.Peer.Constructor == Constructor.peerChat) {
                     if (((PeerChatConstructor)dialogModel.Peer).chat_id == chatid) {
                         dialogModel.SetTyping(userid);
                         break;

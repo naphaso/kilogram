@@ -153,7 +153,7 @@ namespace Telegram.MTProto {
                     }
                 }
             } else {
-                throw new InvalidOperationException("state is non-ESTABLISHED for read");
+                //throw new InvalidOperationException("state is non-ESTABLISHED for read");
             }
         }
 

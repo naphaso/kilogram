@@ -24,9 +24,9 @@ namespace Telegram.UI.Flows {
 
         private TelegramSession session;
         private string langCode;
-        private TaskCompletionSource<string> phoneSource;
-        private TaskCompletionSource<string> codeSource;
-        private TaskCompletionSource<SignUpData> signupSource;
+        private TaskCompletionSource<string> phoneSource = new TaskCompletionSource<string>();
+        private TaskCompletionSource<string> codeSource = new TaskCompletionSource<string>();
+        private TaskCompletionSource<SignUpData> signupSource = new TaskCompletionSource<SignUpData>();
         public Login(TelegramSession session, string langCode) {
             this.langCode = langCode;
             this.session = session;
@@ -39,11 +39,12 @@ namespace Telegram.UI.Flows {
 
         public async Task Start() {
             try {
-                phoneSource = new TaskCompletionSource<string>();
-                codeSource = new TaskCompletionSource<string>();
-                signupSource = new TaskCompletionSource<SignUpData>(); 
+//                phoneSource = new TaskCompletionSource<string>();
+//                codeSource = new TaskCompletionSource<string>();
+//                signupSource = new TaskCompletionSource<SignUpData>(); 
 
-                await session.ConnectAsync();
+                await Task.Run(() => session.ConnectAsync());
+//                await session.Established;
 
                 string phone = await phoneSource.Task;
 
@@ -88,7 +89,7 @@ namespace Telegram.UI.Flows {
                     // sign in
                     string code;
 
-                    Deployment.Current.Dispatcher.BeginInvoke(() => NeedCodeEvent(this));
+                    NeedCodeEvent(this);
                     while (true) {
 
                         // wait 30 seconds and send phone call
@@ -105,12 +106,12 @@ namespace Telegram.UI.Flows {
                                 (Auth_authorizationConstructor)
                                     await session.Api.auth_signIn(phone, sendCodeResponse.phone_code_hash, code);
                             await session.SaveAuthorization(authorization);
-                            Deployment.Current.Dispatcher.BeginInvoke(() => LoginSuccessEvent(this));
+                            LoginSuccessEvent(this);
                             break;
                         }
                         catch (MTProtoErrorException e) {
                             codeSource = new TaskCompletionSource<string>();
-                            Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                            WrongCodeEvent(this);
                         }
                     }
 
@@ -118,7 +119,7 @@ namespace Telegram.UI.Flows {
                 else {
                     // sign up
                     string code;
-                    Deployment.Current.Dispatcher.BeginInvoke(() => NeedCodeEvent(this));
+                    NeedCodeEvent(this);
 
                     // wait 30 seconds and send phone call
                     if (await Task.WhenAny(codeSource.Task, Task.Delay(TimeSpan.FromSeconds(60))) == codeSource.Task) {
@@ -133,7 +134,7 @@ namespace Telegram.UI.Flows {
                         try {
                             await session.Api.auth_signIn(phone, sendCodeResponse.phone_code_hash, code);
                             codeSource = new TaskCompletionSource<string>();
-                            Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                            WrongCodeEvent(this);
                         }
                         catch (MTProtoErrorException e) {
                             if (e.ErrorMessage.StartsWith("PHONE_NUMBER_UNOCCUPIED")) {
@@ -142,20 +143,20 @@ namespace Telegram.UI.Flows {
                             }
                             else if (e.ErrorMessage.StartsWith("PHONE_CODE_INVALID")) {
                                 codeSource = new TaskCompletionSource<string>();
-                                Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                                WrongCodeEvent(this);
                             }
                             else if (e.ErrorMessage.StartsWith("PHONE_CODE_EXPIRED")) {
                                 codeSource = new TaskCompletionSource<string>();
-                                Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                                WrongCodeEvent(this);
                             }
                             else if (e.ErrorMessage.StartsWith("PHONE_CODE_EMPTY")) {
                                 codeSource = new TaskCompletionSource<string>();
-                                Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                                WrongCodeEvent(this);
                             }
                         }
                     }
 
-                    Deployment.Current.Dispatcher.BeginInvoke(() => NeedSignupEvent(this));
+                    NeedSignupEvent(this);
                     SignUpData signUpData = await signupSource.Task;
 
                     while (true) {
@@ -167,12 +168,12 @@ namespace Telegram.UI.Flows {
                                             signUpData.firstname, signUpData.lastname);
                             await session.SaveAuthorization(authorization);
 
-                            Deployment.Current.Dispatcher.BeginInvoke(() => LoginSuccessEvent(this));
+                            LoginSuccessEvent(this);
                             break;
                         }
                         catch (MTProtoErrorException e) {
                             codeSource = new TaskCompletionSource<string>();
-                            Deployment.Current.Dispatcher.BeginInvoke(() => WrongCodeEvent(this));
+                            WrongCodeEvent(this);
                         }
                     }
                 }
