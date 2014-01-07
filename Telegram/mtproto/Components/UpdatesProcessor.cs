@@ -23,6 +23,8 @@ namespace Telegram.MTProto.Components {
 
     public delegate void UserPhotoHandler(int userId, int date, UserProfilePhoto photo, bool previous);
 
+    public delegate void MessagesReadHandler(List<int> messages);
+
     public class UpdatesProcessor {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(UpdatesProcessor));
         private TelegramSession session;
@@ -33,6 +35,7 @@ namespace Telegram.MTProto.Components {
         public event ChatTypingHandler ChatTypingEvent;
         public event UserNameHandler UserNameEvent;
         public event UserPhotoHandler UserPhotoEvent;
+        public event MessagesReadHandler MessagesReadEvent;
 
         // update state
         private int pts;
@@ -459,7 +462,7 @@ namespace Telegram.MTProto.Components {
 
         private void ProcessUpdate(UpdateReadMessagesConstructor update) {
             updatePts(update.pts);
-
+            MessagesReadEvent(update.messages);
         }
         private void ProcessUpdate(UpdateDeleteMessagesConstructor update) {
             updatePts(update.pts);

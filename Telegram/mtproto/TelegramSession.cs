@@ -264,6 +264,7 @@ namespace Telegram.MTProto {
             updates.ChatTypingEvent += dialogs.SetChatTyping;
             updates.UserNameEvent += SetUserName;
             updates.UserPhotoEvent += SetUserPhoto;
+            updates.MessagesReadEvent += dialogs.MessagesRead;
         }
 
         private void SetUserPhoto(int userId, int date, UserProfilePhoto photo, bool previous) {
