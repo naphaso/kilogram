@@ -513,7 +513,8 @@ namespace Telegram.Model.Wrappers {
                 messages_StatedMessage sentMessage =
                     await TelegramSession.Instance.Api.messages_sendMedia(InputPeer, media, randomId);
 
-                int pts, seq;
+                Message message;
+                int pts, seq, id;
                 if (sentMessage.Constructor == Constructor.messages_statedMessage) {
                     Messages_statedMessageConstructor sentMessageConstructor =
         (Messages_statedMessageConstructor)sentMessage;
@@ -523,8 +524,8 @@ namespace Telegram.Model.Wrappers {
 
                     pts = sentMessageConstructor.pts;
                     seq = sentMessageConstructor.seq;
-
-                    session.Updates.processUpdatePtsSeq(pts, seq);
+                    message = sentMessageConstructor.message;
+                    
                 } else if (sentMessage.Constructor == Constructor.messages_statedMessageLink) {
                     Messages_statedMessageLinkConstructor statedMessageLink =
                         (Messages_statedMessageLinkConstructor) sentMessage;
@@ -535,13 +536,24 @@ namespace Telegram.Model.Wrappers {
 
                     pts = statedMessageLink.pts;
                     seq = statedMessageLink.seq;
-
-                    session.Updates.processUpdatePtsSeq(pts, seq);
+                    message = statedMessageLink.message;
                 }
                 else {
                     logger.error("unknown messages_StatedMessage constructor");
+                    return;
                 }
 
+                if (!session.Updates.processUpdatePtsSeq(pts, seq)) {
+                    return;
+                }
+
+                int messageIndex = messages.IndexOf(undeliveredMessage);
+                if (messageIndex != -1) {
+                    messages[messageIndex] =
+                        new MessageModelDelivered(message);
+                } else {
+                    logger.error("not found undelivered message to confirmation");
+                }
 
             }
             catch (Exception ex) {

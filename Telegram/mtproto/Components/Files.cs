@@ -111,7 +111,7 @@ namespace Telegram.MTProto.Components {
                 handler((float) chunkCount*(float) chunkSize/allStreamLength);
                 byte[] lastChunkData = new byte[lastChunkSize];
                 stream.Read(lastChunkData, 0, lastChunkSize);
-                bool lastChunkResult = big ? await api.upload_saveBigFilePart(fileId, chunkCount, allChunksCount, lastChunkData) ? await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
+                bool lastChunkResult = big ? await api.upload_saveBigFilePart(fileId, chunkCount, allChunksCount, lastChunkData) : await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
                 //while(lastChunkResult != true) {
                 //    lastChunkResult = await api.upload_saveFilePart(fileId, chunkCount, lastChunkData);
                 //}

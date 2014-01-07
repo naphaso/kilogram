@@ -138,7 +138,7 @@
             <Grid x:Name="AttachPopupLayoutRoot" Background="{StaticResource PhoneChromeBrush}" Width="480" Height="300">
                 <StackPanel>
                     <ListBoxItem>
-                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="photo" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="photo" Tap="PickAndSendPhoto" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                     </ListBoxItem>
                     <ListBoxItem>
                         <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="video" Style="{StaticResource PhoneTextExtraLargeStyle}"/>

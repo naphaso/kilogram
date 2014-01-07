@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -49,15 +50,31 @@ namespace Telegram.UI {
                 ShowNotice();
         }
 
+        protected override void OnBackKeyPress(CancelEventArgs e) {
+            if (EmojiPopup.IsOpen) {
+                ToggleEmoji();
+                e.Cancel = true;
+                return;
+            }
+
+            if (AttachPopup.IsOpen) {
+                ToggleAttach();
+                e.Cancel = true;
+                return;
+            }
+
+            NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
+        }
+
         private void UpdateDataContext() {
             this.DataContext = model;
             MessageLongListSelector.ItemsSource = model.Messages;            
         }
 
         public DialogPage() {
-            this.BackKeyPress += delegate {
-                NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
-            };
+//            this.BackKeyPress += delegate {
+//
+//            };
 
             session = TelegramSession.Instance;
 
@@ -114,7 +131,7 @@ namespace Telegram.UI {
             //Toaster.Show("Igor Glotov", text);
         }
 
-        private void PickAndSendPhoto() {
+        private void PickAndSendPhoto(object sender, GestureEventArgs e) {
             var photo = new PhotoChooserTask { ShowCamera = true };
             photo.Completed += photoChooserTask_Completed;
             photo.Show();
@@ -154,27 +171,34 @@ namespace Telegram.UI {
             }
         }
 
-        private void Dialog_Attach(object sender, EventArgs e) {
+        private void ToggleAttach() {
             this.Focus();
             EmojiPopup.IsOpen = false;
-//            AttachPopup.SetValue(Popup.VerticalOffsetProperty, windowCenter.Y - (yourPopup.ActualHeight / 2.0));
+
             AttachPopup.IsOpen = !AttachPopup.IsOpen;
             if (AttachPopup.IsOpen)
                 MainPanel.Margin = new Thickness(0, 0, 0, AttachPopup.Height);
             else
-                MainPanel.Margin = new Thickness(0, 0, 0, 0);
+                MainPanel.Margin = new Thickness(0, 0, 0, 0);  
         }
 
+        private void Dialog_Attach(object sender, EventArgs e) {
+            ToggleAttach();
+        }
 
-        private void Dialog_Emoji(object sender, EventArgs e) {
+        private void ToggleEmoji() {
             this.Focus();
-//            EmojiPopup.VerticalOffset = ActualHeight - EmojiPopup.Height;
+
             AttachPopup.IsOpen = false;
             EmojiPopup.IsOpen = !EmojiPopup.IsOpen;
             if (EmojiPopup.IsOpen)
                 MainPanel.Margin = new Thickness(0, 0, 0, EmojiPopup.Height);
             else
-                MainPanel.Margin = new Thickness(0,0,0,0);
+                MainPanel.Margin = new Thickness(0, 0, 0, 0);
+        }
+
+        private void Dialog_Emoji(object sender, EventArgs e) {
+            ToggleEmoji();
         }
 
         private int GetEditorTotalHeight() {

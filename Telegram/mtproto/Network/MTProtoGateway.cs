@@ -317,7 +317,7 @@ namespace Telegram.MTProto {
         private Dictionary<ulong, MTProtoRequest> runningRequests = new Dictionary<ulong, MTProtoRequest>();
         private List<MTProtoRequest> pendingRequests = new List<MTProtoRequest>(); 
         public async Task<T> Call<T>(byte[] requestData) {
-            logger.info("call data: {0}", BitConverter.ToString(requestData));
+//            logger.info("call data: {0}", BitConverter.ToString(requestData));
             MTProtoRequest<T> request = new MTProtoRequest<T>(requestData);
             Submit(request);
             return await request.Task;
