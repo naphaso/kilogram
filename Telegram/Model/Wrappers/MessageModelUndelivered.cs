@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Telegram.MTProto;
+using Telegram.Utils;
 
 namespace Telegram.Model.Wrappers {
     class MessageModelUndelivered :MessageModel {
@@ -39,6 +40,12 @@ namespace Telegram.Model.Wrappers {
             set { _text = value; }
         }
 
+        public override bool IsOut {
+            get {
+                return true;
+            }
+        }
+
         public override sealed DateTime Timestamp { get; set; }
 
         public override void Write(BinaryWriter writer) {
@@ -55,6 +62,22 @@ namespace Telegram.Model.Wrappers {
             Timestamp = DateTimeExtensions.DateTimeFromUnixTimestampSeconds(reader.ReadInt64());
             MessageType = (Type) reader.ReadInt32();
             RandomId = reader.ReadInt64();
+        }
+
+        public override MessageDeliveryState GetMessageDeliveryState() {
+            return MessageDeliveryState.Pending;
+        }
+
+        public override MessageDeliveryState MessageDeliveryStateProperty {
+            get {
+                return GetMessageDeliveryState();
+            }
+        }
+
+        public override string TimeString {
+            get {
+                return Formatters.FormatDialogDateTimestamp(Timestamp);
+            }
         }
     }
 }

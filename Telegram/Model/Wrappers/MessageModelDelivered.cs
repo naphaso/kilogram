@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Telegram.MTProto;
+using Telegram.Utils;
 
 namespace Telegram.Model.Wrappers {
     public class MessageModelDelivered : MessageModel {
@@ -32,6 +33,22 @@ namespace Telegram.Model.Wrappers {
                         return ((MessageForwardedConstructor)message).id;
                     case Constructor.messageService:
                         return ((MessageServiceConstructor)message).id;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+            }
+        }
+
+        public override bool IsOut {
+            get {
+                int myId = TelegramSession.Instance.SelfId;
+                switch (message.Constructor) {
+                    case Constructor.message:
+                        return ((MessageConstructor)message).from_id == myId;
+                    case Constructor.messageForwarded:
+                        return ((MessageForwardedConstructor)message).from_id == myId;
+                    case Constructor.messageService:
+                        return ((MessageServiceConstructor)message).from_id == myId;
                     default:
                         throw new InvalidDataException("invalid constructor");
                 }
@@ -71,6 +88,12 @@ namespace Telegram.Model.Wrappers {
                 return DateTimeExtensions.DateTimeFromUnixTimestampSeconds(UnixSecondsTime);
             }
             set { }
+        }
+
+        public override string TimeString {
+            get {
+                return Formatters.FormatDialogDateTimestampUnix(UnixSecondsTime);
+            }
         }
 
         public int UnixSecondsTime {
@@ -144,6 +167,39 @@ namespace Telegram.Model.Wrappers {
         public override void Write(BinaryWriter writer) {
             writer.Write(1);
             message.Write(writer);
+        }
+
+        public override MessageDeliveryState GetMessageDeliveryState() {
+
+            if (message.Constructor == Constructor.message) {
+                MessageConstructor messageConstructor = (MessageConstructor)message;
+                return messageConstructor.unread ? MessageDeliveryState.Delivered : MessageDeliveryState.Read;
+            } else if (message.Constructor == Constructor.messageForwarded) {
+                return ((MessageForwardedConstructor)message).unread ? MessageDeliveryState.Delivered : MessageDeliveryState.Read;
+            } else if (message.Constructor == Constructor.messageService) {
+                return ((MessageServiceConstructor)message).unread ? MessageDeliveryState.Delivered : MessageDeliveryState.Read;
+            }
+            
+            return MessageDeliveryState.Delivered;
+        }
+
+        public void SetReadState() {
+            if (message.Constructor == Constructor.message) {
+                MessageConstructor messageConstructor = (MessageConstructor)message;
+                messageConstructor.unread = false;
+            } else if (message.Constructor == Constructor.messageForwarded) {
+                ((MessageForwardedConstructor) message).unread = false;
+            } else if (message.Constructor == Constructor.messageService) {
+                ((MessageServiceConstructor) message).unread = false;
+            }
+
+            OnPropertyChanged("MessageDeliveryStateProperty");
+        }
+
+        public override MessageDeliveryState MessageDeliveryStateProperty {
+            get {
+                return GetMessageDeliveryState();
+            }
         }
 
         private void Read(BinaryReader reader) {

@@ -50,14 +50,7 @@ namespace Telegram.UI {
 
         private void UpdateDataContext() {
             this.DataContext = model;
-            MessageLongListSelector.ItemsSource = model.Messages;
-//            model.NewMessageReceived += ModelOnNewMessageReceived;
-            
-        }
-
-        private void ModelOnNewMessageReceived(object sender, object args) {
-//            logger.debug("usermodel marker {0}", UserModel.GetCurrentMethod());
-//            MessageLongListSelector.ScrollTo(model.Messages.LastOrDefault());
+            MessageLongListSelector.ItemsSource = model.Messages;            
         }
 
         public DialogPage() {
