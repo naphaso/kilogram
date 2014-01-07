@@ -119,7 +119,7 @@ namespace Telegram.MTProto {
         }
 
         SemaphoreSlim _lock = new SemaphoreSlim(1);
-        public async Task<MTProtoGateway> GetFileGateway() {
+        public async Task<MTProtoGateway> GetFileGateway(ulong salt) {
             await _lock.WaitAsync();
 //            fileGateway = new MTProtoGateway(this, fileSession);
             try {
@@ -131,7 +131,7 @@ namespace Telegram.MTProto {
                     fileSession = new TelegramFileSession(Helpers.GenerateRandomUlong(), 0);
                 }
 
-                fileGateway = new MTProtoGateway(this, fileSession);
+                fileGateway = new MTProtoGateway(this, fileSession, false, salt);
                 await fileGateway.ConnectAsync();
 
                 return fileGateway;
@@ -165,12 +165,12 @@ namespace Telegram.MTProto {
                 Serializers.Bytes.write(writer, authKey.Data);    
             }
 
-            if(fileSession == null) {
-                writer.Write(0);
-            } else {
-                writer.Write(1);
-                fileSession.Write(writer);
-            }
+            //if(fileSession == null) {
+            //    writer.Write(0);
+            //} else {
+            //    writer.Write(1);
+            //    fileSession.Write(writer);
+            //}
 
             if(fileAuthorization == null) {
                 writer.Write(0);
@@ -194,12 +194,12 @@ namespace Telegram.MTProto {
                 authKey = new AuthKey(Serializers.Bytes.read(reader));    
             }
 
-            int fileSessionExists = reader.ReadInt32();
-            if(fileSessionExists == 0) {
-                fileSession = null;
-            } else {
-                fileSession = new TelegramFileSession(reader);
-            }
+            //int fileSessionExists = reader.ReadInt32();
+            //if(fileSessionExists == 0) {
+            //    fileSession = null;
+            //} else {
+            //    fileSession = new TelegramFileSession(reader);
+            //}
 
             int fileAuthExists = reader.ReadInt32();
             if(fileAuthExists == 0) {
@@ -264,6 +264,7 @@ namespace Telegram.MTProto {
             updates.ChatTypingEvent += dialogs.SetChatTyping;
             updates.UserNameEvent += SetUserName;
             updates.UserPhotoEvent += SetUserPhoto;
+            updates.MessagesReadEvent += dialogs.MessagesRead;
         }
 
         private void SetUserPhoto(int userId, int date, UserProfilePhoto photo, bool previous) {
@@ -530,7 +531,7 @@ namespace Telegram.MTProto {
             try {
                 if (gateway == null) {
                     logger.info("creating new mtproto gateway...");
-                    gateway = new MTProtoGateway(MainDc, this);
+                    gateway = new MTProtoGateway(MainDc, this, true);
                     gateway.UpdatesEvent += updates.ProcessUpdates;
                     while (true) {
                         try {
@@ -543,7 +544,7 @@ namespace Telegram.MTProto {
                             id = Helpers.GenerateRandomUlong();
                             sequence = 0;
                             gateway.Dispose();
-                            gateway = new MTProtoGateway(MainDc, this);
+                            gateway = new MTProtoGateway(MainDc, this, true);
                             gateway.UpdatesEvent += updates.ProcessUpdates;
                         }
                     }
@@ -653,7 +654,7 @@ namespace Telegram.MTProto {
                 dcs[dc] = targetDc;
             }
             
-            MTProtoGateway fileGateway = await targetDc.GetFileGateway();
+            MTProtoGateway fileGateway = await targetDc.GetFileGateway(gateway.Salt);
             
             TLApi fileGatewayApi = new TLApi(fileGateway);
 

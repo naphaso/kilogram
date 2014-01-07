@@ -95,6 +95,14 @@ namespace Telegram.MTProto.Components {
                 }
             });
         }
+
+        public void MessagesRead(List<int> messages) {
+            Deployment.Current.Dispatcher.BeginInvoke(delegate {
+                foreach(var dialogModel in model.Dialogs) {
+                    dialogModel.MarkRead(messages);
+                }
+            });
+        }
     }
 
 }

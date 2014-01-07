@@ -9,8 +9,10 @@ using System.Collections.ObjectModel;
 ﻿using System.Runtime.CompilerServices;
 ﻿using System.Threading.Tasks;
 ﻿using System.Windows;
+﻿using System.Windows.Controls;
 ﻿using System.Windows.Media.Imaging;
 ﻿using Coding4Fun.Toolkit.Controls.Common;
+﻿using Microsoft.Phone.Controls.Primitives;
 ﻿using Microsoft.Phone.Maps.Controls;
 ﻿using Microsoft.Phone.Reactive;
 ﻿using System.IO;
@@ -696,6 +698,12 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public void MarkRead(List<int> messages) {
+            var msgs = from msg in this.messages where msg is MessageModelDelivered && messages.Contains(((MessageModelDelivered)msg).Id) select (MessageModelDelivered)msg;
+            foreach(var messageModel in msgs) {
+                messageModel.SetReadState();
+            }
+        }
     }
 
     public delegate void OnNewMessageReceived(object sender, object args);
