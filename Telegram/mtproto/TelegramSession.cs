@@ -284,7 +284,7 @@ namespace Telegram.MTProto {
             updates.UserPhotoEvent += SetUserPhoto;
             updates.MessagesReadEvent += dialogs.MessagesRead;
 
-
+            
         }
 
         
@@ -568,6 +568,7 @@ namespace Telegram.MTProto {
                     logger.info("creating new mtproto gateway...");
                     gateway = new MTProtoGateway(MainDc, this, true, cachedSalt);
                     gateway.UpdatesEvent += updates.ProcessUpdates;
+        
                     while (true) {
                         try {
                             await gateway.ConnectAsync();
@@ -586,6 +587,9 @@ namespace Telegram.MTProto {
                     api = new TLApi(gateway);
                     logger.info("connection established, notifying");
                     establishedTask.SetResult(null);
+
+                    updates.RequestDifference();
+                    gateway.ReconnectEvent += updates.RequestDifference;
 
                     if(!saveSessionTimerInitialized) {
                         SaveSessionTimer();

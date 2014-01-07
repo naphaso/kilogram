@@ -533,5 +533,8 @@ namespace Telegram.MTProto.Components {
         }
 
 
+        public void RequestDifference() {
+            DifferenceExecutor.Request();
+        }
     }
 }

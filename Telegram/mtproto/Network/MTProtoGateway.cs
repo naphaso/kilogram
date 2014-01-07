@@ -147,6 +147,7 @@ namespace Telegram.MTProto {
 
     public delegate void UpdatesHandler(Updates updates);
 
+    public delegate void ReconnectHandler();
     public class MTProtoGateway : IDisposable {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(MTProtoGateway));
         private TransportGateway gateway;
@@ -168,6 +169,7 @@ namespace Telegram.MTProto {
         private bool highlevel;
 
         public event UpdatesHandler UpdatesEvent;
+        public event ReconnectHandler ReconnectEvent;
 
         public MTProtoGateway(TelegramDC dc, ISession session, bool highlevel, ulong salt) {
             this.dc = dc;
@@ -274,6 +276,8 @@ namespace Telegram.MTProto {
 
 //                if (!gatewayConnected.Task.IsCompleted)
 //                    gatewayConnected.SetResult(true);
+
+                ReconnectEvent();
 
                 DelayTask();
             }
