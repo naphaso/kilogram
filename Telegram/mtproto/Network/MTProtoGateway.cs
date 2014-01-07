@@ -577,11 +577,11 @@ namespace Telegram.MTProto {
 
 
         private bool HandleGzipPacked(ulong messageId, int sequence, BinaryReader messageReader) {
-            byte[] packedData = Serializers.Bytes.read(messageReader);
+            uint code = messageReader.ReadUInt32();
+            byte[] packedData = GZipStream.UncompressBuffer(Serializers.Bytes.read(messageReader));
             using (MemoryStream packedStream = new MemoryStream(packedData, false))
-            using (GZipStream zipStream = new GZipStream(packedStream, CompressionMode.Decompress))
-            using (BinaryReader compressedReader = new BinaryReader(zipStream)) {
-                processMessage(messageId, sequence, messageReader);
+            using (BinaryReader compressedReader = new BinaryReader(packedStream)) {
+                processMessage(messageId, sequence, compressedReader);
             }
 
             return true;
