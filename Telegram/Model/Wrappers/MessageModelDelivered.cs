@@ -214,7 +214,6 @@ namespace Telegram.Model.Wrappers {
 
                 // media is cached
                 if (_previewPath != null) {
-                    logger.debug("Returning cached preview {0}", _previewPath);
                     return Utils.Helpers.GetBitmapImageInternal(_previewPath);
                 }
 
@@ -235,7 +234,6 @@ namespace Telegram.Model.Wrappers {
                 if (media == null)
                     return null;
 
-                logger.debug("getting location for media {0}", media);
 
                 FileLocation resultFileLocation = null;
 
@@ -262,17 +260,15 @@ namespace Telegram.Model.Wrappers {
                     return Utils.Helpers.GetBitmapImageInternal(_previewPath);
                 }
 
-                logger.debug("File receive in progress {0}", resultFileLocation);
                 getFileTask.ContinueWith((path) => SetPreviewPath(path.Result), TaskScheduler.FromCurrentSynchronizationContext());
 
-                return new BitmapImage(new Uri("/Assets/UI/placeholder.user.yellow-WVGA.png", UriKind.Relative));
+                return new BitmapImage(new Uri("/Assets/UI/black-placeholder.png", UriKind.Relative));
             }
         }
 
         private string _previewPath = null;
         public void SetPreviewPath(string path) {
             _previewPath = path;
-            logger.debug("Attachment preview path saved {0}", _previewPath);
             OnPropertyChanged("Attachment");
         }
 

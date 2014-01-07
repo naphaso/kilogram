@@ -116,13 +116,13 @@ namespace Telegram.MTProto.Components {
             }
         }
 
-        private void ProcessUsers(List<User> users) {
+        public void ProcessUsers(List<User> users) {
             foreach(var user in users) {
                 session.SaveUser(user);
             }
         }
 
-        private void ProcessChats(List<Chat> chats) {
+        public void ProcessChats(List<Chat> chats) {
             foreach(var chat in chats) {
                 session.SaveChat(chat);
             }

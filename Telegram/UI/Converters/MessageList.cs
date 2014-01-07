@@ -60,7 +60,6 @@ namespace Telegram.UI.Converters {
             object parameter, System.Globalization.CultureInfo culture) {
 
             if (value == null) {
-                logger.debug("no attachment image detected");
                 return "";
             }
 
@@ -85,10 +84,9 @@ namespace Telegram.UI.Converters {
             object parameter, System.Globalization.CultureInfo culture) {
 
             if (value == null) {
-                logger.debug("no attachment image detected, invisible");
                 return Visibility.Collapsed;
             }
-            logger.debug("attachment image detected, visible");
+
             return Visibility.Visible;
         }
 
