@@ -147,6 +147,7 @@ namespace Telegram.MTProto {
 
     public delegate void UpdatesHandler(Updates updates);
 
+    public delegate void ReconnectHandler();
     public class MTProtoGateway : IDisposable {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(MTProtoGateway));
         private TransportGateway gateway;
@@ -168,8 +169,9 @@ namespace Telegram.MTProto {
         private bool highlevel;
 
         public event UpdatesHandler UpdatesEvent;
+        public event ReconnectHandler ReconnectEvent;
 
-        public MTProtoGateway(TelegramDC dc, ISession session, bool highlevel, ulong salt = 0) {
+        public MTProtoGateway(TelegramDC dc, ISession session, bool highlevel, ulong salt) {
             this.dc = dc;
             this.session = session;
             this.highlevel = highlevel;
@@ -185,6 +187,10 @@ namespace Telegram.MTProto {
 
         public ulong Salt {
             get { return salt; }
+        }
+
+        public bool Connected {
+            get { return gateway.Connected; }
         }
 
         private void GatewayOnInput(object sender, byte[] data) {
@@ -271,6 +277,9 @@ namespace Telegram.MTProto {
 //                if (!gatewayConnected.Task.IsCompleted)
 //                    gatewayConnected.SetResult(true);
 
+                var handler = ReconnectEvent;
+                if(handler != null) ReconnectEvent();
+
                 DelayTask();
             }
             catch (Exception ex) {
@@ -291,7 +300,7 @@ namespace Telegram.MTProto {
 
         private ulong GetNewMessageId() {
             long time = Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds);
-            ulong newMessageId = (ulong) ((time / 1000 + TelegramSettings.Instance.TimeOffset) << 32) |
+            ulong newMessageId = (ulong) ((time / 1000 + TelegramSession.Instance.TimeOffset) << 32) |
                                  (ulong) ((time % 1000) << 22) |
                                  (ulong) (random.Next(524288) << 2); // 2^19
             // [ unix timestamp : 32 bit] [ milliseconds : 10 bit ] [ buffer space : 1 bit ] [ random : 19 bit ] [ msg_id type : 2 bit ] = [ msg_id : 64 bit ]

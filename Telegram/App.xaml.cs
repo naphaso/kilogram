@@ -10,6 +10,7 @@ using Microsoft.Phone.Shell;
 using Telegram.Core.Logging;
 using Telegram.Model;
 using Telegram.MTProto;
+using Telegram.Notifications;
 using Telegram.Platform;
 using Telegram.Resources;
 
@@ -70,7 +71,7 @@ namespace Telegram
             if (TelegramSession.Instance.AuthorizationExists()) {
                 ContactManager cm = new ContactManager();
                 Task.Run(() => cm.SyncContacts());
-                Task.Run(() => TelegramSettings.Instance.Notifications().RegisterPushNotifications());
+                Task.Run(() => new NotificationManager().RegisterPushNotifications());
             }
         }
 

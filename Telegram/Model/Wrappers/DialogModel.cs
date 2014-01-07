@@ -378,8 +378,6 @@ namespace Telegram.Model.Wrappers {
                 for(int i = messagesIndexStart; i < messagesIndexStart + messagesCount; i++) {
                     messages[i].Write(writer);
                 }
-
-                logger.info("saved {0} messages", messagesCount);
             }
         }
 

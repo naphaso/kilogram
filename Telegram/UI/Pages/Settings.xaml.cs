@@ -17,6 +17,7 @@ using Telegram.Core.Logging;
 using Telegram.Model;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto;
+using Telegram.Notifications;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Telegram.UI
@@ -126,7 +127,7 @@ namespace Telegram.UI
         }
 
         private async Task DoLogout() {
-            await TelegramSettings.Instance.Notifications().UnregisterPushNotifications();
+            await new NotificationManager().UnregisterPushNotifications();
             TelegramSession.Instance.clear();
             Deployment.Current.Dispatcher.BeginInvoke(() => {
                 NavigationService.Navigate(new Uri("/UI/Pages/Signup.xaml", UriKind.Relative));

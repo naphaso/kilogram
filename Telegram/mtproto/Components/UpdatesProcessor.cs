@@ -533,5 +533,9 @@ namespace Telegram.MTProto.Components {
         }
 
 
+        public void RequestDifference() {
+            if(TelegramSession.Instance.AuthorizationExists()) 
+                DifferenceExecutor.Request();
+        }
     }
 }

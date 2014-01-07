@@ -175,7 +175,6 @@
     <Compile Include="Model\MainSettingsItem.cs" />
     <Compile Include="Model\MainSettingsModel.cs" />
     <Compile Include="MTProto\NetworkTest.cs" />
-    <Compile Include="MTProto\TelegramSettings.cs" />
     <Compile Include="MTProto\TelegramStore.cs" />
     <Compile Include="UI\Controls\PhoneButtonUserControl.xaml.cs">
       <DependentUpon>PhoneButtonUserControl.xaml</DependentUpon>

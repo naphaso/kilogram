@@ -10,6 +10,7 @@ using System.Windows.Media;
 using Windows.UI.Core;
 using Microsoft.Phone.Controls;
 using Telegram.MTProto;
+using Telegram.Notifications;
 using Telegram.Platform;
 using Telegram.UI.Flows;
 using Telegram.Utils;
@@ -71,7 +72,7 @@ namespace Telegram.UI {
                     delegate {
 
                         HideProgress();
-                        TelegramSettings.Instance.Notifications().RegisterPushNotifications();
+                        new NotificationManager().RegisterPushNotifications();
                         NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
 
                         ContactManager cm = new ContactManager();

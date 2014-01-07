@@ -58,13 +58,13 @@ namespace Telegram.MTProto {
 
         private void TryReconnect() {
             if(state == NetworkGatewayState.DISPOSED) {
-                connectTaskCompletionSource.SetResult(null);
+                connectTaskCompletionSource.TrySetResult(null);
                 return;
             }
 
             if(connectRetries == 0) {
                 logger.info("connect failed");
-                connectTaskCompletionSource.SetException(new TransportConnectException());
+                connectTaskCompletionSource.TrySetException(new TransportConnectException());
                 return;
             }
 
