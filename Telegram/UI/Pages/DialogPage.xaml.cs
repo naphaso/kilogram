@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
-using System.Net;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Logging;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 using Telegram.Core.Logging;
 using Telegram.Model;
 using Telegram.Model.Wrappers;
@@ -114,9 +112,56 @@ namespace Telegram.UI {
             //Toaster.Show("Igor Glotov", text);
         }
 
-        private void Dialog_Attach(object sender, EventArgs e) {
-            Toaster.Show("Igor Glotov", "Hello");
+        private void PickAndSendPhoto() {
+            var photo = new PhotoChooserTask { ShowCamera = true };
+            photo.Completed += photoChooserTask_Completed;
+            photo.Show();
         }
+
+        void photoChooserTask_Completed(object sender, PhotoResult e) {
+            try {
+                if (e.ChosenPhoto == null)
+                    return;
+
+                Task.Run(() => StartUploadPhoto(e.OriginalFileName, e.ChosenPhoto));
+            } catch (Exception exception) {
+                Debug.WriteLine("Exception in photoChooserTask_Completed " + exception.Message);
+            }
+        }
+
+        private async Task StartUploadPhoto(string name, Stream stream) {
+            try {
+//                Deployment.Current.Dispatcher.BeginInvoke(() => {
+//                    UploadProgressBar.Visibility = Visibility.Collapsed;
+//                });
+
+                InputFile file =
+                    await TelegramSession.Instance.Files.UploadFile(name, stream, delegate { });
+
+                InputMedia media = TL.inputMediaUploadedPhoto(file);
+
+
+                Deployment.Current.Dispatcher.BeginInvoke(() => {
+                    model.SendMedia(media);
+                });
+//                Deployment.Current.Dispatcher.BeginInvoke(() => {
+//                    UploadProgressBar.Visibility = Visibility.Collapsed;
+//                });
+            } catch (Exception ex) {
+                logger.error("exception {0}", ex);
+            }
+        }
+
+        private void Dialog_Attach(object sender, EventArgs e) {
+//            Toaster.Show("Igor Glotov", "Hello");
+
+            new PhoneFlipMenu(new PhoneFlipMenuAction("photo", PickAndSendPhoto),
+                    new PhoneFlipMenuAction("video", () => { MessageBox.Show("sorry, not impelmented"); }),
+                    new PhoneFlipMenuAction("location", () => { MessageBox.Show("sorry, not impelmented"); }),
+                    new PhoneFlipMenuAction("document", () => { MessageBox.Show("sorry, not impelmented"); }),
+                    new PhoneFlipMenuAction("contact", () => { MessageBox.Show("sorry, not impelmented"); })).Show();
+        }
+
 
         private bool emojiPanelShowing = false;
         private void Dialog_Emoji(object sender, EventArgs e) {

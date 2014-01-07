@@ -496,47 +496,112 @@ namespace Telegram.Model.Wrappers {
                 NewMessageReceived(this, messageModel);
         }
 
+        public async Task SendMedia(InputMedia media) {
+            try {
+                long randomId = Helpers.GenerateRandomLong();
+
+                // PHOTO IS HERE
+                MessageModelUndelivered undeliveredMessage = new MessageModelUndelivered() {
+                    MessageType = MessageModelUndelivered.Type.Text,
+                    Text = "",
+                    Timestamp = DateTime.Now,
+                    RandomId = randomId
+                };
+
+                ProcessNewMessage(undeliveredMessage);
+
+                messages_StatedMessage sentMessage =
+                    await TelegramSession.Instance.Api.messages_sendMedia(InputPeer, media, randomId);
+
+                int pts, seq;
+                if (sentMessage.Constructor == Constructor.messages_statedMessage) {
+                    Messages_statedMessageConstructor sentMessageConstructor =
+        (Messages_statedMessageConstructor)sentMessage;
+
+                    TelegramSession.Instance.Updates.ProcessChats(sentMessageConstructor.chats);
+                    TelegramSession.Instance.Updates.ProcessUsers(sentMessageConstructor.users);
+
+                    pts = sentMessageConstructor.pts;
+                    seq = sentMessageConstructor.seq;
+
+                    session.Updates.processUpdatePtsSeq(pts, seq);
+                } else if (sentMessage.Constructor == Constructor.messages_statedMessageLink) {
+                    Messages_statedMessageLinkConstructor statedMessageLink =
+                        (Messages_statedMessageLinkConstructor) sentMessage;
+
+                    TelegramSession.Instance.Updates.ProcessChats(statedMessageLink.chats);
+                    TelegramSession.Instance.Updates.ProcessUsers(statedMessageLink.users);
+                    // TODO: process links
+
+                    pts = statedMessageLink.pts;
+                    seq = statedMessageLink.seq;
+
+                    session.Updates.processUpdatePtsSeq(pts, seq);
+                }
+                else {
+                    logger.error("unknown messages_StatedMessage constructor");
+                }
+
+
+            }
+            catch (Exception ex) {
+                logger.error("Error sending media {0}", ex);
+            }
+        }
+
         public async Task SendMessage(string message) {
-            long randomId = Helpers.GenerateRandomLong();
+            try {
+                long randomId = Helpers.GenerateRandomLong();
 
-            MessageModelUndelivered undeliveredMessage = new MessageModelUndelivered() {
-                MessageType = MessageModelUndelivered.Type.Text,
-                Text = message,
-                Timestamp = DateTime.Now,
-                RandomId = randomId
-            };
+                MessageModelUndelivered undeliveredMessage = new MessageModelUndelivered() {
+                    MessageType = MessageModelUndelivered.Type.Text,
+                    Text = message,
+                    Timestamp = DateTime.Now,
+                    RandomId = randomId
+                };
 
-            ProcessNewMessage(undeliveredMessage);
+                ProcessNewMessage(undeliveredMessage);
 
-            messages_SentMessage sentMessage = await TelegramSession.Instance.Api.messages_sendMessage(InputPeer, message, randomId);
-            int date, id, pts, seq;
-            if(sentMessage.Constructor == Constructor.messages_sentMessage) {
-                Messages_sentMessageConstructor sent = (Messages_sentMessageConstructor) sentMessage;
-                id = sent.id;
-                pts = sent.pts;
-                seq = sent.seq;
-                date = sent.date;
-            } else if(sentMessage.Constructor == Constructor.messages_sentMessageLink) {
-                Messages_sentMessageLinkConstructor sent = (Messages_sentMessageLinkConstructor) sentMessage;
-                id = sent.id;
-                pts = sent.pts;
-                seq = sent.seq;
-                date = sent.date;
-                List<contacts_Link> links = sent.links;
-                // TODO: process links
-            } else {
-                logger.error("unknown sentMessage constructor");
-                return;
+                // TODO: npe? 
+                messages_SentMessage sentMessage =
+                    await TelegramSession.Instance.Api.messages_sendMessage(InputPeer, message, randomId);
+                int date, id, pts, seq;
+                if (sentMessage.Constructor == Constructor.messages_sentMessage) {
+                    Messages_sentMessageConstructor sent = (Messages_sentMessageConstructor) sentMessage;
+                    id = sent.id;
+                    pts = sent.pts;
+                    seq = sent.seq;
+                    date = sent.date;
+                }
+                else if (sentMessage.Constructor == Constructor.messages_sentMessageLink) {
+                    Messages_sentMessageLinkConstructor sent = (Messages_sentMessageLinkConstructor) sentMessage;
+                    id = sent.id;
+                    pts = sent.pts;
+                    seq = sent.seq;
+                    date = sent.date;
+                    List<contacts_Link> links = sent.links;
+                    // TODO: process links
+                }
+                else {
+                    logger.error("unknown sentMessage constructor");
+                    return;
+                }
+
+                int messageIndex = messages.IndexOf(undeliveredMessage);
+                if (messageIndex != -1) {
+                    messages[messageIndex] =
+                        new MessageModelDelivered(TL.message(id, session.SelfId, dialog.peer, true, true, date, message,
+                            TL.messageMediaEmpty()));
+                }
+                else {
+                    logger.error("not found undelivered message to confirmation");
+                }
+
+                session.Updates.processUpdatePtsSeqDate(pts, seq, date);
             }
-
-            int messageIndex = messages.IndexOf(undeliveredMessage);
-            if(messageIndex != -1) {
-                messages[messageIndex] = new MessageModelDelivered(TL.message(id, session.SelfId, dialog.peer, true, true, date, message, TL.messageMediaEmpty()));
-            } else {
-                logger.error("not found undelivered message to confirmation");
+            catch (Exception ex) {
+                logger.error("exception {0}", ex);
             }
-
-            session.Updates.processUpdatePtsSeqDate(pts, seq, date);
         }
 
         public async Task RemoveAndClearDialog() {

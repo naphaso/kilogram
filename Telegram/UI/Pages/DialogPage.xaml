@@ -55,10 +55,9 @@
                     </Grid>
                     <StackPanel Margin="10,19,10,10">
                         <TextBlock Text="Binding ForwardedFrom}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
-
+                        <Image Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top"/>
                         <StackPanel  HorizontalAlignment="Right" Orientation="Horizontal">
-                            <Image Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding TimeString}" TextWrapping="Wrap" Margin="24,0,0,0" VerticalAlignment="Top" Opacity="0.6"/>
                             <Image Height="24" Width="24" Margin="5,2,0,0" VerticalAlignment="Center" Source="{Binding MessageDeliveryStateProperty, Converter={StaticResource StatusIconConverter}}" HorizontalAlignment="Right" />
                         </StackPanel>

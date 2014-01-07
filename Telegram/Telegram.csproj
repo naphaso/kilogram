@@ -25,6 +25,8 @@
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     <ExpressionBlendVersion>12.0.41002.1</ExpressionBlendVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -112,6 +114,7 @@
       <DependentUpon>SecretChatNotice.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Controls\ExtendedSelector.cs" />
+    <Compile Include="UI\Controls\FlipMenu\FlipMenu.cs" />
     <Compile Include="UI\Controls\FormLatterEditPhoneControl.xaml.cs">
       <DependentUpon>FormLatterEditPhoneControl.xaml</DependentUpon>
     </Compile>
@@ -608,4 +611,5 @@
   </Target>
   -->
   <ProjectExtensions />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

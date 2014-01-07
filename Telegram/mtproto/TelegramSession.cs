@@ -228,7 +228,7 @@ namespace Telegram.MTProto {
         public static TelegramSession instance = loadIfExists();
 
         private MTProtoGateway gateway = null;
-        private TLApi api = null;
+        private volatile TLApi api = null;
 
         private Dialogs dialogs = null;
         private UpdatesProcessor updates = null;
