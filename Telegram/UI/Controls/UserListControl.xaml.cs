@@ -44,6 +44,21 @@ namespace Telegram.UI.Controls {
 //            initDemo();
         }
 
+        public void FilterTelegramUsersByName(string filter) {
+            if (filter == "")
+                FriendsList.ItemsSource = friendList;
+
+            ObservableCollection<UserModel> filteredCollection = new ObservableCollection<UserModel>();
+
+            foreach (var userModel in friendList) {
+                if (userModel.FullName.ToLower().Contains(filter)) {
+                    filteredCollection.Add(userModel);
+                }
+            }
+
+            FriendsList.ItemsSource = filteredCollection;
+        }
+
         private void ContactsOnSearchCompleted(object sender, ContactsSearchEventArgs e) {
             var items = e.Results;
 //                from Contact con in e.Results
