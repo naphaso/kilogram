@@ -66,7 +66,7 @@ namespace Telegram.Model.Wrappers {
         }
 
 
-        public override async Task SendMessage(string message) {
+        public override async Task<bool> SendMessage(string message) {
             logger.info("send message with key: {0}", BitConverter.ToString(key).Replace("-", "").ToLower());
             long messageId = Helpers.GenerateRandomLong();
             DecryptedMessage msg = TL.decryptedMessage(messageId, Helpers.GenerateRandomBytes(128), message, TL.decryptedMessageMediaEmpty());
@@ -98,7 +98,8 @@ namespace Telegram.Model.Wrappers {
             }
 
             Messages_sentEncryptedMessageConstructor sent = (Messages_sentEncryptedMessageConstructor) await session.Api.messages_sendEncrypted(TL.inputEncryptedChat(Id, AccessHash), messageId, data);
-            
+
+            return true;
         }
 
         public void ReceiveMessage(EncryptedMessage encryptedMessage) {

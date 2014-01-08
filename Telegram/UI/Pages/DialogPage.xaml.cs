@@ -30,8 +30,8 @@ namespace Telegram.UI {
 
         private bool keyboardWasShownBeforeEmojiPanelIsAppeared;
 
-        private DialogModel model;
-
+        private DialogModel model = null;
+        private volatile bool needDialogCreate = false;
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
 
@@ -39,9 +39,24 @@ namespace Telegram.UI {
 
             if (NavigationContext.QueryString.TryGetValue("modelId", out uriParam)) {
                 model = TelegramSession.Instance.Dialogs.Model.Dialogs[(int.Parse(uriParam))];
-            }
-            else {
-                logger.error("Unable to get model id from navigation");
+            } else if (NavigationContext.QueryString.TryGetValue("userId", out uriParam)) {
+                int userId = int.Parse(uriParam);
+                var targetPeer = TL.peerUser(userId);
+
+                foreach (DialogModel dialogModel in TelegramSession.Instance.Dialogs.Model.Dialogs) {
+                    if (dialogModel is DialogModelEncrypted)
+                        continue;
+                    
+                    if (TLStuff.PeerEquals(dialogModel.Peer, targetPeer)) {
+                        model = dialogModel;
+                        break;
+                    }
+                }
+
+                if (model == null) {
+                    model = new DialogModelPlain(TL.peerUser(userId), TelegramSession.Instance);
+                    needDialogCreate = true;
+                }
             }
 
             UpdateDataContext();
@@ -52,6 +67,7 @@ namespace Telegram.UI {
             if (MessageLongListSelector.ItemsSource == null || MessageLongListSelector.ItemsSource.Count == 0)
                 ShowNotice();
         }
+
 
         protected override void OnBackKeyPress(CancelEventArgs e) {
             if (EmojiPopup.IsOpen) {
@@ -150,10 +166,18 @@ namespace Telegram.UI {
 
         private void Dialog_Message_Send(object sender, EventArgs e) {
             var text = messageEditor.Text;
-
             messageEditor.Text = "";
-            model.SendMessage(text);
-            //Toaster.Show("Igor Glotov", text);
+
+            if (needDialogCreate) {
+                model.SendMessage(text).ContinueWith((result) => {
+                    if (result.Result) {
+                        TelegramSession.Instance.Dialogs.Model.Dialogs.Add(model);
+                        needDialogCreate = false;
+                    }
+                });
+            } else { 
+                model.SendMessage(text);
+            }
         }
 
         private void PickAndSendPhoto(object sender, GestureEventArgs e) {
@@ -266,8 +290,13 @@ namespace Telegram.UI {
         }
 
         private void OnHeaderTap(object sender, GestureEventArgs e) {
-            int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(model);
-            NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?modelId=" + modelId, UriKind.Relative));
+            Peer peer = model.Peer;
+            if (peer.Constructor == Constructor.peerUser) {
+                NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?userId="+((PeerUserConstructor) peer).user_id, UriKind.Relative));
+            }
+            else {
+                
+            }
         }
 
         private void OnOpenAttachment(object sender, GestureEventArgs e) {

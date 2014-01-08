@@ -7,11 +7,14 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using Telegram.Core.Logging;
 using Telegram.MTProto;
 using Telegram.MTProto.Crypto;
 
 namespace Telegram.Utils {
     class Helpers {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(Helpers));
+
         private static Random random = new Random();
 
         public static ulong GenerateRandomUlong() {
@@ -32,10 +35,15 @@ namespace Telegram.Utils {
 
         public static BitmapImage GetBitmapImageInternal(string avatarPath) {
             BitmapImage bi = new BitmapImage();
-            using (var iso = IsolatedStorageFile.GetUserStoreForApplication()) {
-                using (var stream = iso.OpenFile(avatarPath, FileMode.Open, FileAccess.Read)) {
-                    bi.SetSource(stream);
+            try {
+                using (var iso = IsolatedStorageFile.GetUserStoreForApplication()) {
+                    using (var stream = iso.OpenFile(avatarPath, FileMode.Open, FileAccess.Read)) {
+                        bi.SetSource(stream);
+                    }
                 }
+            }
+            catch (Exception ex) {
+                logger.error("ERROR OPENING AVATAR FROM ISOLATED STORAGE {0}", ex);
             }
             return bi;
         }

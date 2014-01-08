@@ -482,7 +482,7 @@ namespace Telegram.MTProto {
                     session = new TelegramSession(sessionId, 0);
                     // prod 173.240.5.1 
                     // test 173.240.5.253
-                    TelegramEndpoint endpoint = new TelegramEndpoint("173.240.5.1", 443);
+                    TelegramEndpoint endpoint = new TelegramEndpoint("173.240.5.253", 443);
                     TelegramDC dc = new TelegramDC();
                     dc.Endpoints.Add(endpoint);
                     session.Dcs.Add(1, dc);
@@ -610,6 +610,7 @@ namespace Telegram.MTProto {
 
         public async Task SaveAuthorization(auth_Authorization authorization) {
             this.authorization = (Auth_authorizationConstructor) authorization;
+            SaveUser(this.authorization.user);
             Task dialogsTask = dialogs.DialogsRequest();
             Task updateTask = updates.GetStateRequest();
             await Task.WhenAll(dialogsTask, updateTask);

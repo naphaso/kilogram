@@ -35,7 +35,6 @@ namespace Telegram.Model.Wrappers {
             SubscribeToDialog();
         }
 
-        // FIXME: review ctor params !!
         public DialogModelPlain(MessageModelDelivered topMessage, TelegramSession session) : base(session) {
             this.dialog = (DialogConstructor) TL.dialog(topMessage.Peer, topMessage.Id, 1);
             this.messages.Add(topMessage);
@@ -45,6 +44,12 @@ namespace Telegram.Model.Wrappers {
 
         public DialogModelPlain(TelegramSession session, BinaryReader reader) : base(session) {
             Read(reader);
+
+            SubscribeToDialog();
+        }
+        public DialogModelPlain(Peer peer, TelegramSession session)
+            : base(session) {
+            this.dialog = (DialogConstructor)TL.dialog(peer, 0, 1);
 
             SubscribeToDialog();
         }
@@ -239,7 +244,7 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public override async Task SendMessage(string message) {
+        public override async Task<bool> SendMessage(string message) {
             try {
                 long randomId = Helpers.GenerateRandomLong();
 
@@ -274,12 +279,12 @@ namespace Telegram.Model.Wrappers {
                 }
                 else {
                     logger.error("unknown sentMessage constructor");
-                    return;
+                    return false;
                 }
 
                 if (session.Updates.processUpdatePtsSeqDate(pts, seq, date) == false) {
                     messages.Remove(undeliveredMessage);
-                    return;
+                    return false;
                 };
 
                 int messageIndex = messages.IndexOf(undeliveredMessage);
@@ -292,10 +297,11 @@ namespace Telegram.Model.Wrappers {
                     logger.error("not found undelivered message to confirmation");
                 }
 
-
+                return true;
             }
             catch (Exception ex) {
                 logger.error("exception {0}", ex);
+                return false;
             }
         }
 
