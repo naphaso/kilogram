@@ -21,5 +21,24 @@ namespace Telegram.Utils {
 
             return time.ToString("h:mmt");
         }
+
+        public static string FormatDayWasOnlineUnix(int seconds) {
+            return FormatDayWasOnline(DateTimeExtensions.DateTimeFromUnixTimestampSeconds(seconds));
+        }
+
+        public static string FormatTimeWasOnlineUnix(int seconds) {
+            return FormatTimeWasOnline(DateTimeExtensions.DateTimeFromUnixTimestampSeconds(seconds));
+        }
+
+        public static string FormatDayWasOnline(DateTime time) {
+            if (DateTime.Now - time > DateTime.Now - DateTime.Today)
+                return time.ToString("d MMM");
+
+            return "today";
+        }
+
+        public static string FormatTimeWasOnline(DateTime time) {
+            return time.ToString("h:mmt");
+        }
     }
 }

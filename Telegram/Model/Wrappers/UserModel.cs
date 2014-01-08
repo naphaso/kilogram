@@ -14,6 +14,7 @@ using Telegram.Core.Logging;
 using Telegram.MTProto;
 using Telegram.MTProto.Exceptions;
 using Telegram.UI;
+using Telegram.Utils;
 
 namespace Telegram.Model.Wrappers {
 
@@ -228,10 +229,10 @@ namespace Telegram.Model.Wrappers {
             string statusString = "unknown";
             switch (status.Constructor) {
                 case Constructor.userStatusEmpty:
-                    statusString = "loading";
+                    statusString = "offline";
                     break;
                 case Constructor.userStatusOffline:
-                    statusString = "offline";
+                    statusString = GetOfflineUserState((UserStatusOfflineConstructor) status);
                     break;
                 case Constructor.userStatusOnline:
                     statusString = "online";
@@ -239,6 +240,14 @@ namespace Telegram.Model.Wrappers {
             }
 
             return statusString;
+        }
+
+        private static string GetOfflineUserState(UserStatusOfflineConstructor status) {
+            string statusStr = "last seen {0} at {1}";
+            string date = Formatters.FormatDayWasOnlineUnix(status.was_online);
+            string time = Formatters.FormatTimeWasOnlineUnix(status.was_online);
+
+            return String.Format(statusStr, date, time);
         }
 
         public static string GetLastOnlineTime(int lastOnline) {
