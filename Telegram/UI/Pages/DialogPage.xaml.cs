@@ -92,7 +92,6 @@ namespace Telegram.UI {
             messageEditor.GotFocus += delegate {
                 AttachPopup.IsOpen = false;
                 EmojiPopup.IsOpen = false;
-                MainPanel.Margin = new Thickness(0, 0, 0, -20);
             };
 
             messageEditor.LostFocus += delegate {
@@ -104,7 +103,6 @@ namespace Telegram.UI {
             EmojiPanelControl.KeyboardClick += EmojiPanelControlOnKeyboardClick;
             EmojiPanelControl.EmojiGridListSelector.SelectionChanged += EmojiGridListSelectorOnSelectionChanged;
 
-//            dialogList.ItemsSource
         }
 
         private void EmojiPanelControlOnKeyboardClick(object sender, object args) {

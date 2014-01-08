@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="UI\Converters\DialogList.cs" />
     <Compile Include="UI\Converters\MessageList.cs" />
+    <Compile Include="UI\Converters\UserList.cs" />
     <Compile Include="UI\Emoji\EmojiPhoneControl.xaml.cs">
       <DependentUpon>EmojiPhoneControl.xaml</DependentUpon>
     </Compile>

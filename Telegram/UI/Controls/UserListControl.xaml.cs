@@ -7,11 +7,16 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using Windows.Phone.PersonalInformation;
+using Windows.Storage.Streams;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.UserData;
+using Telegram.Model.Wrappers;
+using Telegram.MTProto;
 using Telegram.UI.Models;
 using Telegram.UI.Models.Users;
+using Contact = Microsoft.Phone.UserData.Contact;
 
 namespace Telegram.UI.Controls {
     public partial class UserListControl : UserControl {
@@ -22,6 +27,8 @@ namespace Telegram.UI.Controls {
         public event OnTelegramUserSelected TelegramUserSelected;
         public event OnAddressbookUserSelected AddressbookUserSelected;
 
+        private ObservableCollection<UserModel> friendList = new ObservableCollection<UserModel>(); 
+
         private ObservableCollection<UserUiModel> userList = new ObservableCollection<UserUiModel>();
         public UserListControl() {
             InitializeComponent();
@@ -30,7 +37,11 @@ namespace Telegram.UI.Controls {
 
             contacts.SearchCompleted += ContactsOnSearchCompleted;
             contacts.SearchAsync(String.Empty, FilterKind.None, "Addressbook Contacts");
-            initDemo();
+
+            FriendsList.ItemsSource = friendList;
+
+            GetFriends();
+//            initDemo();
         }
 
         private void ContactsOnSearchCompleted(object sender, ContactsSearchEventArgs e) {
@@ -54,26 +65,22 @@ namespace Telegram.UI.Controls {
 //            ContactsList.DataContext = items;
         }
 
-        private void initDemo() {
-            var users = new List<UserItem> {
-                new UserItem() {Name = "John Doe", Online = true},
-                new UserItem() {Name = "Jane Doe", Online = true},
-                new UserItem() {Name = "Decard Kain", Online = false, LastSeen = "19:33p"},
-                new UserItem() {Name = "Igor Glotov", Online = true, LastSeen = "19:33p"},
-                new UserItem() {Name = "Mila Kunis", Online = false, LastSeen = "19:33p"},
-                new UserItem() {Name = "Jack Daniel", Online = false, LastSeen = "19:33p"},
-                new UserItem() {Name = "Stanislav Ovsyannikov", AddressBookContact = true}
-            };
+        private async void GetFriends() {
+            ContactStore store = await ContactStore.CreateOrOpenAsync();
+            ContactQueryResult result = store.CreateContactQuery();
+           
+            IReadOnlyList<StoredContact> contacts = await result.GetContactsAsync();
 
-//            List<AlphaKeyGroup<UserItem>> userDataSource = AlphaKeyGroup<UserItem>.CreateGroups(users,
-//                System.Threading.Thread.CurrentThread.CurrentUICulture,
-//                (UserItem s) => s.Name, true);
+            friendList.Clear();
+            
+            foreach (var storedContact in contacts) {
+                UserModel user = TelegramSession.Instance.GetUser(int.Parse(storedContact.RemoteId));
+                friendList.Add(user);                
+            }
 
-//            var observableUsersSource = new ObservableCollection<AlphaKeyGroup<UserItem>>(userDataSource);
-
-            FriendsList.ItemsSource = users;
+            if (contacts.Count > 0)
+                FriendsList.Visibility = Visibility.Visible;
         }
-
 
         private void AddressbookContactSelected(object sender, SelectionChangedEventArgs e) {
             if ((sender as LongListSelector).SelectedItem == null)
