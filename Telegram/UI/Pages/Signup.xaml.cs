@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using Windows.UI.Core;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Tasks;
 using Telegram.MTProto;
 using Telegram.Notifications;
 using Telegram.Platform;
@@ -81,12 +82,12 @@ namespace Telegram.UI {
                         ContactManager cm = new ContactManager();
                         Task.Run(() => cm.SyncContacts());
 
-                        Stream avatarSource = nameControl.GetAvatarSource();
+                        PhotoResult avatarSource = nameControl.GetAvatarSource();
                         
                         if (avatarSource != null) { 
                             Task.Run(async delegate {
                                 InputFile file =
-                                await TelegramSession.Instance.Files.UploadFile("avatar", avatarSource, (progress) => { });
+                                await TelegramSession.Instance.Files.UploadFile(avatarSource.OriginalFileName, avatarSource.ChosenPhoto, (progress) => { });
                                 
                                 photos_Photo photo =
                                     await

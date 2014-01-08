@@ -18,19 +18,19 @@ namespace Telegram
 {
     public partial class SignupName_Control : UserControl {
 
-        private volatile System.IO.Stream avatarSource = null;
+        private volatile PhotoResult avatarSource = null;
         
         public SignupName_Control()
         {
             InitializeComponent();
         }
 
-        public Stream GetAvatarSource() {
+        public PhotoResult GetAvatarSource() {
             return avatarSource;
         }
 
         private void UIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-            var photo = new PhotoChooserTask {ShowCamera = true};
+            var photo = new PhotoChooserTask {ShowCamera = true, PixelHeight = 200, PixelWidth = 200};
             photo.Completed += photoChooserTask_Completed;
             photo.Show();
         }
@@ -42,7 +42,7 @@ namespace Telegram
 
                 var bi = new BitmapImage();
                 bi.SetSource(e.ChosenPhoto);
-                avatarSource = e.ChosenPhoto;
+                avatarSource = e;
                 AvatarHandle.SetImage(bi);
 
 //                TelegramSession.Instance.

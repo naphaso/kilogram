@@ -119,7 +119,7 @@ namespace Telegram.MTProto {
                     logger.info("connection successfully");
                     state = NetworkGatewayState.ESTABLISHED;
                     sendCounter = 0;
-                    connectTaskCompletionSource.SetResult(null);
+                    connectTaskCompletionSource.TrySetResult(null);
                     ConnectedEvent();
                     ReadAsync();
                 } else {
