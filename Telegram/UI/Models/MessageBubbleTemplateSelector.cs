@@ -11,7 +11,7 @@ namespace Telegram.UI.Models {
     public class MessageBubbleTemplateSelector : DataTemplateSelector {
         public DataTemplate TextInBubbleTemplate { get; set; }
         public DataTemplate TextOutBubbleTemplate { get; set; }
-
+        public DataTemplate TextChatInBubbleTemplate { get; set; }
         public DataTemplate TextServiceBubbleTemplate { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container) {
 //            if (item.GetType() != typeof(MessageModelUndelivered))
@@ -23,7 +23,13 @@ namespace Telegram.UI.Models {
             if (model.IsService)
                 return TextServiceBubbleTemplate;
             
-            return model.IsOut ? TextOutBubbleTemplate : TextInBubbleTemplate;
+            if (model.IsOut)
+                return TextOutBubbleTemplate;
+
+            if (model.IsChat)
+                return TextChatInBubbleTemplate;
+
+            return TextInBubbleTemplate;
         }
     }
 }
