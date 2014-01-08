@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Coding4Fun.Toolkit.Controls;
 using Telegram.Annotations;
 using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
@@ -100,6 +102,28 @@ namespace Telegram.MTProto.Components {
             Deployment.Current.Dispatcher.BeginInvoke(delegate {
                 foreach(var dialogModel in model.Dialogs) {
                     dialogModel.MarkRead(messages);
+                }
+            });
+        }
+
+        public void ReceiveMessage(EncryptedMessage encryptedMessage) {
+            int id;
+            switch(encryptedMessage.Constructor) {
+                case Constructor.encryptedMessage:
+                    id = ((EncryptedMessageConstructor) encryptedMessage).chat_id;
+                    break;
+                case Constructor.encryptedMessageService:
+                    id = ((EncryptedMessageServiceConstructor) encryptedMessage).chat_id;
+                    break;
+                default:
+                    logger.error("invalid constructor");
+                    return;
+            }
+
+            Deployment.Current.Dispatcher.BeginInvoke(() => {
+                foreach (var dialog in from dialogModel in model.Dialogs where dialogModel is DialogModelEncrypted && ((DialogModelEncrypted)dialogModel).Id == id select (DialogModelEncrypted)dialogModel) {
+                    dialog.ReceiveMessage(encryptedMessage);
+                    break;
                 }
             });
         }

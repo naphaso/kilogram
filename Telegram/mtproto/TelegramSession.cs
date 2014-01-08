@@ -286,7 +286,7 @@ namespace Telegram.MTProto {
             updates.UserPhotoEvent += SetUserPhoto;
             updates.MessagesReadEvent += dialogs.MessagesRead;
             updates.EncryptedChatEvent += encryptedChats.UpdateChat;
-
+            updates.EncryptedMessageEvent += dialogs.ReceiveMessage;
         }
 
         

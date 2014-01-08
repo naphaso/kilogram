@@ -27,6 +27,8 @@ namespace Telegram.MTProto.Components {
 
     public delegate void EncryptedChatHandler(EncryptedChat chat);
 
+    public delegate void NewEncryptedMessageHandler(EncryptedMessage message);
+
     public class UpdatesProcessor {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(UpdatesProcessor));
         private TelegramSession session;
@@ -39,6 +41,7 @@ namespace Telegram.MTProto.Components {
         public event UserPhotoHandler UserPhotoEvent;
         public event MessagesReadHandler MessagesReadEvent;
         public event EncryptedChatHandler EncryptedChatEvent;
+        public event NewEncryptedMessageHandler EncryptedMessageEvent;
 
         // update state
         private int pts;
@@ -515,7 +518,9 @@ namespace Telegram.MTProto.Components {
         }
         private void ProcessUpdate(UpdateNewEncryptedMessageConstructor update) {
             // TODO: update qts
-            
+            qts = update.qts;
+            EncryptedMessageEvent(update.message);
+
         }
         private void ProcessUpdate(UpdateEncryptedChatTypingConstructor update) {
             

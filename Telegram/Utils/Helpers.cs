@@ -103,9 +103,21 @@ namespace Telegram.Utils {
             return msgKey;
         }
 
+        public static byte[] CalcMsgKey(byte[] data, int offset, int limit) {
+            byte[] msgKey = new byte[16];
+            Array.Copy(sha1(data, offset, limit), 4, msgKey, 0, 16);
+            return msgKey;
+        }
+
         public static byte[] sha1(byte[] data) {
             using (SHA1 sha1 = new SHA1Managed()) {
                 return sha1.ComputeHash(data);
+            }
+        }
+
+        public static byte[] sha1(byte[] data, int offset, int limit) {
+            using (SHA1 sha1 = new SHA1Managed()) {
+                return sha1.ComputeHash(data, offset, limit);
             }
         }
     }
