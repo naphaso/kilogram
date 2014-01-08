@@ -122,7 +122,7 @@ namespace Telegram.Notifications {
 //                    );
             logger.error(String.Format("A push notification {0} error occurred.  {1} ({2}) {3}",
                     e.ErrorType, e.Message, e.ErrorCode, e.ErrorAdditionalData));
-            Toaster.Show("MPNS", "Error occured: " + e.Message);
+            //Toaster.Show("MPNS", "Error occured: " + e.Message);
 
         }
 

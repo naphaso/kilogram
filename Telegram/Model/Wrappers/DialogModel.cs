@@ -27,10 +27,7 @@ namespace Telegram.Model.Wrappers {
     public abstract class DialogModel : INotifyPropertyChanged {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(DialogModel));
 
-        public abstract BitmapImage AvatarPath { get; }
         public abstract Peer Peer { get; }
-        public abstract DialogStatus PreviewOrAction { get; }
-        public abstract DialogStatus StatusOrAction { get; }
         public abstract string Preview { get; }
         public abstract bool IsChat { get; }
 
@@ -131,6 +128,21 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public BitmapImage AvatarPath {
+            get {
+                Peer peer = Peer;
+                if (peer.Constructor == Constructor.peerChat) {
+                    PeerChatConstructor peerChat = (PeerChatConstructor)peer;
+                    ChatModel chat = session.GetChat(peerChat.chat_id);
+                    return chat.AvatarPath;
+                }
+
+                PeerUserConstructor peerUser = (PeerUserConstructor)peer;
+                UserModel user = session.GetUser(peerUser.user_id);
+                return user.AvatarPath;
+            }
+        }
+
         public MessageModel.MessageDeliveryState MessageDeliveryStateProperty {
             get {
                 if (messages.Count == 0)
@@ -160,6 +172,11 @@ namespace Telegram.Model.Wrappers {
                 return Formatters.FormatDialogDateTimestamp(messageModel.Timestamp);
             }
         }
+
+        public bool IsEncrypted {
+            get { return this is DialogModelEncrypted; }
+        }
+
         public enum StatusType {
             Static,
             Activity
@@ -187,6 +204,80 @@ namespace Telegram.Model.Wrappers {
         }
 
         public DialogStatus _currentStatus = new DialogStatus();
+
+        public DialogStatus PreviewOrAction {
+            get {
+                Peer peer = Peer;
+                if (peer.Constructor == Constructor.peerUser) {
+                    if (userTyping != null) {
+                        _currentStatus.String = Typing;
+                        _currentStatus.Type = StatusType.Activity;
+                    }
+                    else {
+                        return GetPreviewConfig();
+                    }
+                }
+                else { // peer chat
+                    if (chatTyping.Count != 0) {
+                        _currentStatus.String = Typing;
+                        _currentStatus.Type = StatusType.Activity;
+                    }
+                    else {
+                        return GetPreviewConfig();
+                    }
+                }
+
+                return _currentStatus;
+            }
+        }
+
+        private DialogStatus GetPreviewConfig() {
+            if (messages == null || messages.Count == 0) {
+                return new DialogStatus() { String = "invalid", Type = StatusType.Activity };
+            }
+
+            // text, service, media or forwarded
+
+            bool isGreen = false;
+            if (messages.Last().MessageDeliveryStateProperty == MessageModel.MessageDeliveryState.Read)
+                isGreen = false;
+            else
+                isGreen = true;
+
+            return new DialogStatus() {
+                String = Preview,
+                Type = isGreen ? StatusType.Activity : StatusType.Static
+            };
+        }
+
+        public DialogStatus StatusOrAction {
+            get {
+                Peer peer = Peer;
+                if (peer.Constructor == Constructor.peerUser) {
+                    if (userTyping != null) {
+                        _currentStatus.String = Typing;
+                        _currentStatus.Type = StatusType.Activity;
+                    }
+                    else {
+                        _currentStatus.String = Status;
+                        _currentStatus.Type = StatusType.Static;
+                    }
+                }
+                else { // peer chat
+                    if (chatTyping.Count != 0) {
+                        _currentStatus.String = Typing;
+                        _currentStatus.Type = StatusType.Activity;
+                    }
+                    else {
+                        _currentStatus.String = Status;
+                        _currentStatus.Type = StatusType.Static;
+                    }
+                }
+
+                return _currentStatus;
+            }
+        }
+
 
         public void SetTyping(int userid) {
             logger.debug("user {0} in chat typing in dialog model", userid);
@@ -299,5 +390,7 @@ namespace Telegram.Model.Wrappers {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
     }
 }

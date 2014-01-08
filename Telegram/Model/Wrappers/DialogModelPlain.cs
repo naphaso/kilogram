@@ -71,92 +71,12 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public override BitmapImage AvatarPath {
-            get {
-                if (dialog.peer.Constructor == Constructor.peerChat) {
-                    PeerChatConstructor peerChat = (PeerChatConstructor) dialog.peer;
-                    ChatModel chat = session.GetChat(peerChat.chat_id);
-                    return chat.AvatarPath;
-                }
-
-                PeerUserConstructor peerUser = (PeerUserConstructor) dialog.peer;
-                UserModel user = session.GetUser(peerUser.user_id);
-                return user.AvatarPath;
-            }
-        }
-
         public override Peer Peer {
             get {
                 return dialog.peer;
             }
         }
 
-        public override DialogStatus PreviewOrAction {
-            get {
-                if (dialog.peer.Constructor == Constructor.peerUser) {
-                    if (userTyping != null) {
-                        _currentStatus.String = Typing;
-                        _currentStatus.Type = StatusType.Activity;
-                    }
-                    else {
-                        return GetPreviewConfig();
-                    }
-                } else { // peer chat
-                    if (chatTyping.Count != 0) {
-                        _currentStatus.String = Typing;
-                        _currentStatus.Type = StatusType.Activity;
-                    }
-                    else {
-                        return GetPreviewConfig();
-                    }
-                }
-
-                return _currentStatus;
-            }
-        }
-
-        private DialogStatus GetPreviewConfig() {
-            if (messages == null || messages.Count == 0) {
-                return new DialogStatus() {String = "invalid", Type = StatusType.Activity};
-            }
-
-            // text, service, media or forwarded
-
-            bool isGreen = false;
-            if (messages.Last().MessageDeliveryStateProperty == MessageModel.MessageDeliveryState.Read)
-                isGreen = false;
-            else
-                isGreen = true;
-            
-            return new DialogStatus() { 
-                String = Preview,
-                Type = isGreen ? StatusType.Activity : StatusType.Static
-            };
-        }
-
-        public override DialogStatus StatusOrAction {
-            get {
-                if (dialog.peer.Constructor == Constructor.peerUser) {
-                    if (userTyping != null) {
-                        _currentStatus.String = Typing;
-                        _currentStatus.Type = StatusType.Activity;
-                    } else {
-                        _currentStatus.String = Status;
-                        _currentStatus.Type = StatusType.Static;
-                    }
-                } else { // peer chat
-                    if (chatTyping.Count != 0) {
-                        _currentStatus.String = Typing;
-                        _currentStatus.Type = StatusType.Activity;
-                    } else {
-                        _currentStatus.String = Status;
-                        _currentStatus.Type = StatusType.Static;
-                    }
-                }
-
-                return _currentStatus;
-            }
-        }
 
         private async Task MessagesRequest() {
             messages_Messages loadedMessages = await session.Api.messages_getHistory(TLStuff.PeerToInputPeer(dialog.peer), 0, -1, 100);

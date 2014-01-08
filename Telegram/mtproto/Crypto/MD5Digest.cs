@@ -58,12 +58,16 @@ namespace Telegram.MTProto.Crypto {
     public class MD5 {
 
         public static string GetMd5String(string data) {
+            return BitConverter.ToString(GetMd5Bytes(Encoding.UTF8.GetBytes(data))).Replace("-", "").ToLower();
+        }
+
+        public static byte[] GetMd5Bytes(byte[] data) {
             MD5Digest digest = new MD5Digest();
-            digest.BlockUpdate(Encoding.UTF8.GetBytes(data), 0, data.Length);
+            digest.BlockUpdate(data, 0, data.Length);
             byte[] hash = new byte[16];
             digest.DoFinal(hash, 0);
 
-            return BitConverter.ToString(hash).Replace("-", "").ToLower();
+            return hash;
         }
 
         private MD5Digest digest = new MD5Digest();

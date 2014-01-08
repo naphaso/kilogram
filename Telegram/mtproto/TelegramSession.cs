@@ -251,6 +251,7 @@ namespace Telegram.MTProto {
         private Dialogs dialogs = null;
         private UpdatesProcessor updates = null;
         private Files files = null;
+        private EncryptedChats encryptedChats;
 
         private Timer timer = null;
         
@@ -266,6 +267,7 @@ namespace Telegram.MTProto {
             updates = new UpdatesProcessor(this);
             dialogs = new Dialogs(this);
             files = new Files(this);
+            encryptedChats = new EncryptedChats(this);
             users = new Dictionary<int, UserModel>();
             chats = new Dictionary<int, ChatModel>();
 
@@ -283,8 +285,8 @@ namespace Telegram.MTProto {
             updates.UserNameEvent += SetUserName;
             updates.UserPhotoEvent += SetUserPhoto;
             updates.MessagesReadEvent += dialogs.MessagesRead;
+            updates.EncryptedChatEvent += encryptedChats.UpdateChat;
 
-            
         }
 
         
@@ -444,7 +446,7 @@ namespace Telegram.MTProto {
             dialogs = new Dialogs(this, reader);
             
             files = new Files(this);
-
+            encryptedChats = new EncryptedChats(this);
 
             logger.info("session readed complete");
         }
@@ -646,6 +648,12 @@ namespace Telegram.MTProto {
             }
             set {
                 timeOffset = value;
+            }
+        }
+
+        public EncryptedChats EncryptedChats {
+            get {
+                return encryptedChats;
             }
         }
 
