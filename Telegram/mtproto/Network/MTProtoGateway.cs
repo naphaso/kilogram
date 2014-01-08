@@ -358,9 +358,11 @@ namespace Telegram.MTProto {
 
         private void timerDispatcher(object sender, EventArgs args) {
             if((DateTime.Now - lastSend).TotalSeconds > 5) {
-                if(needConfirmation.Count > 0) {
-                    StartSend();
-                }    
+                if(gateway.Connected) {
+                    if(needConfirmation.Count > 0 || pendingRequests.Count > 0) {
+                        StartSend();
+                    }
+                }
             }
         }
 
