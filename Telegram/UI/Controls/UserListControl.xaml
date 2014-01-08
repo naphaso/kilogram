@@ -6,6 +6,7 @@
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:properties="clr-namespace:Coding4Fun.Toolkit.Controls.Properties;assembly=Coding4Fun.Toolkit.Controls"
+    xmlns:converters="clr-namespace:Telegram.UI.Converters"
     xmlns:users="clr-namespace:Telegram.UI.Models.Users"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -15,6 +16,7 @@
     
     <UserControl.Resources>
         <!-- USER TEMPLATE SELECTOR -->
+        <converters:UserOnlineStatusColorConverter x:Key="OnlineColorConverter"/>
 
         <DataTemplate x:Key="ContactTemplate">
             <ListBoxItem>
@@ -25,25 +27,13 @@
             </ListBoxItem>
         </DataTemplate>
 
-        <DataTemplate x:Key="FriendOfflineTemplate">
-            <ListBoxItem>
-                <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
-                    <Grid Height="62" Margin="0,6">
-                        <Image Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        <TextBlock Text="{Binding Name}" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
-                        <TextBlock Text="{Binding LastSeen}" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
-                    </Grid>
-                </StackPanel>
-            </ListBoxItem>
-        </DataTemplate>
-
         <DataTemplate x:Key="FriendOnlineTemplate">
             <ListBoxItem>
                 <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
                     <Grid Height="62" Margin="0,6">
-                        <Image Source="/Assets/UI/placeholder.user.blue-WVGA.png" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        <TextBlock Text="{Binding Name}" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
-                        <TextBlock Text="{Binding LastSeen}" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
+                        <Image Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding FullName}" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+                        <TextBlock Text="{Binding Status}" Foreground="{Binding Status, Converter={StaticResource OnlineColorConverter}}" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
                     </Grid>
                 </StackPanel>
             </ListBoxItem>
@@ -53,7 +43,6 @@
         <DataTemplate x:Key="UserSelectingTemplate">
             <users:UserTemplateSelector Content="{Binding}"
                                 ContactTemplate="{StaticResource ContactTemplate}"
-                                FriendOfflineTemplate="{StaticResource FriendOfflineTemplate}"
                                 FriendOnlineTemplate="{StaticResource FriendOnlineTemplate}"
                                 HorizontalContentAlignment="Stretch"/>
         </DataTemplate>
@@ -75,6 +64,7 @@
                 <phone:LongListSelector 
                     ItemTemplate="{StaticResource UserSelectingTemplate}"
                     Name="FriendsList"
+                    Visibility="Collapsed"
                     LayoutMode="List"
                 VerticalAlignment="Top"/>
                 <phone:LongListSelector 

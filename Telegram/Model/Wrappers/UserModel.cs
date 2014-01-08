@@ -203,6 +203,25 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public bool IsOnline() {
+            switch (user.Constructor) {
+                case Constructor.userEmpty:
+                    return false;
+                case Constructor.userSelf:
+                    return ((UserSelfConstructor)user).status.Constructor == Constructor.userStatusOnline;
+                case Constructor.userContact:
+                    return ((UserContactConstructor)user).status.Constructor == Constructor.userStatusOnline;
+                case Constructor.userRequest:
+                    return ((UserRequestConstructor)user).status.Constructor == Constructor.userStatusOnline;
+                case Constructor.userForeign:
+                    return ((UserForeignConstructor)user).status.Constructor == Constructor.userStatusOnline;
+                case Constructor.userDeleted:
+                    return false;
+                default:
+                    throw new InvalidDataException("invalid constructor");
+            }
+        }
+
         public static string GetStatusString(UserStatus status) {
              
 
