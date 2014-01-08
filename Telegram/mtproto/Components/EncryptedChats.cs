@@ -20,14 +20,30 @@ namespace Telegram.MTProto.Components {
         private TelegramSession session;
 
         private int version = 0;
-        private int g;
-        private BigInteger p;
+        private int g = 1;
+        private BigInteger p = BigInteger.One;
 
         //private XoredRandom random = new XoredRandom();
         private Random random = new Random();
 
         public EncryptedChats(TelegramSession session) {
             this.session = session;
+        }
+
+        public EncryptedChats(TelegramSession session, BinaryReader reader) : this(session) {
+            Read(reader);
+        }
+
+        private void Read(BinaryReader reader) {
+            version = reader.ReadInt32();
+            g = reader.ReadInt32();
+            p = new BigInteger(1, Serializers.Bytes.read(reader));
+        }
+
+        public void Write(BinaryWriter writer) {
+            writer.Write(version);
+            writer.Write(g);
+            Serializers.Bytes.write(writer, p.ToByteArrayUnsigned());
         }
 
         public BigInteger Modulo {

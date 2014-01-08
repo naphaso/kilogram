@@ -398,7 +398,8 @@ namespace Telegram.MTProto {
 
             updates.Write(writer);
             dialogs.Write(writer);
-
+            // files
+            encryptedChats.Write(writer);
 
             logger.info("saving session complete");
         }
@@ -446,7 +447,7 @@ namespace Telegram.MTProto {
             dialogs = new Dialogs(this, reader);
             
             files = new Files(this);
-            encryptedChats = new EncryptedChats(this);
+            encryptedChats = new EncryptedChats(this, reader);
 
             logger.info("session readed complete");
         }

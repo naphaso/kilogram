@@ -203,6 +203,14 @@ namespace Telegram.Model.Wrappers {
                 Serializers.Bytes.write(writer, key);
                 writer.Write(fingerprint);
             }
+
+            if (a == null) {
+                writer.Write(0);
+            }
+            else {
+                writer.Write(1);
+                Serializers.Bytes.write(writer, a);
+            }
         }
 
         public override void Read(BinaryReader reader) {
@@ -211,6 +219,11 @@ namespace Telegram.Model.Wrappers {
             if(keyExists != 0) {
                 key = Serializers.Bytes.read(reader);
                 fingerprint = reader.ReadInt64();
+            }
+
+            int aExists = reader.ReadInt32();
+            if (aExists != 0) {
+                a = Serializers.Bytes.read(reader);
             }
         }
 
