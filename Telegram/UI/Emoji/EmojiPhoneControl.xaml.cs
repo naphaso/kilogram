@@ -186,7 +186,7 @@ namespace Telegram
             _panelContentList.Clear();
            
             for (int i = 0; i < data[listNumber].Length; i++) {
-                string emojiFile = "/Assets/emoji/" + data[listNumber][i].ToString("X") + ".png";
+                string emojiFile = "/Assets/emoji/" + data[listNumber][i].ToString("X").ToUpper() + ".png";
                 _panelContentList.Add(new EmojiItemModel() { Path = emojiFile, Code = data[listNumber][i]});
             }
 

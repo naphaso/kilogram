@@ -51,6 +51,10 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public override string Preview {
+            get { return Text; }
+        }
+
         public override DateTime Timestamp { get; set; }
 
         public override void Write(BinaryWriter writer) {

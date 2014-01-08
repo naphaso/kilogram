@@ -29,6 +29,7 @@ namespace Telegram.Model.Wrappers {
         public abstract bool Delivered { get; } 
 
         public abstract string Text { get; set;  }
+        public abstract string Preview { get; }
 
         public abstract DateTime Timestamp { get; set; }
 

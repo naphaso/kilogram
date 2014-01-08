@@ -123,7 +123,7 @@ namespace Telegram.Model.Wrappers {
             // text, service, media or forwarded
 
             bool isGreen = false;
-            if (messages.Last().MessageDeliveryStateProperty == MessageModel.MessageDeliveryState.Read)
+            if (messages.Last().MessageDeliveryStateProperty == MessageModel.MessageDeliveryState.Read || messages.Last().IsOut)
                 isGreen = false;
             else
                 isGreen = true;
@@ -200,25 +200,8 @@ namespace Telegram.Model.Wrappers {
                 if (messageModel.Delivered == false) {
                     return ((MessageModelUndelivered) messageModel).Text;
                 }
-                
-                string preview = "";
-                var topMessage = ((MessageModelDelivered) messageModel).RawMessage;
 
-                switch (topMessage.Constructor) {
-                    case Constructor.message:
-                        preview = ((MessageConstructor)topMessage).message;
-                        break;
-                    case Constructor.messageForwarded:
-                        preview = ((MessageForwardedConstructor)topMessage).message;
-                        break;
-                    case Constructor.messageService:
-                        preview = "SERVICE";
-                        break;
-                    default:
-                        throw new InvalidDataException("invalid constructor");
-                }
-
-                return preview;
+                return messageModel.Preview;
             }
         }
 

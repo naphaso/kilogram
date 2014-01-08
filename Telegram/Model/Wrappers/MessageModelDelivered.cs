@@ -87,6 +87,62 @@ namespace Telegram.Model.Wrappers {
             set { }
         }
 
+        // NOTE: lower case
+        public override string Preview {
+            get {
+
+                if (message.Constructor == Constructor.message) {
+                    
+                    string preview = ((MessageConstructor)message).message;
+                    MessageMedia media = ((MessageConstructor) message).media;
+
+                    if (media.Constructor == Constructor.messageMediaAudio) {
+                        preview = "audio";
+                    } else if (media.Constructor == Constructor.messageMediaContact) {
+                        preview = "contact";
+                    } else if (media.Constructor == Constructor.messageMediaPhoto) {
+                        preview = "photo";
+                    } else if (media.Constructor == Constructor.messageMediaGeo) {
+                        preview = "location";
+                    } else if (media.Constructor == Constructor.messageMediaVideo) {
+                        preview = "video";
+                    } else if (media.Constructor == Constructor.messageMediaDocument) {
+                        preview = "document";
+                    } else if (media.Constructor == Constructor.messageMediaUnsupported) {
+                        preview = "media";
+                    }
+
+                    return preview;
+                } else if (message.Constructor == Constructor.messageForwarded) {
+                    return "forwarded message";
+                } else if (message.Constructor == Constructor.messageService) {
+                    MessageAction action = ((MessageServiceConstructor)message).action;
+
+                    if (action.Constructor == Constructor.messageActionChatAddUser) {
+                        return "added user";
+                    } else if (action.Constructor == Constructor.messageActionChatCreate) {
+                        return "created chat";
+                    } else if (action.Constructor == Constructor.messageActionChatDeletePhoto) {
+                        return "removed chat photo";
+                    } else if (action.Constructor == Constructor.messageActionChatEditPhoto) {
+                        return "changed chat photo";
+                    } else if (action.Constructor == Constructor.messageActionChatDeleteUser) {
+                        return "removed user from chat";
+                    } else if (action.Constructor == Constructor.messageActionChatEditTitle) {
+                        return "changed chat title";
+                    } else if (action.Constructor == Constructor.messageActionGeoChatCheckin) {
+                        return "checked in geo chat";
+                    } else if (action.Constructor == Constructor.messageActionGeoChatCreate) {
+                        return "created geo chat";
+                    } else if (action.Constructor == Constructor.messageActionEmpty) {
+                        return "empty";
+                    }
+                }
+
+                return "";
+            }
+        }
+
         public override DateTime Timestamp {
             get {
                 return DateTimeExtensions.DateTimeFromUnixTimestampSeconds(UnixSecondsTime);
