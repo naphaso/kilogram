@@ -21,6 +21,9 @@ namespace Telegram.UI.Converters {
         public object Convert(object value, Type targetType,
             object parameter, System.Globalization.CultureInfo culture) {
 
+            if (value == null)
+                return "";
+
             MessageModel.MessageDeliveryState status = (MessageModel.MessageDeliveryState)value;
 
             string itemPath = "";
@@ -35,6 +38,10 @@ namespace Telegram.UI.Converters {
 
                 case MessageModel.MessageDeliveryState.Read:
                     itemPath = "/Assets/UI/message.state.read-WVGA.png";
+                    break;
+
+                default:
+                    itemPath = "";
                     break;
             }
 

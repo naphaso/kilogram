@@ -11,11 +11,34 @@
     xmlns:Telegram="clr-namespace:Telegram"
     xmlns:converters="clr-namespace:Telegram.UI.Converters"
     xmlns:controls="clr-namespace:Telegram.UI.Controls"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     x:Class="Telegram.UI.DialogPage"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     d:DataContext="{d:DesignData DialogDemoData.xaml}"
     shell:SystemTray.IsVisible="True">
+    
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+    
     <phone:PhoneApplicationPage.Resources>
         <converters:MessageDeliveryStateConverter x:Key="StatusIconConverter"/>
         <converters:MessageAttachmentSourceConverter x:Key="AttachmentSourceConverter"/>
@@ -34,7 +57,7 @@
         			<StackPanel Margin="10,19,10,10">
                         <TextBlock Text="{Binding Sender}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap" VerticalAlignment="Top"/>
         				<TextBlock Text="{Binding ForwardedFrom}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
-                        <Image Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Image Tap="OnOpenAttachment" Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Text}" TextWrapping="Wrap"  VerticalAlignment="Top"/>
                         <TextBlock HorizontalAlignment="Right" Text="{Binding TimeString}" TextWrapping="Wrap"  VerticalAlignment="Top" Opacity="0.6"/>
         			</StackPanel>
@@ -55,7 +78,7 @@
                     </Grid>
                     <StackPanel Margin="10,19,10,10">
                         <TextBlock Text="Binding ForwardedFrom}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
-                        <Image Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Image Tap="OnOpenAttachment" Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top"/>
                         <StackPanel  HorizontalAlignment="Right" Orientation="Horizontal">
                             <TextBlock Text="{Binding TimeString}" TextWrapping="Wrap" Margin="24,0,0,0" VerticalAlignment="Top" Opacity="0.6"/>
@@ -138,7 +161,7 @@
             <Grid x:Name="AttachPopupLayoutRoot" Background="{StaticResource PhoneChromeBrush}" Width="480" Height="300">
                 <StackPanel>
                     <ListBoxItem>
-                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="photo" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="photo" Tap="PickAndSendPhoto" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                     </ListBoxItem>
                     <ListBoxItem>
                         <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="video" Style="{StaticResource PhoneTextExtraLargeStyle}"/>

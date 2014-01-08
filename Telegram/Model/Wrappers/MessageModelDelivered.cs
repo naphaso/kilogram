@@ -187,6 +187,24 @@ namespace Telegram.Model.Wrappers {
             return MessageDeliveryState.Delivered;
         }
 
+        public override UserModel Sender {
+            get {
+                switch (message.Constructor) {
+                    case Constructor.message:
+                        return TelegramSession.Instance.GetUser(((MessageConstructor)message).from_id);
+                        break;
+                    case Constructor.messageForwarded:
+                        return TelegramSession.Instance.GetUser(((MessageForwardedConstructor)message).from_id);
+                        break;
+                    case Constructor.messageService:
+                        return TelegramSession.Instance.GetUser(((MessageServiceConstructor)message).from_id);
+                        break;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+            }
+        }
+
         public void SetReadState() {
             if (message.Constructor == Constructor.message) {
                 MessageConstructor messageConstructor = (MessageConstructor)message;

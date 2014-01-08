@@ -51,7 +51,7 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public override sealed DateTime Timestamp { get; set; }
+        public override DateTime Timestamp { get; set; }
 
         public override void Write(BinaryWriter writer) {
             writer.Write(2);
@@ -82,6 +82,12 @@ namespace Telegram.Model.Wrappers {
         public override string TimeString {
             get {
                 return Formatters.FormatDialogDateTimestamp(Timestamp);
+            }
+        }
+
+        public override UserModel Sender {
+            get {
+                return TelegramSession.Instance.GetUser(TelegramSession.Instance.SelfId);
             }
         }
     }

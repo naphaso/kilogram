@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -49,15 +50,39 @@ namespace Telegram.UI {
                 ShowNotice();
         }
 
+        protected override void OnBackKeyPress(CancelEventArgs e) {
+            if (EmojiPopup.IsOpen) {
+                ToggleEmoji();
+                e.Cancel = true;
+                return;
+            }
+
+            if (AttachPopup.IsOpen) {
+                ToggleAttach();
+                e.Cancel = true;
+                return;
+            }
+
+            NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
+        }
+
         private void UpdateDataContext() {
             this.DataContext = model;
-            MessageLongListSelector.ItemsSource = model.Messages;            
+            MessageLongListSelector.ItemsSource = model.Messages;
+//            MessageLongListSelector.ItemRealized += delegate {
+//                if (MessageLongListSelector.ItemsSource == null ||
+//                    MessageLongListSelector.ItemsSource.Count == 0)
+//                    return;
+//
+//                MessageLongListSelector.ScrollTo(
+//                    MessageLongListSelector.ItemsSource[MessageLongListSelector.ItemsSource.Count - 1]);
+//            };
         }
 
         public DialogPage() {
-            this.BackKeyPress += delegate {
-                NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
-            };
+//            this.BackKeyPress += delegate {
+//
+//            };
 
             session = TelegramSession.Instance;
 
@@ -76,6 +101,7 @@ namespace Telegram.UI {
                 if (!EmojiPopup.IsOpen && !AttachPopup.IsOpen)
                     MainPanel.Margin = new Thickness(0, 0, 0, 0);
             };
+
 
             EmojiPanelControl.EmojiGridListSelector.SelectionChanged += EmojiGridListSelectorOnSelectionChanged;
 
@@ -114,8 +140,14 @@ namespace Telegram.UI {
             //Toaster.Show("Igor Glotov", text);
         }
 
-        private void PickAndSendPhoto() {
+        private void PickAndSendPhoto(object sender, GestureEventArgs e) {
             var photo = new PhotoChooserTask { ShowCamera = true };
+            photo.Completed += photoChooserTask_Completed;
+            photo.Show();
+        }
+
+        private void PickAndSendVideo(object sender, GestureEventArgs e) {
+            var photo = new PhotoChooserTask {  };
             photo.Completed += photoChooserTask_Completed;
             photo.Show();
         }
@@ -126,6 +158,10 @@ namespace Telegram.UI {
                     return;
 
                 Task.Run(() => StartUploadPhoto(e.OriginalFileName, e.ChosenPhoto));
+
+                if (AttachPopup.IsOpen)
+                    ToggleAttach();
+
             } catch (Exception exception) {
                 Debug.WriteLine("Exception in photoChooserTask_Completed " + exception.Message);
             }
@@ -137,6 +173,11 @@ namespace Telegram.UI {
 //                    UploadProgressBar.Visibility = Visibility.Collapsed;
 //                });
 
+                if (!(model is DialogModelPlain)) 
+                    return;
+
+                DialogModelPlain plainModel = (DialogModelPlain) model;
+
                 InputFile file =
                     await TelegramSession.Instance.Files.UploadFile(name, stream, delegate { });
 
@@ -144,7 +185,7 @@ namespace Telegram.UI {
 
 
                 Deployment.Current.Dispatcher.BeginInvoke(() => {
-                    model.SendMedia(media);
+                    plainModel.SendMedia(media);
                 });
 //                Deployment.Current.Dispatcher.BeginInvoke(() => {
 //                    UploadProgressBar.Visibility = Visibility.Collapsed;
@@ -154,27 +195,34 @@ namespace Telegram.UI {
             }
         }
 
-        private void Dialog_Attach(object sender, EventArgs e) {
+        private void ToggleAttach() {
             this.Focus();
             EmojiPopup.IsOpen = false;
-//            AttachPopup.SetValue(Popup.VerticalOffsetProperty, windowCenter.Y - (yourPopup.ActualHeight / 2.0));
+
             AttachPopup.IsOpen = !AttachPopup.IsOpen;
             if (AttachPopup.IsOpen)
                 MainPanel.Margin = new Thickness(0, 0, 0, AttachPopup.Height);
             else
-                MainPanel.Margin = new Thickness(0, 0, 0, 0);
+                MainPanel.Margin = new Thickness(0, 0, 0, 0);  
         }
 
+        private void Dialog_Attach(object sender, EventArgs e) {
+            ToggleAttach();
+        }
 
-        private void Dialog_Emoji(object sender, EventArgs e) {
+        private void ToggleEmoji() {
             this.Focus();
-//            EmojiPopup.VerticalOffset = ActualHeight - EmojiPopup.Height;
+
             AttachPopup.IsOpen = false;
             EmojiPopup.IsOpen = !EmojiPopup.IsOpen;
             if (EmojiPopup.IsOpen)
                 MainPanel.Margin = new Thickness(0, 0, 0, EmojiPopup.Height);
             else
-                MainPanel.Margin = new Thickness(0,0,0,0);
+                MainPanel.Margin = new Thickness(0, 0, 0, 0);
+        }
+
+        private void Dialog_Emoji(object sender, EventArgs e) {
+            ToggleEmoji();
         }
 
         private int GetEditorTotalHeight() {
@@ -203,6 +251,10 @@ namespace Telegram.UI {
         private void OnHeaderTap(object sender, GestureEventArgs e) {
             int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(model);
             NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?modelId=" + modelId, UriKind.Relative));
+        }
+
+        private void OnOpenAttachment(object sender, GestureEventArgs e) {
+            NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
         }
     }
 }
