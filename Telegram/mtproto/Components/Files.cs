@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage.FileProperties;
 using Telegram.Core.Logging;
 using Telegram.MTProto.Crypto;
 using Telegram.MTProto.Exceptions;
@@ -125,6 +126,46 @@ namespace Telegram.MTProto.Components {
             return TL.inputFile(fileId, allChunksCount, filename, hash.FinalString());
         }
 
+        public async Task<string> DownloadVideo(Video arg, FileUploadProcessHandler handler) {
+            if(arg.Constructor == Constructor.videoEmpty) {
+                return null;
+            }
+
+            VideoConstructor video = (VideoConstructor) arg;
+            TLApi api = await session.GetFileSession(video.dc_id);
+            InputFileLocation inputFile = TL.inputVideoFileLocation(video.id, video.access_hash);
+            string videoPath = GetVideoPath(video);
+
+            int allSize = video.size;
+            int chunkSize = 128*1024;
+            int chunksCount = allSize/chunkSize;
+            int lastChunkSize = allSize - chunkSize*chunksCount;
+            int allChunksCount = chunksCount + (lastChunkSize != 0 ? 1 : 0);
+
+            using(IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication()) {
+                using(Stream stream = new IsolatedStorageFileStream(GetVideoPath(video), FileMode.OpenOrCreate, FileAccess.Write, storage)) {
+                    for (int i = 0; i < chunksCount; i++) {
+                        handler((float)i * (float)chunkSize / (float)allSize);
+                        Upload_fileConstructor chunk = (Upload_fileConstructor) await api.upload_getFile(inputFile, i*chunkSize, chunkSize);
+                        stream.Write(chunk.bytes, 0, chunk.bytes.Length);
+                    }
+
+                    if(lastChunkSize != 0) {
+                        handler((float)chunksCount * (float)chunkSize / (float)allSize);
+                        Upload_fileConstructor lastChunk = (Upload_fileConstructor) await api.upload_getFile(inputFile, chunksCount*chunkSize, lastChunkSize);
+                        stream.Write(lastChunk.bytes, 0, lastChunk.bytes.Length);
+                    }
+
+                    handler(1.0f);
+                }
+            }
+
+            return videoPath;
+        }
+
+        private string GetVideoPath(VideoConstructor video) {
+            return String.Format("{0}.mp4", video.id);
+        }
 
     }
 }
