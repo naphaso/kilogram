@@ -164,7 +164,7 @@ namespace Telegram.Model.Wrappers {
 
         public string Timestamp {
             get {
-                if (messages.Count > 0) {
+                if (messages.Count == 0) {
                     return "";
                 }
 
@@ -216,8 +216,7 @@ namespace Telegram.Model.Wrappers {
                     else {
                         return GetPreviewConfig();
                     }
-                }
-                else { // peer chat
+                } else { // peer chat
                     if (chatTyping.Count != 0) {
                         _currentStatus.String = Typing;
                         _currentStatus.Type = StatusType.Activity;
@@ -233,13 +232,13 @@ namespace Telegram.Model.Wrappers {
 
         private DialogStatus GetPreviewConfig() {
             if (messages == null || messages.Count == 0) {
-                return new DialogStatus() { String = "invalid", Type = StatusType.Activity };
+                return new DialogStatus() { String = "new conversation", Type = StatusType.Activity };
             }
 
             // text, service, media or forwarded
 
             bool isGreen = false;
-            if (messages.Last().MessageDeliveryStateProperty == MessageModel.MessageDeliveryState.Read)
+            if (messages.Last().MessageDeliveryStateProperty == MessageModel.MessageDeliveryState.Read || messages.Last().IsOut)
                 isGreen = false;
             else
                 isGreen = true;
@@ -341,6 +340,10 @@ namespace Telegram.Model.Wrappers {
             foreach (var messageModel in msgs) {
                 messageModel.SetReadState();
             }
+
+            OnPropertyChanged("MessageDeliveryStateProperty");
+            OnPropertyChanged("PreviewOrAction");
+            OnPropertyChanged("StatusOrAction");
         }
 
         public void ProcessNewMessage(MessageModel messageModel) {
@@ -350,20 +353,16 @@ namespace Telegram.Model.Wrappers {
             if (peer.Constructor == Constructor.peerUser) {
                 if (userTyping != null) {
                     userTyping = null;
-
-                    OnPropertyChanged("PreviewOrAction");
-                    OnPropertyChanged("StatusOrAction");
-                    OnPropertyChanged("MessageDeliveryStateProperty");
                 }
             } else if (peer.Constructor == Constructor.peerChat) {
                 if (chatTyping.Count != 0) {
                     chatTyping.Clear();
-
-                    OnPropertyChanged("PreviewOrAction");
-                    OnPropertyChanged("StatusOrAction");
-                    OnPropertyChanged("MessageDeliveryStateProperty");
                 }
             }
+
+            OnPropertyChanged("PreviewOrAction");
+            OnPropertyChanged("StatusOrAction");
+            OnPropertyChanged("MessageDeliveryStateProperty");
         }
 
         // proxy method from holded dialog object (user or chat)

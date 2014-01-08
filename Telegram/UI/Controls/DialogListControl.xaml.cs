@@ -32,8 +32,7 @@ namespace Telegram.UI.Controls {
             LoadModel();
             DialogList.SelectionChanged += delegate(object sender, SelectionChangedEventArgs e) {
                 var longListSelector = sender as LongListSelector;
-                if (longListSelector == null) {
-                    logger.error("sender as LongListSelector == null");
+                if (longListSelector.SelectedItem == null) {
                     return;
                 }
 
@@ -41,6 +40,7 @@ namespace Telegram.UI.Controls {
                 Debug.Assert(selectedDialog != null, "selectedDialog != null");
 
                 OnSelected(selectedDialog);
+                (sender as LongListSelector).SelectedItem = null;
             };
         }
 

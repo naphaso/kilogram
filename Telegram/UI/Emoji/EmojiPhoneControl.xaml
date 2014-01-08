@@ -24,9 +24,9 @@
 
     <Grid x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
     	<StackPanel VerticalAlignment="Top" Margin="0,0,0,-46">
-    		<phone:LongListSelector ItemTemplate="{StaticResource EmojiTemplate}" ItemsSource="{Binding}" x:Name="EmojiGridListSelector" LayoutMode="Grid" GridCellSize="79,69" Margin="0" Height="304" />
+    		<phone:LongListSelector ItemTemplate="{StaticResource EmojiTemplate}" x:Name="EmojiGridListSelector" LayoutMode="Grid" GridCellSize="79,69" Margin="0" Height="304" />
 
-    		<phone:LongListSelector x:Name="EmojiCategoryListSelector" ItemTemplate="{StaticResource EmojiCategoryTemplate}" ItemsSource="{Binding}" LayoutMode="Grid" GridCellSize="59,86" Padding="0" Background="{StaticResource PhoneChromeBrush}" Height="86"/>
+    		<phone:LongListSelector x:Name="EmojiCategoryListSelector" SelectionChanged="OnCategorySelectionChanged"  ItemTemplate="{StaticResource EmojiCategoryTemplate}"  LayoutMode="Grid" GridCellSize="59,86" Padding="0" Background="{StaticResource PhoneChromeBrush}" Height="86"/>
     	</StackPanel>
     </Grid>
 </UserControl>

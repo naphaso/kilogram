@@ -64,6 +64,11 @@
         		</Grid>
         	</StackPanel>
         </DataTemplate>
+        <DataTemplate x:Key="TextServiceBubbleTemplate">
+            <Grid Margin="10,10,10,10" MinHeight="40" VerticalAlignment="Top" >
+                <TextBlock TextWrapping="Wrap" Text="{Binding Text}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"></TextBlock>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="TextOutBubbleTemplate">
         	<StackPanel Margin="0,6,0,12" HorizontalAlignment="Right" >
 <!--                <TextBlock Text="FUCK"></TextBlock>-->
@@ -93,7 +98,8 @@
         <DataTemplate x:Key="UserSelectingTemplate">
         	<models:MessageBubbleTemplateSelector Content="{Binding}"
         		TextOutBubbleTemplate="{StaticResource TextOutBubbleTemplate}"
-        		TextInBubbleTemplate="{StaticResource TextInBubbleTemplate}"   
+        		TextInBubbleTemplate="{StaticResource TextInBubbleTemplate}"  
+                TextServiceBubbleTemplate="{StaticResource TextServiceBubbleTemplate}"
         		HorizontalContentAlignment="Stretch"/>
         </DataTemplate>
 
@@ -121,11 +127,11 @@
     </phone:PhoneApplicationPage.ApplicationBar>
 
 <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Margin="0,0,0,0" Background="Transparent">
 
         <!--TitlePanel contains the name of the application and page title-->
-		<StackPanel x:Name="MainPanel" Margin="0" VerticalAlignment="Bottom">
-			<Grid x:Name="DialogHeader" Tap="OnHeaderTap" VerticalAlignment="Top" Height="70">
+		<StackPanel x:Name="MainPanel" Margin="0,0,0,0" VerticalAlignment="Bottom">
+			<Grid x:Name="DialogHeader" Tap="OnHeaderTap" VerticalAlignment="Top" Height="75">
 				<StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0,0,0">
 					<TextBlock x:Name="DialogNameTextBlock" Text="{Binding Title}" Style="{StaticResource PhoneTextNormalStyle}" Margin="0,0,-82,0" FontSize="32" FontFamily="Segoe WP Light" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 					<TextBlock x:Name="DialogStatusTextBlock" Text="{Binding StatusOrAction, Converter={StaticResource StringConverter}}" Style="{StaticResource TextBlockFieldHint}" Margin="0,0,-82,0" FontSize="18.667" FontFamily="Segoe WP SemiLight" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -133,7 +139,7 @@
 				<Image Margin="396,0,10,0" Source="{Binding AvatarPath}" Stretch="Fill" Width="55" Height="55" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 				<Rectangle Margin="0" Canvas.ZIndex="2" StrokeThickness="5"/>
 			</Grid>
-			<StackPanel x:Name="ContentPanel" Height="634">
+			<StackPanel x:Name="ContentPanel" Height="629">
 				<controls:ExtendedSelector
 					ItemTemplate="{StaticResource UserSelectingTemplate}"
 					ItemsSource="{Binding Items}" 

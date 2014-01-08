@@ -78,6 +78,7 @@ namespace Telegram.Model.Wrappers {
         }
 
 
+
         private async Task MessagesRequest() {
             messages_Messages loadedMessages = await session.Api.messages_getHistory(TLStuff.PeerToInputPeer(dialog.peer), 0, -1, 100);
             List<Message> messagesList;
@@ -120,25 +121,8 @@ namespace Telegram.Model.Wrappers {
                 if (messageModel.Delivered == false) {
                     return ((MessageModelUndelivered) messageModel).Text;
                 }
-                
-                string preview = "";
-                var topMessage = ((MessageModelDelivered) messageModel).RawMessage;
 
-                switch (topMessage.Constructor) {
-                    case Constructor.message:
-                        preview = ((MessageConstructor)topMessage).message;
-                        break;
-                    case Constructor.messageForwarded:
-                        preview = ((MessageForwardedConstructor)topMessage).message;
-                        break;
-                    case Constructor.messageService:
-                        preview = "SERVICE";
-                        break;
-                    default:
-                        throw new InvalidDataException("invalid constructor");
-                }
-
-                return preview;
+                return messageModel.Preview;
             }
         }
 
@@ -237,6 +221,7 @@ namespace Telegram.Model.Wrappers {
                 }
 
                 if (!session.Updates.processUpdatePtsSeq(pts, seq)) {
+                    messages.Remove(undeliveredMessage);
                     return;
                 }
 
@@ -292,6 +277,11 @@ namespace Telegram.Model.Wrappers {
                     return;
                 }
 
+                if (session.Updates.processUpdatePtsSeqDate(pts, seq, date) == false) {
+                    messages.Remove(undeliveredMessage);
+                    return;
+                };
+
                 int messageIndex = messages.IndexOf(undeliveredMessage);
                 if (messageIndex != -1) {
                     messages[messageIndex] =
@@ -302,7 +292,7 @@ namespace Telegram.Model.Wrappers {
                     logger.error("not found undelivered message to confirmation");
                 }
 
-                session.Updates.processUpdatePtsSeqDate(pts, seq, date);
+
             }
             catch (Exception ex) {
                 logger.error("exception {0}", ex);

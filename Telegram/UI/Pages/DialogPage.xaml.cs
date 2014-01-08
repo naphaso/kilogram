@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +19,7 @@ using Telegram.Model;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto;
 using Telegram.UI.Controls;
+using Telegram.Utils;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 using Logger = Telegram.Core.Logging.Logger;
 
@@ -80,13 +83,8 @@ namespace Telegram.UI {
         }
 
         public DialogPage() {
-//            this.BackKeyPress += delegate {
-//
-//            };
 
             session = TelegramSession.Instance;
-
-//            this.DataContext = MessageModel;
 
             InitializeComponent();
             DisableEditBox();
@@ -102,10 +100,27 @@ namespace Telegram.UI {
                     MainPanel.Margin = new Thickness(0, 0, 0, 0);
             };
 
-
+            EmojiPanelControl.BackspaceClick += EmojiPanelControlOnBackspaceClick;
+            EmojiPanelControl.KeyboardClick += EmojiPanelControlOnKeyboardClick;
             EmojiPanelControl.EmojiGridListSelector.SelectionChanged += EmojiGridListSelectorOnSelectionChanged;
 
 //            dialogList.ItemsSource
+        }
+
+        private void EmojiPanelControlOnKeyboardClick(object sender, object args) {
+            if (EmojiPopup.IsOpen)
+                ToggleEmoji();
+
+            messageEditor.Focus();
+        }
+
+        private void EmojiPanelControlOnBackspaceClick(object sender, object args) {
+            if (messageEditor.Text.Length == 0)
+                return;
+
+            var utf32list = messageEditor.Text.ToUtf32().ToList();
+            utf32list.RemoveAt(utf32list.Count-1);
+            messageEditor.Text = new string(utf32list.ToUtf16().ToArray());
         }
 
 
@@ -127,9 +142,12 @@ namespace Telegram.UI {
         }
 
         private void EmojiGridListSelectorOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs) {
-            Debug.WriteLine("Emoji clicked");
-            EmojiItemModel emoji = (sender as LongListSelector).SelectedItem as EmojiItemModel;
+            var selector = (LongListSelector) sender;
+            if (selector.SelectedItem == null)
+                return;
+            var emoji = (EmojiItemModel)selector.SelectedItem;
             messageEditor.Text += emoji.ToString();
+            selector.SelectedItem = null;
         }
 
         private void Dialog_Message_Send(object sender, EventArgs e) {
@@ -215,9 +233,10 @@ namespace Telegram.UI {
 
             AttachPopup.IsOpen = false;
             EmojiPopup.IsOpen = !EmojiPopup.IsOpen;
-            if (EmojiPopup.IsOpen)
+            if (EmojiPopup.IsOpen) {
                 MainPanel.Margin = new Thickness(0, 0, 0, EmojiPopup.Height);
-            else
+                EmojiPanelControl.Show();
+            } else
                 MainPanel.Margin = new Thickness(0, 0, 0, 0);
         }
 

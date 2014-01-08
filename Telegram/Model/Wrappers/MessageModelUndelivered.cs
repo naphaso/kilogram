@@ -32,6 +32,10 @@ namespace Telegram.Model.Wrappers {
 
         private string _text;
 
+        public override bool IsService {
+            get { return false; }
+        }
+
         public override bool Delivered {
             get { return false; }
         }
@@ -49,6 +53,10 @@ namespace Telegram.Model.Wrappers {
             get {
                 return true;
             }
+        }
+
+        public override string Preview {
+            get { return Text; }
         }
 
         public override DateTime Timestamp { get; set; }
