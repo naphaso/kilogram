@@ -68,7 +68,9 @@ namespace Telegram.UI.Controls {
         private async void GetFriends() {
             ContactStore store = await ContactStore.CreateOrOpenAsync();
             ContactQueryResult result = store.CreateContactQuery();
-           
+
+
+
             IReadOnlyList<StoredContact> contacts = await result.GetContactsAsync();
 
             friendList.Clear();

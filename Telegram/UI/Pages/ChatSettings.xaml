@@ -1,0 +1,88 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="Telegram.UI.Pages.ChatSettings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:telegram="clr-namespace:Telegram"
+    xmlns:model="clr-namespace:Telegram.Model"
+    xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True">
+
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="PhotoThumbTemplate">
+            <Image Source="{Binding Thumb}" HorizontalAlignment="Left" Height="102" Margin="4,4,4,4" VerticalAlignment="Top" Width="102"/>
+        </DataTemplate>
+        <DataTemplate x:Key="VideoThumbTemplate">
+            <Grid HorizontalAlignment="Left" Height="102" VerticalAlignment="Top" Width="102" Margin="4,4,4,4">
+                <Image HorizontalAlignment="Left" Height="102" Margin="0,0,0,0" VerticalAlignment="Top" Width="102" Source="{Binding Thumb}"/>
+                <TextBlock Margin="23,66,22,5" TextWrapping="Wrap" Text="14:88" VerticalAlignment="Top"/>
+                <es:RegularPolygon Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="10" InnerRadius="1" Margin="5,75,0,5" PointCount="3" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.5,0.5">
+                    <es:RegularPolygon.RenderTransform>
+                        <CompositeTransform Rotation="90"/>
+                    </es:RegularPolygon.RenderTransform>
+                </es:RegularPolygon>
+            </Grid>
+        </DataTemplate>
+
+        <!-- USER TEMPLATE SELECTOR -->
+        <DataTemplate x:Key="ThumbSelectingTemplate">
+            <model:ThumbTemplateSelector Content="{Binding}"
+        		VideoThumbTemplate="{StaticResource VideoThumbTemplate}"
+        		PhotoThumbTemplate="{StaticResource PhotoThumbTemplate}"/>
+        </DataTemplate>
+
+    </phone:PhoneApplicationPage.Resources>
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <StackPanel x:Name="LayoutRoot" Height="696">
+
+        <phone:Pivot Name="UserProfilePivot" Grid.Row="1" Title="{Binding Title}" Height="696">
+            <phone:PivotItem Header="profile">
+                <ScrollViewer Background="{x:Null}">
+                    <StackPanel>
+                        <Grid Margin="12,0,0,10">
+                            <Image Margin="0" Source="{Binding AvatarPath}" Stretch="Fill" Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <StackPanel VerticalAlignment="Top" Margin="146,0,0,0">
+                            	<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Margin="0,0,-204,0" Style="{StaticResource TextBlockFieldHint}" FontSize="21.333" Text="{Binding Status}" Height="28.5"/>
+                            	<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Margin="0,0,-204,0" Style="{StaticResource TextBlockFieldHint}" FontSize="21.333" Text="{Binding Status}" Height="28.5" Visibility="Collapsed"/>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Margin="0" VerticalAlignment="Top">
+                            <ListBoxItem HorizontalContentAlignment="Stretch"/>
+                            <ListBoxItem HorizontalContentAlignment="Stretch"/>
+                            <ListBoxItem HorizontalContentAlignment="Stretch"/>
+
+                            <toolkit:ToggleSwitch  toolkit:TiltEffect.IsTiltEnabled="True" Header="Notifications" IsChecked="{Binding NotificationsEnabled, Mode=TwoWay}"/>
+                            <TextBlock TextWrapping="Wrap" Text="Sound" Style="{StaticResource TextBlockFieldHint}" Margin="12,0,6,-5" Height="27"/>
+                            <toolkit:ListPicker Margin="12,0,12,10"/>
+                        </StackPanel>
+                        <telegram:CustomUserListController UserSelected="OnUserSelected" Margin="12,10,12,0" Name="UserListController" Padding="0,10,0,0"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </phone:PivotItem>
+            <phone:PivotItem Header="media">
+                <Grid Margin="8,0" HorizontalAlignment="Center">
+<!--                    <phone:LongListSelector Name="GalleryListSelector" LayoutMode="Grid" GridCellSize="102,102" Width="432"/>-->
+                </Grid>
+            </phone:PivotItem>
+        </phone:Pivot>
+
+    </StackPanel>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
+
+            <shell:ApplicationBarIconButton Click="Add_Click" IconUri="/Assets/UI/appbar.new.png" Text="new dialog" />
+            <shell:ApplicationBarIconButton Click="Edit_Click" IconUri="/Assets/UI/appbar.edit.png" Text="search" />
+
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+</phone:PhoneApplicationPage>

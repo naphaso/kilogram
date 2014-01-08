@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Windows.Phone.PersonalInformation;
 using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto.Components;
@@ -467,6 +468,16 @@ namespace Telegram.MTProto {
             }
         }
 
+        private static async void CleanContacts() {
+            ContactStore store = await ContactStore.CreateOrOpenAsync();
+            ContactQueryResult result = store.CreateContactQuery();
+            IReadOnlyList<StoredContact> contacts = await result.GetContactsAsync();
+
+            foreach (var contact in contacts) {
+                await store.DeleteContactAsync(contact.Id);
+            }
+        }
+
         private static TelegramSession loadIfExists() {
             TelegramSession session;
             lock(typeof(TelegramSession)) {
@@ -479,6 +490,10 @@ namespace Telegram.MTProto {
                     }
                 } catch(Exception e) {
                     logger.info("error loading session, create new...: {0}", e);
+
+                    logger.info("cleaning contacts");
+                    CleanContacts();
+
                     ulong sessionId = Helpers.GenerateRandomUlong();
                     session = new TelegramSession(sessionId, 0);
                     // prod 173.240.5.1 

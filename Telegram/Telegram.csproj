@@ -96,6 +96,9 @@
       <DependentUpon>ChatNotice.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\RequestTask.cs" />
+    <Compile Include="CustomUserListController.xaml.cs">
+      <DependentUpon>CustomUserListController.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\DateTimeExtensions.cs" />
     <Compile Include="Model\Wrappers\ChatModel.cs" />
     <Compile Include="Model\Wrappers\DialogListModel.cs" />
@@ -206,6 +209,9 @@
     <Compile Include="UI\Pages\ChatCreate.xaml.cs">
       <DependentUpon>ChatCreate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Pages\ChatSettings.xaml.cs">
+      <DependentUpon>ChatSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Pages\DialogPage.xaml.cs">
       <DependentUpon>DialogPage.xaml</DependentUpon>
     </Compile>
@@ -275,6 +281,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="CustomUserListController.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SecretChatNotice.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -336,6 +346,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Pages\ChatCreate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\ChatSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
