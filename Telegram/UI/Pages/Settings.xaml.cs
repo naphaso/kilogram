@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
@@ -40,8 +41,14 @@ namespace Telegram.UI
             this.DataContext = App.SettingsModel;
         }
 
-        private void Edit_Click(object sender, EventArgs e) {
 
+        protected override void OnBackKeyPress(CancelEventArgs e) {
+            e.Cancel = true;
+            NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
+        }
+
+        private void Edit_Click(object sender, EventArgs e) {
+            NavigationService.Navigate(new Uri("/UI/Pages/EditNamePage.xaml", UriKind.Relative));
         }
 
         private void SettingsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -100,7 +107,7 @@ namespace Telegram.UI
                 foreach (var user in photoConstructor.users) {
                     TelegramSession.Instance.SaveUser(user);
                 }
-
+                
                 Deployment.Current.Dispatcher.BeginInvoke(() => {
                     UploadProgressBar.Visibility = Visibility.Collapsed;
                 });

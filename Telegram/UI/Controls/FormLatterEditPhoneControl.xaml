@@ -147,12 +147,11 @@
 	</UserControl.Resources>
     
 	<Grid x:Name="LayoutRoot">
-
-		<Grid>
-			<Rectangle Fill="#FF999999" Height="1" VerticalAlignment="Bottom" StrokeThickness="0"/>
-			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Subject:" VerticalAlignment="Top" Foreground="#FF999999" Margin="0,6,0,0" FontSize="26.667"/>
-            <toolkit:PhoneTextBox TextWrapping="NoWrap"  Text="Some Text Which is Hardcoded" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Margin="92,-10,-10,-10" FontSize="26.667" AcceptsReturn="True" Foreground="White" SelectionForeground="{x:Null}" SelectionBackground="{x:Null}" CaretBrush="White" Style="{StaticResource PhoneTextBoxMonoStyle}"/>
-        </Grid>
+		<Rectangle Fill="#FF999999" Height="1" VerticalAlignment="Bottom" StrokeThickness="0" Margin="0"/>
+		<StackPanel Orientation="Horizontal">
+			<TextBlock x:Name="TitleText"  HorizontalAlignment="Left" TextWrapping="Wrap" Text="Subject :" VerticalAlignment="Center" Foreground="#FF999999" FontSize="26.667"/>
+			<toolkit:PhoneTextBox x:Name="ContentText"  TextWrapping="NoWrap"  Text="Some Text Which is Hardcoded" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Margin="0,-10,0,-20" FontSize="26.667" AcceptsReturn="True" Foreground="White" SelectionForeground="{x:Null}" SelectionBackground="{x:Null}" CaretBrush="White" Style="{StaticResource PhoneTextBoxMonoStyle}" Width="398" HorizontalAlignment="Left"/>
+		</StackPanel>
 
 	</Grid>
 </UserControl>
