@@ -26,6 +26,7 @@ namespace Telegram.Model.Wrappers {
         public abstract BitmapImage Attachment { get; }
 
         public abstract bool IsOut { get; }
+        public abstract bool IsService { get; }
         public abstract bool Delivered { get; } 
 
         public abstract string Text { get; set;  }

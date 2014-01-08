@@ -32,6 +32,10 @@ namespace Telegram.Model.Wrappers {
 
         private string _text;
 
+        public override bool IsService {
+            get { return false; }
+        }
+
         public override bool Delivered {
             get { return false; }
         }

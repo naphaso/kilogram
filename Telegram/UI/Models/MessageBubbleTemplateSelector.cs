@@ -12,13 +12,17 @@ namespace Telegram.UI.Models {
         public DataTemplate TextInBubbleTemplate { get; set; }
         public DataTemplate TextOutBubbleTemplate { get; set; }
 
+        public DataTemplate TextServiceBubbleTemplate { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container) {
 //            if (item.GetType() != typeof(MessageModelUndelivered))
 //                return TextInBubbleTemplate;
 //            if (item.GetType() != typeof(MessageModelDelivered))
 //                return TextInBubbleTemplate;
-
             var model = (MessageModel)item;
+
+            if (model.IsService)
+                return TextServiceBubbleTemplate;
+            
             return model.IsOut ? TextOutBubbleTemplate : TextInBubbleTemplate;
         }
     }

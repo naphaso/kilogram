@@ -64,6 +64,11 @@
         		</Grid>
         	</StackPanel>
         </DataTemplate>
+        <DataTemplate x:Key="TextServiceBubbleTemplate">
+            <Grid Margin="10,10,10,10" MinHeight="40" VerticalAlignment="Top" >
+                <TextBlock TextWrapping="Wrap" Text="{Binding Text}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"></TextBlock>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="TextOutBubbleTemplate">
         	<StackPanel Margin="0,6,0,12" HorizontalAlignment="Right" >
 <!--                <TextBlock Text="FUCK"></TextBlock>-->
@@ -93,7 +98,8 @@
         <DataTemplate x:Key="UserSelectingTemplate">
         	<models:MessageBubbleTemplateSelector Content="{Binding}"
         		TextOutBubbleTemplate="{StaticResource TextOutBubbleTemplate}"
-        		TextInBubbleTemplate="{StaticResource TextInBubbleTemplate}"   
+        		TextInBubbleTemplate="{StaticResource TextInBubbleTemplate}"  
+                TextServiceBubbleTemplate="{StaticResource TextServiceBubbleTemplate}"
         		HorizontalContentAlignment="Stretch"/>
         </DataTemplate>
 

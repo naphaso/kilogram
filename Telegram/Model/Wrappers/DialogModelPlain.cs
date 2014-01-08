@@ -117,7 +117,7 @@ namespace Telegram.Model.Wrappers {
 
         private DialogStatus GetPreviewConfig() {
             if (messages == null || messages.Count == 0) {
-                return new DialogStatus() {String = "invalid", Type = StatusType.Activity};
+                return new DialogStatus() {String = "new conversation", Type = StatusType.Activity};
             }
 
             // text, service, media or forwarded

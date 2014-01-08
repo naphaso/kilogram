@@ -25,7 +25,10 @@ namespace Telegram.Model.Wrappers {
 
         public void SetChat(Chat chat) {
             this.chat = chat;
-            ChangeEvent();
+            
+            if (ChangeEvent != null)
+                ChangeEvent();
+            
             OnPropertyChanged("Title");
             OnPropertyChanged("Status");
             OnPropertyChanged("AvatarPath");

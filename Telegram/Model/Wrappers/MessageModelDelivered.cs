@@ -59,6 +59,12 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public override bool IsService {
+            get {
+                return message.Constructor == Constructor.messageService;
+            }
+        }
+
         public Message RawMessage {
             get {
                 return message;
@@ -79,12 +85,17 @@ namespace Telegram.Model.Wrappers {
                     case Constructor.messageForwarded:
                         return ((MessageForwardedConstructor)message).message;
                     case Constructor.messageService:
-                        return "service";
+                        return GetServiceString((MessageServiceConstructor) message);
                     default:
                         throw new InvalidDataException("invalid constructor");
                 }
             }
             set { }
+        }
+
+        private string GetServiceString(MessageServiceConstructor message) {
+            UserModel from = TelegramSession.Instance.GetUser(message.from_id);
+            return from.FullName + " " + Preview;
         }
 
         // NOTE: lower case
@@ -202,7 +213,7 @@ namespace Telegram.Model.Wrappers {
                         }
                     }
                 } else if (message.Constructor == Constructor.messageService) {
-                    MessageForwardedConstructor msg = (MessageForwardedConstructor)message;
+                    MessageServiceConstructor msg = (MessageServiceConstructor)message;
                     if (msg.to_id.Constructor == Constructor.peerChat) {
                         return msg.to_id;
                     } else {
