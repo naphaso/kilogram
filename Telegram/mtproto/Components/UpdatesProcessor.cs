@@ -517,7 +517,6 @@ namespace Telegram.MTProto.Components {
             
         }
         private void ProcessUpdate(UpdateNewEncryptedMessageConstructor update) {
-            // TODO: update qts
             qts = update.qts;
             EncryptedMessageEvent(update.message);
 
@@ -526,6 +525,7 @@ namespace Telegram.MTProto.Components {
             
         }
         private void ProcessUpdate(UpdateEncryptionConstructor update) {
+            logger.info("process update encryption");
             processUpdateDate(update.date);
             EncryptedChatEvent(update.chat);
         }

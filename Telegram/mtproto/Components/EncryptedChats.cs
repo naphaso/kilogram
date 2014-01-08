@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
 using Telegram.mtproto.Crypto;
 using Telegram.MTProto.Crypto;
@@ -17,6 +18,8 @@ namespace Telegram.MTProto.Components {
 
 
     public class EncryptedChats {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(EncryptedChats));
+
         private TelegramSession session;
 
         private int version = 0;
@@ -62,30 +65,37 @@ namespace Telegram.MTProto.Components {
         }
 
         public async Task CreateChatRequest(InputUser user) {
-            messages_DhConfig dhConfig = await session.Api.messages_getDhConfig(version, 256);
-            byte[] randomSalt;
-            if(dhConfig.Constructor == Constructor.messages_dhConfig) {
-                var conf = (Messages_dhConfigConstructor) dhConfig;
-                version = conf.version;
-                g = conf.g;
-                p = new BigInteger(1, conf.p);
-                randomSalt = conf.random;
-            } else if(dhConfig.Constructor == Constructor.messages_dhConfigNotModified) {
-                var conf = (Messages_dhConfigNotModifiedConstructor) dhConfig;
-                randomSalt = conf.random;
-            } else {
-                throw new InvalidDataException("invalid constructor");
+            try {
+                messages_DhConfig dhConfig = await session.Api.messages_getDhConfig(version, 256);
+                byte[] randomSalt;
+                if(dhConfig.Constructor == Constructor.messages_dhConfig) {
+                    var conf = (Messages_dhConfigConstructor) dhConfig;
+                    version = conf.version;
+                    g = conf.g;
+                    p = new BigInteger(1, conf.p);
+                    randomSalt = conf.random;
+                } else if(dhConfig.Constructor == Constructor.messages_dhConfigNotModified) {
+                    var conf = (Messages_dhConfigNotModifiedConstructor) dhConfig;
+                    randomSalt = conf.random;
+                } else {
+                    throw new InvalidDataException("invalid constructor");
+                }
+
+                byte[] a = GetSaltedRandomBytes(256, randomSalt, 0);
+                BigInteger ga = BigInteger.ValueOf(g).ModPow(new BigInteger(1, a), p);
+
+                logger.info("generated a: {0}, ga: {1}", BitConverter.ToString(a).Replace("-","").ToLower(), ga);
+
+                int randomId = random.Next(); // also chat id
+                EncryptedChat chat = await session.Api.messages_requestEncryption(user, randomId, ga.ToByteArrayUnsigned());
+                UpdateChat(chat, a);
+            } catch(Exception e) {
+                logger.error("creating chat error: {0}", e);
             }
-
-            byte[] a = GetSaltedRandomBytes(256, randomSalt, 0);
-            BigInteger ga = BigInteger.ValueOf(g).ModPow(new BigInteger(1, a), p);
-
-            int randomId = random.Next(); // also chat id
-            EncryptedChat chat = await session.Api.messages_requestEncryption(user, randomId, ga.ToByteArrayUnsigned());
-            UpdateChat(chat, a);
         }
 
         public void UpdateChatHandler(EncryptedChat chat) {
+            logger.info("update chat handler: {0}", chat);
             UpdateChat(chat);
         }
 
@@ -116,6 +126,10 @@ namespace Telegram.MTProto.Components {
             Deployment.Current.Dispatcher.BeginInvoke(() => {
                 var dialogsEnum = from dialog in session.Dialogs.Model.Dialogs where dialog is DialogModelEncrypted && ((DialogModelEncrypted)dialog).Id == chat.id select (DialogModelEncrypted)dialog;
                 List<DialogModelEncrypted> dialogs = dialogsEnum.ToList();
+                if(dialogs.Count != 1) {
+                    logger.error("invalid target encrypted dialogs count: {0}");
+                }
+
                 foreach (var dialogModel in dialogs) {
                     dialogModel.SetEncryptedChat(chat, a);
                 }
@@ -147,44 +161,45 @@ namespace Telegram.MTProto.Components {
         }
 
         private async Task CreateChatResponse(EncryptedChatRequestedConstructor chat) {
-            messages_DhConfig dhConfig = await session.Api.messages_getDhConfig(version, 256);
-            byte[] randomSalt;
-            if (dhConfig.Constructor == Constructor.messages_dhConfig) {
-                Messages_dhConfigConstructor conf = (Messages_dhConfigConstructor)dhConfig;
-                version = conf.version;
-                g = conf.g;
-                p = new BigInteger(1, conf.p);
-                randomSalt = conf.random;
-            }
-            else if (dhConfig.Constructor == Constructor.messages_dhConfigNotModified) {
-                Messages_dhConfigNotModifiedConstructor conf = (Messages_dhConfigNotModifiedConstructor)dhConfig;
-                randomSalt = conf.random;
-            }
-            else {
-                throw new InvalidDataException("invalid constructor");
-            }
-
-            byte[] b = GetSaltedRandomBytes(256, randomSalt, 0);
-            BigInteger bInt = new BigInteger(1, b);
-            byte[] gb = BigInteger.ValueOf(g).ModPow(bInt, p).ToByteArrayUnsigned();
-            byte[] key = new BigInteger(1, chat.g_a).ModPow(bInt, p).ToByteArrayUnsigned();
-            long fingerprint = CalculateKeyFingerprint(key);
-
-            EncryptedChat acceptedChat = await session.Api.messages_acceptEncryption(TL.inputEncryptedChat(chat.id, chat.access_hash), gb, fingerprint);
-
-
-            Deployment.Current.Dispatcher.BeginInvoke(() => {
-                var echats = from dialog in session.Dialogs.Model.Dialogs where dialog is DialogModelEncrypted && ((DialogModelEncrypted)dialog).Id == chat.id select dialog;
-                if (echats.Any()) {
-                    // ???
+            try {
+                messages_DhConfig dhConfig = await session.Api.messages_getDhConfig(version, 256);
+                byte[] randomSalt;
+                if(dhConfig.Constructor == Constructor.messages_dhConfig) {
+                    Messages_dhConfigConstructor conf = (Messages_dhConfigConstructor) dhConfig;
+                    version = conf.version;
+                    g = conf.g;
+                    p = new BigInteger(1, conf.p);
+                    randomSalt = conf.random;
+                } else if(dhConfig.Constructor == Constructor.messages_dhConfigNotModified) {
+                    Messages_dhConfigNotModifiedConstructor conf = (Messages_dhConfigNotModifiedConstructor) dhConfig;
+                    randomSalt = conf.random;
+                } else {
+                    throw new InvalidDataException("invalid constructor");
                 }
-                else {
-                    session.Dialogs.Model.Dialogs.Insert(0, new DialogModelEncrypted(session, acceptedChat, key, fingerprint));
-                }
-            });
+
+                byte[] b = GetSaltedRandomBytes(256, randomSalt, 0);
+                BigInteger bInt = new BigInteger(1, b);
+                byte[] gb = BigInteger.ValueOf(g).ModPow(bInt, p).ToByteArrayUnsigned();
+                byte[] key = new BigInteger(1, chat.g_a).ModPow(bInt, p).ToByteArrayUnsigned();
+                long fingerprint = CalculateKeyFingerprint(key);
+
+                EncryptedChat acceptedChat = await session.Api.messages_acceptEncryption(TL.inputEncryptedChat(chat.id, chat.access_hash), gb, fingerprint);
+
+
+                Deployment.Current.Dispatcher.BeginInvoke(() => {
+                    var echats = from dialog in session.Dialogs.Model.Dialogs where dialog is DialogModelEncrypted && ((DialogModelEncrypted) dialog).Id == chat.id select dialog;
+                    if(echats.Any()) {
+                        // ???
+                    } else {
+                        session.Dialogs.Model.Dialogs.Insert(0, new DialogModelEncrypted(session, acceptedChat, key, fingerprint, b));
+                    }
+                });
+            } catch(Exception e) {
+                logger.error("response create chat error: {0}", e);
+            }
         }
 
-        private long CalculateKeyFingerprint(byte[] key) {
+        public static long CalculateKeyFingerprint(byte[] key) {
             using (SHA1 hash = new SHA1Managed()) {
                 using (MemoryStream hashStream = new MemoryStream(hash.ComputeHash(key), false)) {
                     using (BinaryReader hashReader = new BinaryReader(hashStream)) {

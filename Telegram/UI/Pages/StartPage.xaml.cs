@@ -102,7 +102,7 @@ namespace Telegram.UI
 
         private void Search_Click(object sender, EventArgs e) {
             //NavigationService.Navigate(new Uri("/UI/Pages/SearchPage.xaml", UriKind.Relative));
-            Task.Run(() => TelegramSession.Instance.EncryptedChats.CreateChatRequest(TL.inputUserContact(246813)));
+            Task.Run(() => TelegramSession.Instance.EncryptedChats.CreateChatRequest(TL.inputUserContact(117870))); // 117870, 246813
         }
 
         private void Settings_Click(object sender, EventArgs e) {
