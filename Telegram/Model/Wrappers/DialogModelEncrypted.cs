@@ -11,6 +11,7 @@ using System.Xml.Linq;
 using Telegram.Core.Logging;
 using Telegram.MTProto;
 using Telegram.MTProto.Crypto;
+using Telegram.mtproto.Crypto;
 using Telegram.Utils;
 
 namespace Telegram.Model.Wrappers {
@@ -19,9 +20,11 @@ namespace Telegram.Model.Wrappers {
 
         private EncryptedChat chat;
         private byte[] key;
+        private byte[] a;
         private long fingerprint;
-        public DialogModelEncrypted(TelegramSession session, EncryptedChat chat) : base(session) {
+        public DialogModelEncrypted(TelegramSession session, EncryptedChat chat, byte[] a) : base(session) {
             this.chat = chat;
+            this.a = a;
         }
 
         public DialogModelEncrypted(TelegramSession session, EncryptedChat chat, byte[] key, long fingerprint) : base(session) {
@@ -70,10 +73,11 @@ namespace Telegram.Model.Wrappers {
             logger.info("send message with key: {0}", BitConverter.ToString(key).Replace("-", "").ToLower());
             long messageId = Helpers.GenerateRandomLong();
             DecryptedMessage msg = TL.decryptedMessage(messageId, Helpers.GenerateRandomBytes(128), message, TL.decryptedMessageMediaEmpty());
+            DecryptedMessageLayer layer = TL.decryptedMessageLayer(8, msg);
             byte[] data;
             using(MemoryStream memory = new MemoryStream()) {
                 using(BinaryWriter writer = new BinaryWriter(memory)) {
-                    msg.Write(writer);
+                    layer.Write(writer);
                     data = memory.ToArray();
                 }
             }
@@ -103,6 +107,7 @@ namespace Telegram.Model.Wrappers {
 
         public void ReceiveMessage(EncryptedMessage encryptedMessage) {
             if(encryptedMessage.Constructor == Constructor.encryptedMessage) {
+                logger.info("simple encrypted message");
                 EncryptedMessageConstructor encryptedMessageConstructor = (EncryptedMessageConstructor) encryptedMessage;
                 byte[] data = encryptedMessageConstructor.bytes;
                 byte[] msgKey;
@@ -144,7 +149,14 @@ namespace Telegram.Model.Wrappers {
 
                 using (MemoryStream memory = new MemoryStream(data)) {
                     using (BinaryReader reader = new BinaryReader(memory)) {
-                        decryptedMessage = TL.Parse<DecryptedMessage>(reader);
+                        DecryptedMessageLayerConstructor layer = (DecryptedMessageLayerConstructor) TL.Parse<DecryptedMessageLayer>(reader);
+                        if(layer.layer > 8) {
+                            logger.info("encrypted message layer {0} - need upgrade", layer.layer);
+                            // TODO: notify - need upgrade
+                            return;
+                        }
+
+                        decryptedMessage = layer.message;
                     }
                 }
 
@@ -174,6 +186,10 @@ namespace Telegram.Model.Wrappers {
         public void SetEncryptedChat(EncryptedChatConstructor chat) {
             this.chat = chat;
 
+            if(a != null) {
+                key = new BigInteger(1, chat.g_a_or_b).ModPow(new BigInteger(1, a), TelegramSession.Instance.EncryptedChats.Modulo).ToByteArrayUnsigned();
+                logger.info("new calculated key: {0}", BitConverter.ToString(key).Replace("-", "").ToLower());
+            }
             // TODO: on property changed
         }
 
@@ -228,6 +244,10 @@ namespace Telegram.Model.Wrappers {
                         throw new InvalidDataException("invalid constructor");
                 }
             }
+        }
+
+        public void SetA(byte[] a) {
+            this.a = a;
         }
     }
 }

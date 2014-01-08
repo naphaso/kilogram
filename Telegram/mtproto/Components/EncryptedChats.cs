@@ -30,6 +30,12 @@ namespace Telegram.MTProto.Components {
             this.session = session;
         }
 
+        public BigInteger Modulo {
+            get {
+                return p;
+            }
+        }
+
         private byte[] GetSaltedRandomBytes(int bytesCount, byte[] salt, int offset) {
             byte[] bytes = new byte[bytesCount];
             random.NextBytes(bytes);
@@ -61,43 +67,50 @@ namespace Telegram.MTProto.Components {
 
             int randomId = random.Next(); // also chat id
             EncryptedChat chat = await session.Api.messages_requestEncryption(user, randomId, ga.ToByteArrayUnsigned());
+            UpdateChat(chat, a);
+        }
+
+        public void UpdateChatHandler(EncryptedChat chat) {
             UpdateChat(chat);
         }
 
-        public void UpdateChat(EncryptedChat chat) {
+        public void UpdateChat(EncryptedChat chat, byte[] a = null) {
             if(chat.Constructor == Constructor.encryptedChatEmpty) {
                 return;
             }
 
             switch(chat.Constructor) {
                 case Constructor.encryptedChatRequested:
-                    UpdateChat((EncryptedChatRequestedConstructor)chat);
+                    UpdateChat((EncryptedChatRequestedConstructor)chat, a);
                     break;
                 case Constructor.encryptedChatDiscarded:
-                    UpdateChat((EncryptedChatDiscardedConstructor) chat);
+                    UpdateChat((EncryptedChatDiscardedConstructor) chat, a);
                     break;
                 case Constructor.encryptedChatWaiting:
-                    UpdateChat((EncryptedChatWaitingConstructor)chat);
+                    UpdateChat((EncryptedChatWaitingConstructor)chat, a);
                     break;
                 case Constructor.encryptedChat:
-                    UpdateChat((EncryptedChatConstructor)chat);
+                    UpdateChat((EncryptedChatConstructor)chat, a);
                     break;
             }
             //
 
         }
 
-        public void UpdateChat(EncryptedChatConstructor chat) {
+        public void UpdateChat(EncryptedChatConstructor chat, byte[] a) {
             Deployment.Current.Dispatcher.BeginInvoke(() => {
                 var dialogsEnum = from dialog in session.Dialogs.Model.Dialogs where dialog is DialogModelEncrypted && ((DialogModelEncrypted)dialog).Id == chat.id select (DialogModelEncrypted)dialog;
                 List<DialogModelEncrypted> dialogs = dialogsEnum.ToList();
                 foreach (var dialogModel in dialogs) {
                     dialogModel.SetEncryptedChat(chat);
+                    if(a != null) {
+                        dialogModel.SetA(a);
+                    }
                 }
             });
         }
 
-        public void UpdateChat(EncryptedChatDiscardedConstructor chat) {
+        public void UpdateChat(EncryptedChatDiscardedConstructor chat, byte[] a) {
             Deployment.Current.Dispatcher.BeginInvoke(() => {
                 var dialogsEnum = from dialog in session.Dialogs.Model.Dialogs where dialog is DialogModelEncrypted && ((DialogModelEncrypted) dialog).Id == chat.id select dialog;
                 List<DialogModel> dialogs = dialogsEnum.ToList();
@@ -106,18 +119,18 @@ namespace Telegram.MTProto.Components {
                 }
             });
         }
-        public void UpdateChat(EncryptedChatWaitingConstructor chat) {
+        public void UpdateChat(EncryptedChatWaitingConstructor chat, byte[] a) {
             Deployment.Current.Dispatcher.BeginInvoke(() => {
                 var echats = from dialog in session.Dialogs.Model.Dialogs where dialog is DialogModelEncrypted && ((DialogModelEncrypted)dialog).Id == chat.id select dialog;
                 if (echats.Any()) {
                     // ???
                 }
                 else {
-                    session.Dialogs.Model.Dialogs.Insert(0, new DialogModelEncrypted(session, chat));
+                    session.Dialogs.Model.Dialogs.Insert(0, new DialogModelEncrypted(session, chat, a));
                 }
             });
         }
-        public void UpdateChat(EncryptedChatRequestedConstructor chat) {
+        public void UpdateChat(EncryptedChatRequestedConstructor chat, byte[] a) {
             Task.Run(() => CreateChatResponse(chat));
         }
 

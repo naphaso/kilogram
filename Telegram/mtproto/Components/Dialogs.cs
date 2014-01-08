@@ -120,6 +120,8 @@ namespace Telegram.MTProto.Components {
                     return;
             }
 
+            logger.info("receivong encrypted message in chat");
+
             Deployment.Current.Dispatcher.BeginInvoke(() => {
                 foreach (var dialog in from dialogModel in model.Dialogs where dialogModel is DialogModelEncrypted && ((DialogModelEncrypted)dialogModel).Id == id select (DialogModelEncrypted)dialogModel) {
                     dialog.ReceiveMessage(encryptedMessage);
