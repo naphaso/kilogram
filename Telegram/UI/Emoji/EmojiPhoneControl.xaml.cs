@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -7,12 +8,18 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Telegram.Core.Logging;
 using Telegram.Model;
 
 namespace Telegram
 {
     public partial class EmojiPhoneControl : UserControl {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(EmojiPhoneControl));
+
         private static EmojiPhoneControl instance_;
+
+        public event OnKeyboardClick KeyboardClick;
+        public event OnBackspaceClick BackspaceClick;
 
         public TextBox InsertionTextBox;
 
@@ -29,8 +36,8 @@ namespace Telegram
         }
 
 
-        private List<EmojiItemModel> _panelContentList = new List<EmojiItemModel>(); 
-        private List<EmojiItemModel> _categoriesContentList = new List<EmojiItemModel>();
+        private ObservableCollection<EmojiItemModel> _panelContentList = new ObservableCollection<EmojiItemModel>();
+        private ObservableCollection<EmojiItemModel> _categoriesContentList = new ObservableCollection<EmojiItemModel>();
         public static ulong[][] data ={new ulong[]{},
 
 			new ulong[]{0x00000000D83DDE04L, 0x00000000D83DDE03L, 0x00000000D83DDE00L, 0x00000000D83DDE0AL, 0x000000000000263AL, 0x00000000D83DDE09L, 0x00000000D83DDE0DL,
@@ -158,9 +165,6 @@ namespace Telegram
         public EmojiPhoneControl()
         {
             InitializeComponent();
-
-            LoadEmojiList(1);
-
             InitCategories();
         }
 
@@ -168,6 +172,11 @@ namespace Telegram
             instance_ = null;
         }
 
+        public void Show() {
+            LoadEmojiList(openedList);
+        }
+
+        private int openedList = 2;
         private void InitCategories() {
             _categoriesContentList.Add(new EmojiItemModel() { Path = "/Assets/UI/emoji.abc-WVGA.png" });
             _categoriesContentList.Add(new EmojiItemModel() { Path = "/Assets/UI/emoji.recent-WVGA.png" });
@@ -187,10 +196,39 @@ namespace Telegram
            
             for (int i = 0; i < data[listNumber].Length; i++) {
                 string emojiFile = "/Assets/emoji/" + data[listNumber][i].ToString("X").ToUpper() + ".png";
+                logger.debug("Loading emoji {0}", emojiFile);
                 _panelContentList.Add(new EmojiItemModel() { Path = emojiFile, Code = data[listNumber][i]});
             }
 
             EmojiGridListSelector.ItemsSource = _panelContentList;
         }
+
+        private void OnCategorySelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if ((sender as LongListSelector).SelectedItem == null)
+                return;
+
+            int selection = _categoriesContentList.IndexOf((sender as LongListSelector).SelectedItem as EmojiItemModel);
+
+            (sender as LongListSelector).SelectedItem = null;
+            if (selection == 0) {
+                if (KeyboardClick != null)
+                    KeyboardClick(this, null);
+                return;
+            }
+
+            if (selection == 7) {
+                if (BackspaceClick != null)
+                    BackspaceClick(this, null);
+                return;
+            }
+
+            openedList = selection -1;
+            Show();
+
+        }
     }
+
+    public delegate void OnBackspaceClick(object sender, object args);
+
+    public delegate void OnKeyboardClick(object sender, object args);
 }

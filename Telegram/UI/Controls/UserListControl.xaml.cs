@@ -76,12 +76,16 @@ namespace Telegram.UI.Controls {
 
 
         private void AddressbookContactSelected(object sender, SelectionChangedEventArgs e) {
+            if ((sender as LongListSelector).SelectedItem == null)
+                return;
+
             var contactsList = sender as LongListSelector;
             Debug.Assert(contactsList != null, "contactsList != null");
             Contact selectedContact = contactsList.SelectedItem as Contact;
 
             Debug.Assert(selectedContact != null, "selectedContact != null");
             AddressbookUserSelected(sender, selectedContact);
+            (sender as LongListSelector).SelectedItem = null;
         }
     }
 

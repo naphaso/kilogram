@@ -300,6 +300,7 @@ namespace Telegram.Model.Wrappers {
                 }
 
                 if (!session.Updates.processUpdatePtsSeq(pts, seq)) {
+                    messages.Remove(undeliveredMessage);
                     return;
                 }
 
@@ -355,6 +356,11 @@ namespace Telegram.Model.Wrappers {
                     return;
                 }
 
+                if (session.Updates.processUpdatePtsSeqDate(pts, seq, date) == false) {
+                    messages.Remove(undeliveredMessage);
+                    return;
+                };
+
                 int messageIndex = messages.IndexOf(undeliveredMessage);
                 if (messageIndex != -1) {
                     messages[messageIndex] =
@@ -365,7 +371,7 @@ namespace Telegram.Model.Wrappers {
                     logger.error("not found undelivered message to confirmation");
                 }
 
-                session.Updates.processUpdatePtsSeqDate(pts, seq, date);
+
             }
             catch (Exception ex) {
                 logger.error("exception {0}", ex);
