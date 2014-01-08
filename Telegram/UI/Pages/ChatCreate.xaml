@@ -18,13 +18,13 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent" Margin="6,0">
 		<StackPanel Margin="0,0,0,546">
-            <toolkit:PhoneTextBox Height="72" 
+            <toolkit:PhoneTextBox Name="SearchBox" TextChanged="OnSearchBoxTextChanged" Height="72" 
             Hint="search" TextWrapping="Wrap" AcceptsReturn="True"/>
 			<TextBlock Tap="NewGroupTap" TextWrapping="Wrap" Text="new group" Margin="12,12,0,12" FontSize="32" FontFamily="Segoe WP SemiLight"/>
 			<TextBlock TextWrapping="Wrap" Text="new secret chat" Margin="12,12,0,12" FontSize="32" FontFamily="Segoe WP SemiLight"/>
 		</StackPanel>
        
-		<Controls:UserListControl Margin="10,222,10,0" VerticalAlignment="Top" Height="536"/>
+		<Controls:UserListControl Name="UserControl" Margin="10,222,10,0" VerticalAlignment="Top" Height="536"/>
        
 	</Grid>
 

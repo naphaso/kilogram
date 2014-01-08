@@ -292,10 +292,10 @@ namespace Telegram.UI {
         private void OnHeaderTap(object sender, GestureEventArgs e) {
             Peer peer = model.Peer;
             if (peer.Constructor == Constructor.peerUser) {
-                NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?userId="+((PeerUserConstructor) peer).user_id, UriKind.Relative));
-            }
-            else {
-                
+                NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?userId=" + ((PeerUserConstructor) peer).user_id, UriKind.Relative));
+            } else {
+                NavigationService.Navigate(new Uri("/UI/Pages/ChatSettings.xaml?chatId=" + ((PeerChatConstructor)peer).chat_id, UriKind.Relative));
+
             }
         }
 

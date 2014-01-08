@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.IO.IsolatedStorage;
@@ -54,6 +56,7 @@ namespace Telegram.Model.Wrappers {
                 return chat;
             }
         }
+
 
         private static string[] chatPlaceholders = new string[] {
             "/Assets/UI/placeholder.group.blue-WVGA.png",

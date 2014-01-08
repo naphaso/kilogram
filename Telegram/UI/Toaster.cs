@@ -26,6 +26,7 @@ namespace Telegram.UI {
             return new ToastPrompt {
                 Title = header,                
                 Message = content,
+                
 //                ImageHeight = 50,
 //                ImageWidth = 50,
 //                ImageSource = new BitmapImage(new Uri("/Assets/UI/placeholder.user.green-WVGA.png", UriKind.RelativeOrAbsolute))
