@@ -65,14 +65,13 @@ namespace Telegram.MTProto.Components {
             messages_DhConfig dhConfig = await session.Api.messages_getDhConfig(version, 256);
             byte[] randomSalt;
             if(dhConfig.Constructor == Constructor.messages_dhConfig) {
-                Messages_dhConfigConstructor conf = (Messages_dhConfigConstructor) dhConfig;
+                var conf = (Messages_dhConfigConstructor) dhConfig;
                 version = conf.version;
                 g = conf.g;
                 p = new BigInteger(1, conf.p);
                 randomSalt = conf.random;
-            }
-            else if(dhConfig.Constructor == Constructor.messages_dhConfigNotModified) {
-                Messages_dhConfigNotModifiedConstructor conf = (Messages_dhConfigNotModifiedConstructor) dhConfig;
+            } else if(dhConfig.Constructor == Constructor.messages_dhConfigNotModified) {
+                var conf = (Messages_dhConfigNotModifiedConstructor) dhConfig;
                 randomSalt = conf.random;
             } else {
                 throw new InvalidDataException("invalid constructor");
@@ -118,10 +117,7 @@ namespace Telegram.MTProto.Components {
                 var dialogsEnum = from dialog in session.Dialogs.Model.Dialogs where dialog is DialogModelEncrypted && ((DialogModelEncrypted)dialog).Id == chat.id select (DialogModelEncrypted)dialog;
                 List<DialogModelEncrypted> dialogs = dialogsEnum.ToList();
                 foreach (var dialogModel in dialogs) {
-                    dialogModel.SetEncryptedChat(chat);
-                    if(a != null) {
-                        dialogModel.SetA(a);
-                    }
+                    dialogModel.SetEncryptedChat(chat, a);
                 }
             });
         }

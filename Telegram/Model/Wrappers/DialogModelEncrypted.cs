@@ -184,10 +184,11 @@ namespace Telegram.Model.Wrappers {
         }
 
 
-        public void SetEncryptedChat(EncryptedChatConstructor chat) {
+        public void SetEncryptedChat(EncryptedChatConstructor chat, byte[] a) {
             this.chat = chat;
 
             if(a != null) {
+                this.a = null;
                 key = new BigInteger(1, chat.g_a_or_b).ModPow(new BigInteger(1, a), TelegramSession.Instance.EncryptedChats.Modulo).ToByteArrayUnsigned();
                 logger.info("new calculated key: {0}", BitConverter.ToString(key).Replace("-", "").ToLower());
             }
