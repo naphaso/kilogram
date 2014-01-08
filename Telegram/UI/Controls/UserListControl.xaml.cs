@@ -87,16 +87,28 @@ namespace Telegram.UI.Controls {
                 return;
 
             var contactsList = sender as LongListSelector;
-            Debug.Assert(contactsList != null, "contactsList != null");
             Contact selectedContact = contactsList.SelectedItem as Contact;
 
-            Debug.Assert(selectedContact != null, "selectedContact != null");
-            AddressbookUserSelected(sender, selectedContact);
+            if (AddressbookUserSelected != null)
+                AddressbookUserSelected(sender, selectedContact);
+
+            (sender as LongListSelector).SelectedItem = null;
+        }
+
+        private void ContactSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if ((sender as LongListSelector).SelectedItem == null)
+                return;
+
+            var userModel = (sender as LongListSelector).SelectedItem as UserModel;
+
+            if (TelegramUserSelected != null)
+                TelegramUserSelected(sender, userModel);
+
             (sender as LongListSelector).SelectedItem = null;
         }
     }
 
     public delegate void OnAddressbookUserSelected(object sender, Contact contact);
 
-    public delegate void OnTelegramUserSelected(object sender, int userId);
+    public delegate void OnTelegramUserSelected(object sender, UserModel user);
 }

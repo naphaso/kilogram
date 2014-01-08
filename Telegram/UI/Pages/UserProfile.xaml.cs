@@ -21,23 +21,14 @@ namespace Telegram.UI {
 
         private List<GalleryItemModel> items;
         private UserModel model;
-        private DialogModel dialogModel;
+
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
 
             string uriParam = "";
 
-            if (NavigationContext.QueryString.TryGetValue("modelId", out uriParam)) {
-                dialogModel = TelegramSession.Instance.Dialogs.Model.Dialogs[(int.Parse(uriParam))];
-                switch (dialogModel.Peer.Constructor) {
-                    case Constructor.peerChat:
-                        logger.error("Navigation error: page is UserProfile but peer is CHAT");
-                        break;
-                    case Constructor.peerUser:
-                        var peerUser = dialogModel.Peer as PeerUserConstructor;
-                        model = TelegramSession.Instance.GetUser(peerUser.user_id);
-                        break;
-                }
+            if (NavigationContext.QueryString.TryGetValue("userId", out uriParam)) {
+                model = TelegramSession.Instance.GetUser(int.Parse(uriParam));
             } else {
                 logger.error("Unable to get model id from navigation");
             }
@@ -87,13 +78,7 @@ namespace Telegram.UI {
         }
 
         private void OnSendMessage(object sender, GestureEventArgs e) {
-            if (dialogModel == null) {
-                // TODO: create new dialog or NPE
-//                TelegramSession.Instance.Dialogs.
-            }
-
-            int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(dialogModel);
-            NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml?modelId=" + modelId, UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml?userId=" + model.Id, UriKind.Relative));
         }
 
         private void OnCreateSecretChat(object sender, GestureEventArgs e) {

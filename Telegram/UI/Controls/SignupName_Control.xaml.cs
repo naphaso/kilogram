@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -11,14 +12,21 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
+using Telegram.MTProto;
 
 namespace Telegram
 {
-    public partial class SignupName_Control : UserControl
-    {
+    public partial class SignupName_Control : UserControl {
+
+        private volatile System.IO.Stream avatarSource = null;
+        
         public SignupName_Control()
         {
             InitializeComponent();
+        }
+
+        public Stream GetAvatarSource() {
+            return avatarSource;
         }
 
         private void UIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
@@ -34,7 +42,10 @@ namespace Telegram
 
                 var bi = new BitmapImage();
                 bi.SetSource(e.ChosenPhoto);
+                avatarSource = e.ChosenPhoto;
                 AvatarHandle.SetImage(bi);
+
+//                TelegramSession.Instance.
             }
             catch (Exception exception) {
                 Debug.WriteLine("Exception in photoChooserTask_Completed " + exception.Message);

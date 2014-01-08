@@ -66,6 +66,11 @@ namespace Telegram.UI
             };
 
             ContactList.AddressbookUserSelected += ContactListOnAddressbookUserSelected;
+            ContactList.TelegramUserSelected += ContactListOnTelegramUserSelected;
+        }
+
+        private void ContactListOnTelegramUserSelected(object sender, UserModel user) {
+            NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml?userId=" + user.Id, UriKind.Relative));
         }
 
         private void ContactListOnAddressbookUserSelected(object sender, Contact contact) {

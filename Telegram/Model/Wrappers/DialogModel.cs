@@ -33,7 +33,7 @@ namespace Telegram.Model.Wrappers {
 
         public abstract void Write(BinaryWriter writer);
         public abstract void Read(BinaryReader reader);
-        public abstract Task SendMessage(string message);
+        public abstract Task<bool> SendMessage(string message);
         public abstract Task RemoveAndClearDialog();
         public abstract Task ClearDialogHistory();
 

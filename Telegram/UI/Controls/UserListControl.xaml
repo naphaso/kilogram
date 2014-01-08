@@ -20,7 +20,7 @@
 
         <DataTemplate x:Key="ContactTemplate">
             <ListBoxItem>
-                <StackPanel Orientation="Horizontal" toolkit:TiltEffect.IsTiltEnabled="True" Height="82">
+                <StackPanel Orientation="Horizontal" toolkit:TiltEffect.IsTiltEnabled="True" Height="62" Margin="0,6">
                     <Rectangle Fill="#FF333333" VerticalAlignment="Center" Stroke="Black" Width="62" Height="62"/>
                     <TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" VerticalAlignment="Center" Style="{StaticResource PhoneTextLargeStyle}" FontSize="34.667"/>
                 </StackPanel>
@@ -65,6 +65,7 @@
                     ItemTemplate="{StaticResource UserSelectingTemplate}"
                     Name="FriendsList"
                     Visibility="Collapsed"
+                    SelectionChanged="ContactSelectionChanged"
                     LayoutMode="List"
                 VerticalAlignment="Top"/>
                 <phone:LongListSelector 

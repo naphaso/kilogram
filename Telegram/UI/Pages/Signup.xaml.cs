@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -75,8 +76,30 @@ namespace Telegram.UI {
                         new NotificationManager().RegisterPushNotifications();
                         NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
 
+
+
                         ContactManager cm = new ContactManager();
                         Task.Run(() => cm.SyncContacts());
+
+                        Stream avatarSource = nameControl.GetAvatarSource();
+                        
+                        if (avatarSource != null) { 
+                            Task.Run(async delegate {
+                                InputFile file =
+                                await TelegramSession.Instance.Files.UploadFile("avatar", avatarSource, (progress) => { });
+                                
+                                photos_Photo photo =
+                                    await
+                                        TelegramSession.Instance.Api.photos_uploadProfilePhoto(file, "", TL.inputGeoPointEmpty(),
+                                            TL.inputPhotoCropAuto());
+
+                                Photos_photoConstructor photoConstructor = (Photos_photoConstructor)photo;
+
+                                foreach (var user in photoConstructor.users) {
+                                    TelegramSession.Instance.SaveUser(user);
+                                }
+                            });
+                        }
                     });
             };
 
