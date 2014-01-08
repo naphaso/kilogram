@@ -2,6 +2,7 @@
 ﻿using System;
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+﻿using System.Collections.Specialized;
 ﻿using System.ComponentModel;
 ﻿using System.Diagnostics;
 ﻿using System.IO.IsolatedStorage;
@@ -53,6 +54,8 @@ namespace Telegram.Model.Wrappers {
             this.messages = new ObservableCollectionUI<MessageModel>();
             this.messages.Add(messagesMap[this.dialog.top_message]);
 
+            this.messages.CollectionChanged += MessagesOnCollectionChanged;
+
             SubscribeToDialog();
         }
 
@@ -62,6 +65,8 @@ namespace Telegram.Model.Wrappers {
             this.session = session;
             this.messages = new ObservableCollectionUI<MessageModel>();
             this.messages.Add(topMessage);
+
+            this.messages.CollectionChanged += MessagesOnCollectionChanged;
             
             SubscribeToDialog();
         }
@@ -108,6 +113,8 @@ namespace Telegram.Model.Wrappers {
             } else if (propertyChangedEventArgs.PropertyName == "AvatarPath") {
                 logger.debug("Property is AvatarPath");
                 OnPropertyChanged("AvatarPath");
+            } else if (propertyChangedEventArgs.PropertyName == "MessageDeliveryStateProperty") {
+                OnPropertyChanged("MessageDeliveryStateProperty");
             }
         }
 
@@ -291,6 +298,7 @@ namespace Telegram.Model.Wrappers {
             get {
                 if(messages == null) {
                     messages = new ObservableCollectionUI<MessageModel>();
+                    this.messages.CollectionChanged += MessagesOnCollectionChanged;
                     MessagesRequest();
                 }
 
@@ -389,6 +397,7 @@ namespace Telegram.Model.Wrappers {
             int messagesCount = reader.ReadInt32();
             logger.info("loading {0} messages", messagesCount);
             messages = new ObservableCollectionUI<MessageModel>();
+
             for(int i = 0; i < messagesCount; i++) {
                 int type = reader.ReadInt32();
                 if (type == 1) {
@@ -401,7 +410,36 @@ namespace Telegram.Model.Wrappers {
                 }
             }
 
+            this.messages.CollectionChanged += MessagesOnCollectionChanged;
+
             logger.info("loaded {0} messages", messagesCount);
+        }
+
+
+        
+
+        private void MessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs) {
+            if (messages == null || messages.Count == 0) {
+                logger.error("inconsistent messages collection state");
+                return;
+            }
+
+            // check previousmessage wanst last and deleted
+            if (messages.ToArray()[messages.Count - 2] != null)
+                messages.ToArray()[messages.Count - 2].PropertyChanged -= OnLastMessageProperyChanged;
+
+            messages.Last().PropertyChanged += OnLastMessageProperyChanged;
+
+        }
+
+        private void OnLastMessageProperyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs) {
+            if (messages == null || messages.Count == 0) { 
+                logger.error("inconsistent messages list state");
+                return;
+            }
+
+            if (propertyChangedEventArgs.PropertyName == "MessageDeliveryStateProperty")
+                OnPropertyChanged("MessageDeliveryStateProperty");
         }
 
         public bool IsChat {
@@ -558,6 +596,18 @@ namespace Telegram.Model.Wrappers {
             }
             catch (Exception ex) {
                 logger.error("Error sending media {0}", ex);
+            }
+        }
+
+        public MessageModel.MessageDeliveryState MessageDeliveryStateProperty {
+            get {
+                if (messages == null || messages.Count == 0)
+                    return MessageModel.MessageDeliveryState.NoImage;
+                
+                if (messages.Last().IsOut)
+                    return messages.Last().MessageDeliveryStateProperty;
+
+                return MessageModel.MessageDeliveryState.NoImage;
             }
         }
 

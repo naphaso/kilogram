@@ -68,7 +68,15 @@ namespace Telegram.UI {
 
         private void UpdateDataContext() {
             this.DataContext = model;
-            MessageLongListSelector.ItemsSource = model.Messages;            
+            MessageLongListSelector.ItemsSource = model.Messages;
+//            MessageLongListSelector.ItemRealized += delegate {
+//                if (MessageLongListSelector.ItemsSource == null ||
+//                    MessageLongListSelector.ItemsSource.Count == 0)
+//                    return;
+//
+//                MessageLongListSelector.ScrollTo(
+//                    MessageLongListSelector.ItemsSource[MessageLongListSelector.ItemsSource.Count - 1]);
+//            };
         }
 
         public DialogPage() {
@@ -93,6 +101,7 @@ namespace Telegram.UI {
                 if (!EmojiPopup.IsOpen && !AttachPopup.IsOpen)
                     MainPanel.Margin = new Thickness(0, 0, 0, 0);
             };
+
 
             EmojiPanelControl.EmojiGridListSelector.SelectionChanged += EmojiGridListSelectorOnSelectionChanged;
 
@@ -137,12 +146,22 @@ namespace Telegram.UI {
             photo.Show();
         }
 
+        private void PickAndSendVideo(object sender, GestureEventArgs e) {
+            var photo = new PhotoChooserTask {  };
+            photo.Completed += photoChooserTask_Completed;
+            photo.Show();
+        }
+
         void photoChooserTask_Completed(object sender, PhotoResult e) {
             try {
                 if (e.ChosenPhoto == null)
                     return;
 
                 Task.Run(() => StartUploadPhoto(e.OriginalFileName, e.ChosenPhoto));
+
+                if (AttachPopup.IsOpen)
+                    ToggleAttach();
+
             } catch (Exception exception) {
                 Debug.WriteLine("Exception in photoChooserTask_Completed " + exception.Message);
             }
@@ -227,6 +246,10 @@ namespace Telegram.UI {
         private void OnHeaderTap(object sender, GestureEventArgs e) {
             int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(model);
             NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?modelId=" + modelId, UriKind.Relative));
+        }
+
+        private void OnOpenAttachment(object sender, GestureEventArgs e) {
+            NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml?messageId=" + model.Id, UriKind.Relative));
         }
     }
 }

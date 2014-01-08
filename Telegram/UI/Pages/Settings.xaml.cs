@@ -63,11 +63,10 @@ namespace Telegram.UI
                 Debug.WriteLine("Uknown selection");
             }
             
-            
         }
 
         private void OnChangeAvatar(object sender, GestureEventArgs e) {
-            var photo = new PhotoChooserTask { ShowCamera = true };
+            var photo = new PhotoChooserTask { ShowCamera = true, PixelHeight = 200, PixelWidth = 200};
             photo.Completed += photoChooserTask_Completed;
             photo.Show();
         }

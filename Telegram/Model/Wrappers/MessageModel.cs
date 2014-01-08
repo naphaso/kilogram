@@ -13,7 +13,8 @@ namespace Telegram.Model.Wrappers {
         public enum MessageDeliveryState {
             Pending = 0,
             Delivered = 1,
-            Read = 2
+            Read = 2,
+            NoImage = 3
         }
 
         public class MessageAttachment {
