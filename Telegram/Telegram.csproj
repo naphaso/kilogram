@@ -100,6 +100,8 @@
     <Compile Include="Model\Wrappers\ChatModel.cs" />
     <Compile Include="Model\Wrappers\DialogListModel.cs" />
     <Compile Include="Model\Wrappers\DialogModel.cs" />
+    <Compile Include="Model\Wrappers\DialogModelEncrypted.cs" />
+    <Compile Include="Model\Wrappers\DialogModelPlain.cs" />
     <Compile Include="Model\Wrappers\MessageModel.cs" />
     <Compile Include="Model\Wrappers\MessageModelDelivered.cs" />
     <Compile Include="Model\Wrappers\MessageModelUndelivered.cs" />

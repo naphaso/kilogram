@@ -173,6 +173,11 @@ namespace Telegram.UI {
 //                    UploadProgressBar.Visibility = Visibility.Collapsed;
 //                });
 
+                if (!(model is DialogModelPlain)) 
+                    return;
+
+                DialogModelPlain plainModel = (DialogModelPlain) model;
+
                 InputFile file =
                     await TelegramSession.Instance.Files.UploadFile(name, stream, delegate { });
 
@@ -180,7 +185,7 @@ namespace Telegram.UI {
 
 
                 Deployment.Current.Dispatcher.BeginInvoke(() => {
-                    model.SendMedia(media);
+                    plainModel.SendMedia(media);
                 });
 //                Deployment.Current.Dispatcher.BeginInvoke(() => {
 //                    UploadProgressBar.Visibility = Visibility.Collapsed;
@@ -249,7 +254,7 @@ namespace Telegram.UI {
         }
 
         private void OnOpenAttachment(object sender, GestureEventArgs e) {
-            NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml?messageId=" + model.Id, UriKind.Relative));
+            NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
         }
     }
 }

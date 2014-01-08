@@ -67,7 +67,7 @@ namespace Telegram.Model.Wrappers {
             }
 
             foreach (Dialog dialog in dialogsList) {
-                dialogs.Add(new DialogModel(dialog, session, messagesMap));
+                dialogs.Add(new DialogModelPlain(dialog, session, messagesMap));
             }
 
             return dialogsList.Count;
@@ -90,7 +90,7 @@ namespace Telegram.Model.Wrappers {
 
             if(targetDialogModel == null) {
                 logger.info("target dialog not found, creating new...");
-                targetDialogModel = new DialogModel(messageModel, session);
+                targetDialogModel = new DialogModelPlain(messageModel, session);
                     dialogs.Insert(0, targetDialogModel);
             } else {
                 logger.info("target dialog found, rearrange...");
@@ -105,6 +105,11 @@ namespace Telegram.Model.Wrappers {
             // dialogs
             writer.Write(dialogs.Count);
             foreach (var dialog in dialogs) {
+                if (dialog is DialogModelPlain)
+                    writer.Write(0);
+                else if (dialog is DialogModelEncrypted)
+                    writer.Write(1);
+
                 dialog.Write(writer);
             }
         }
@@ -115,7 +120,12 @@ namespace Telegram.Model.Wrappers {
             int dialogsCount = reader.ReadInt32();
             logger.info("dialogs count {0}", dialogsCount);
             for (int i = 0; i < dialogsCount; i++) {
-                dialogs.Add(new DialogModel(session, reader));
+                int messageType = reader.ReadInt32();
+
+                if (messageType == 0)
+                    dialogs.Add(new DialogModelPlain(session, reader));
+                else if(messageType == 1)
+                    dialogs.Add(new DialogModelEncrypted(session, reader));
             }
         }
 

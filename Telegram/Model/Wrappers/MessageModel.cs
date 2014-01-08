@@ -37,6 +37,7 @@ namespace Telegram.Model.Wrappers {
         public abstract MessageDeliveryState GetMessageDeliveryState();
 
         public abstract string TimeString { get; }
+        public abstract UserModel Sender { get; }
 
         public abstract MessageDeliveryState MessageDeliveryStateProperty { get; }
 
