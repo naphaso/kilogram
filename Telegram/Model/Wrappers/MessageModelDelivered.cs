@@ -21,7 +21,7 @@ namespace Telegram.Model.Wrappers {
         }
 
         public MessageModelDelivered() {
-            
+           
         }
 
         public MessageModelDelivered(BinaryReader reader) {
@@ -229,6 +229,11 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public override bool IsChat {
+            get {
+                return Peer.Constructor == Constructor.peerChat;
+            }
+    }
         private static Peer GetPeer(MessageConstructor message) {
             return null;
         }

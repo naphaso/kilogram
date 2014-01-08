@@ -40,6 +40,10 @@ namespace Telegram.Model.Wrappers {
             get { return false; }
         }
 
+        public override bool IsChat {
+            get { return false; }
+        }
+
         public override string Text {
             get { return _text; }
             set { _text = value; }
