@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -82,7 +83,8 @@ namespace Telegram.UI {
         }
 
         private void OnCreateSecretChat(object sender, GestureEventArgs e) {
-            
+            Task.Run(() => TelegramSession.Instance.EncryptedChats.CreateChatRequest(model.InputUser));
+            NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
         }
 
         private void OnCallMobile(object sender, GestureEventArgs e) {

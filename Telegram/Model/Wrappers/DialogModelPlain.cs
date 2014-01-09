@@ -153,12 +153,12 @@ namespace Telegram.Model.Wrappers {
                 int messagesIndexStart = 0;
                 int messagesCount = messages.Count;
                 if(messagesCount > 100) {
-                    messagesCount = 100;
                     messagesIndexStart = messagesCount - 100;
+                    messagesCount = 100;
                 }
                 writer.Write(messagesCount);
-                for(int i = messagesIndexStart; i < messagesIndexStart + messagesCount; i++) {
-                    messages[i].Write(writer);
+                for(int i = 0; i < messagesCount; i++) {
+                    messages[messagesIndexStart + i].Write(writer);
                 }
             }
         }
@@ -354,6 +354,60 @@ namespace Telegram.Model.Wrappers {
                 session.Api.messages_deleteHistory(InputPeer, 0);
 
             session.Updates.processUpdatePtsSeq(affectedHistory.pts, affectedHistory.seq);
+        }
+
+        public override async Task LoadMore() {
+            logger.info("LOADING MOOOOOOOOOOOOOOOOAR!!!!");
+            await Task.Delay(TimeSpan.FromSeconds(5));
+            
+            try {
+                if(messages.Count > 0 && messages[0] is MessageModelDelivered) {
+                    messages_Messages loadedMessages = await TelegramSession.Instance.Api.messages_getHistory(InputPeer, 0, messages[0].Id, 10);
+                    loadMorePossible = Process(loadedMessages);
+                }
+            } catch(Exception e) {
+                logger.error("load more exception: {0}", e);
+            }
+        }
+
+        private bool Process(messages_Messages loadedMessages) {
+            switch(loadedMessages.Constructor) {
+                case Constructor.messages_messages:
+                    return Process((Messages_messagesConstructor)loadedMessages);
+                case Constructor.messages_messagesSlice:
+                    return Process((Messages_messagesSliceConstructor)loadedMessages);
+            }
+
+            return false;
+        }
+
+        private bool Process(Messages_messagesConstructor loadedMessages) {
+            TelegramSession.Instance.Updates.ProcessUsers(loadedMessages.users);
+            TelegramSession.Instance.Updates.ProcessChats(loadedMessages.chats);
+
+            foreach (var message in loadedMessages.messages) {
+                messages.Insert(0, new MessageModelDelivered(message));
+            }
+
+            return loadedMessages.messages.Any();
+        }
+
+        private bool Process(Messages_messagesSliceConstructor loadedMessages) {
+            TelegramSession.Instance.Updates.ProcessUsers(loadedMessages.users);
+            TelegramSession.Instance.Updates.ProcessChats(loadedMessages.chats);
+
+            foreach(var message in loadedMessages.messages) {
+                messages.Insert(0, new MessageModelDelivered(message));
+            }
+
+            return loadedMessages.messages.Any();
+        }
+
+        
+
+        private bool loadMorePossible = true;
+        public override bool LoadMorePossible() {
+            return loadMorePossible;
         }
     }    
 }

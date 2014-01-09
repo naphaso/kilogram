@@ -89,6 +89,8 @@ namespace Telegram.UI {
         private void UpdateDataContext() {
             this.DataContext = model;
             MessageLongListSelector.ItemsSource = model.Messages;
+            MessageLongListSelector.Model = model;
+
             model.Messages.CollectionChanged += delegate {
                 if (MessageLongListSelector.ItemsSource == null || MessageLongListSelector.ItemsSource.Count == 0)
                     ShowNotice();
@@ -114,10 +116,17 @@ namespace Telegram.UI {
                     MainPanel.Margin = new Thickness(0, 0, 0, 0);
             };
 
+            messageEditor.TextChanged += MessageEditorOnTextChanged;
+
             EmojiPanelControl.BackspaceClick += EmojiPanelControlOnBackspaceClick;
             EmojiPanelControl.KeyboardClick += EmojiPanelControlOnKeyboardClick;
             EmojiPanelControl.EmojiGridListSelector.SelectionChanged += EmojiGridListSelectorOnSelectionChanged;
 
+        }
+
+
+        private void MessageEditorOnTextChanged(object sender, TextChangedEventArgs textChangedEventArgs) {
+            
         }
 
         private void EmojiPanelControlOnKeyboardClick(object sender, object args) {
