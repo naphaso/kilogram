@@ -76,9 +76,13 @@ namespace Telegram.Utils {
             if (size.Constructor == Constructor.photoSizeEmpty)
                 return null;
 
-            PhotoSizeConstructor cons = (PhotoSizeConstructor) size;
+            if (size.Constructor == Constructor.photoSize)
+                return ((PhotoSizeConstructor) size).location;
 
-            return cons.location;
+            if (size.Constructor == Constructor.photoCachedSize)
+                return ((PhotoCachedSizeConstructor) size).location;
+
+            return null;
         }
 
         public static AESKeyData CalcKey(byte[] sharedKey, byte[] msgKey, bool client) {

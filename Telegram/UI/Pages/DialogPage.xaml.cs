@@ -306,6 +306,12 @@ namespace Telegram.UI {
                 return;
 
             MessageMedia media = ((MessageModelDelivered) message).MessageMedia;
+            
+            if (media.Constructor == Constructor.messageMediaPhoto) {
+                NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
+            } else if (media.Constructor == Constructor.messageMediaGeo) {
+                
+            }
 
             NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
         }

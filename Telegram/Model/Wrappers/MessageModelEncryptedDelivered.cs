@@ -64,11 +64,6 @@ namespace Telegram.Model.Wrappers {
             get { return output; }
         }
 
-        public override int Id {
-            get {
-                return 0;
-            }
-        }
 
         public override bool IsService {
             get { return message.Constructor == Constructor.decryptedMessageService; }
