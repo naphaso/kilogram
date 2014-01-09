@@ -107,6 +107,7 @@
     <Compile Include="Model\Wrappers\DialogModelPlain.cs" />
     <Compile Include="Model\Wrappers\MessageModel.cs" />
     <Compile Include="Model\Wrappers\MessageModelDelivered.cs" />
+    <Compile Include="Model\Wrappers\MessageModelEncryptedDelivered.cs" />
     <Compile Include="Model\Wrappers\MessageModelUndelivered.cs" />
     <Compile Include="Model\Wrappers\UserModel.cs" />
     <Compile Include="MTProto\Components\EncryptedChats.cs" />
