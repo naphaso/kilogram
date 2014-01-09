@@ -307,13 +307,16 @@ namespace Telegram.UI {
 
             MessageMedia media = ((MessageModelDelivered) message).MessageMedia;
             
-            if (media.Constructor == Constructor.messageMediaPhoto) {
+            MediaTransitionHelper.Instance.Media = media;
+
+            if (media.Constructor == Constructor.messageMediaPhoto
+                || media.Constructor == Constructor.messageMediaVideo) {
+
                 NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
             } else if (media.Constructor == Constructor.messageMediaGeo) {
-                
+                NavigationService.Navigate(new Uri("/UI/Pages/MapViewPage.xaml?mode=view", UriKind.Relative));
             }
 
-            NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
         }
 
         private void UserAvatarTap(object sender, GestureEventArgs e) {

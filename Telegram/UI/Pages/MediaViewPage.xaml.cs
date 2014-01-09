@@ -10,14 +10,19 @@
   
 */
 
+using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Telegram.MTProto;
 using Telegram.Resources;
+using Telegram.Utils;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace sdkImages.Scenarios {
@@ -38,20 +43,42 @@ namespace sdkImages.Scenarios {
         Point _relativeMidpoint;
 
         BitmapImage _bitmap;
+        private MessageMedia media;
 
+        private bool downloaded = false;
+        protected override void OnNavigatedTo(NavigationEventArgs e) {
+            base.OnNavigatedTo(e);
+        }
 
         public PinchAndZoom() {
             InitializeComponent();
 
+            media = MediaTransitionHelper.Instance.Media;
+
+            if (media.Constructor == Constructor.messageMediaPhoto) {
+                ImageViewportElement.Visibility = Visibility.Visible;
+                VideoPlayerElement.Visibility = Visibility.Collapsed;
+            }
+
+            if (media.Constructor == Constructor.messageMediaVideo) {
+                ImageViewportElement.Visibility = Visibility.Collapsed;
+                VideoPlayerElement.Visibility = Visibility.Visible;
+
+                MessageMediaVideoConstructor cons = (MessageMediaVideoConstructor) media;
+                PlaybackControls.Visibility = Visibility.Visible;
+            }
+
 //            BuildLocalizedApplicationBar();
         }
+
+
 
         /// <summary> 
         /// Either the user has manipulated the image or the size of the viewport has changed. We only 
         /// care about the size. 
         /// </summary> 
         void viewport_ViewportChanged(object sender, System.Windows.Controls.Primitives.ViewportChangedEventArgs e) {
-            Size newSize = new Size(viewport.Viewport.Width, viewport.Viewport.Height);
+            Size newSize = new Size(ImageViewportElement.Viewport.Width, ImageViewportElement.Viewport.Height);
             if (newSize != _viewportSize) {
                 _viewportSize = newSize;
                 CoerceScale(true);
@@ -81,9 +108,9 @@ namespace sdkImages.Scenarios {
                 if (!_pinching) {
                     _pinching = true;
                     Point center = e.PinchManipulation.Original.Center;
-                    _relativeMidpoint = new Point(center.X / TestImage.ActualWidth, center.Y / TestImage.ActualHeight);
+                    _relativeMidpoint = new Point(center.X / ImageElement.ActualWidth, center.Y / ImageElement.ActualHeight);
 
-                    var xform = TestImage.TransformToVisual(viewport);
+                    var xform = ImageElement.TransformToVisual(ImageViewportElement);
                     _screenMidpoint = xform.Transform(center);
                 }
 
@@ -110,7 +137,7 @@ namespace sdkImages.Scenarios {
         /// When a new image is opened, set its initial scale. 
         /// </summary> 
         void OnImageOpened(object sender, RoutedEventArgs e) {
-            _bitmap = (BitmapImage)TestImage.Source;
+            _bitmap = (BitmapImage)ImageElement.Source;
 
             // Set scale to the minimum, and then save it. 
             _scale = 0;
@@ -133,18 +160,18 @@ namespace sdkImages.Scenarios {
 
                 xform.ScaleX = xform.ScaleY = _coercedScale;
 
-                viewport.Bounds = new Rect(0, 0, newWidth, newHeight);
+                ImageViewportElement.Bounds = new Rect(0, 0, newWidth, newHeight);
 
                 if (center) {
-                    viewport.SetViewportOrigin(
+                    ImageViewportElement.SetViewportOrigin(
                         new Point(
-                            Math.Round((newWidth - viewport.ActualWidth) / 2),
-                            Math.Round((newHeight - viewport.ActualHeight) / 2)
+                            Math.Round((newWidth - ImageViewportElement.ActualWidth) / 2),
+                            Math.Round((newHeight - ImageViewportElement.ActualHeight) / 2)
                             ));
                 } else {
                     Point newImgMid = new Point(newWidth * _relativeMidpoint.X, newHeight * _relativeMidpoint.Y);
                     Point origin = new Point(newImgMid.X - _screenMidpoint.X, newImgMid.Y - _screenMidpoint.Y);
-                    viewport.SetViewportOrigin(origin);
+                    ImageViewportElement.SetViewportOrigin(origin);
                 }
             }
         }
@@ -156,10 +183,10 @@ namespace sdkImages.Scenarios {
         /// </summary> 
         /// <param name="recompute">Will recompute the min max scale if true.</param> 
         void CoerceScale(bool recompute) {
-            if (recompute && _bitmap != null && viewport != null) {
+            if (recompute && _bitmap != null && ImageViewportElement != null) {
                 // Calculate the minimum scale to fit the viewport 
-                double minX = viewport.ActualWidth / _bitmap.PixelWidth;
-                double minY = viewport.ActualHeight / _bitmap.PixelHeight;
+                double minX = ImageViewportElement.ActualWidth / _bitmap.PixelWidth;
+                double minY = ImageViewportElement.ActualHeight / _bitmap.PixelHeight;
 
                 _minScale = Math.Min(minX, minY);
             }
@@ -172,10 +199,10 @@ namespace sdkImages.Scenarios {
             e.Handled = true;
             _originalScale = _scale;
 
-            Point center = e.GetPosition(TestImage);
-            _relativeMidpoint = new Point(center.X / TestImage.ActualWidth, center.Y / TestImage.ActualHeight);
+            Point center = e.GetPosition(ImageElement);
+            _relativeMidpoint = new Point(center.X / ImageElement.ActualWidth, center.Y / ImageElement.ActualHeight);
 
-            var xform = TestImage.TransformToVisual(viewport);
+            var xform = ImageElement.TransformToVisual(ImageViewportElement);
             _screenMidpoint = xform.Transform(center);
 
             if (doubleTap) {
@@ -214,6 +241,41 @@ namespace sdkImages.Scenarios {
                 menuClicked = true;
                 AppbarUp.Begin();
             }
+        }
+
+        private void OnDownloadOrPlayClick(object sender, RoutedEventArgs e) {
+            if (media == null)
+                return;
+
+            if (!downloaded) {
+                PlaybackButton.IsEnabled = false;
+                PlaybackButton.Content = "downloading...";
+
+                MessageMediaVideoConstructor mediaVideo = (MessageMediaVideoConstructor) media;
+
+                Task.Run(() => TelegramSession.Instance.Files.DownloadVideo(mediaVideo.video, Handler)).ContinueWith(
+                    (result) => {
+                        Deployment.Current.Dispatcher.BeginInvoke(() => {
+                            VideoPlayerElement.Source = new Uri(result.Result, UriKind.Absolute);
+                            PlaybackButton.Content = "play";
+                            PlaybackButton.IsEnabled = true;
+                            PlaybackProgress.Visibility = Visibility.Collapsed;
+                        });
+
+                    });
+            }
+            else {
+                VideoPlayerElement.Play();
+                VideoPlayerElement.MediaEnded += delegate {
+                    PlaybackProgress.Visibility = Visibility.Visible;
+                };
+            }
+        }
+
+        private void Handler(float progress) {
+            Deployment.Current.Dispatcher.BeginInvoke(() => {
+                PlaybackProgress.Value = progress * 100f;
+            });
         }
     }
 }

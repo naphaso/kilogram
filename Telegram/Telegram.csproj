@@ -107,7 +107,6 @@
     <Compile Include="Model\Wrappers\DialogModelPlain.cs" />
     <Compile Include="Model\Wrappers\MessageModel.cs" />
     <Compile Include="Model\Wrappers\MessageModelDelivered.cs" />
-    <Compile Include="Model\Wrappers\MessageModelEncryptedDelivered.cs" />
     <Compile Include="Model\Wrappers\MessageModelUndelivered.cs" />
     <Compile Include="Model\Wrappers\UserModel.cs" />
     <Compile Include="MTProto\Components\EncryptedChats.cs" />
@@ -277,6 +276,7 @@
     <Compile Include="Utils\Formatters.cs" />
     <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Utils\ImageByteArrayAttachedProperty.cs" />
+    <Compile Include="Utils\MediaTransitionHelper.cs" />
     <Compile Include="Utils\ObservableCollectionUI.cs" />
   </ItemGroup>
   <ItemGroup>
