@@ -69,6 +69,17 @@ namespace Telegram.Utils {
             return desiredSize;
         }
 
+        // nullable
+        public static FileLocation FileLocationGetVideoThumbLocation(VideoConstructor video) {
+            PhotoSize size = video.thumb;
+
+            if (size.Constructor == Constructor.photoSizeEmpty)
+                return null;
+
+            PhotoSizeConstructor cons = (PhotoSizeConstructor) size;
+
+            return cons.location;
+        }
 
         public static AESKeyData CalcKey(byte[] sharedKey, byte[] msgKey, bool client) {
             int x = client ? 0 : 8;

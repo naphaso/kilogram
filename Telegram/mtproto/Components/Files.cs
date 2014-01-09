@@ -163,6 +163,11 @@ namespace Telegram.MTProto.Components {
             return videoPath;
         }
 
+//        public async Task<string> DownloadLocation() {
+//            new URL("https://maps.googleapis.com/maps/api/staticmap?center=" + geoPoint.getLat() + "," + geoPoint.getLng()
+//                    + "&zoom=12&size=" + mapSize + "x" + mapSize + "&sensor=false&markers=color:red|" + geoPoint.getLat() + "," + geoPoint.getLng());
+//        }
+
         private string GetVideoPath(VideoConstructor video) {
             return String.Format("{0}.mp4", video.id);
         }
