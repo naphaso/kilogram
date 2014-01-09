@@ -44,6 +44,23 @@ namespace Telegram.UI.Controls {
             };
         }
 
+        public void Filter(string str) {
+            if (str == "") {
+                DialogList.ItemsSource = TelegramSession.Instance.Dialogs.Model.Dialogs;
+                return;
+            }
+
+            ObservableCollection<DialogModel> fakeModel = new ObservableCollection<DialogModel>();
+            foreach (var dialogModel in TelegramSession.Instance.Dialogs.Model.Dialogs) {
+                if (dialogModel.Title.ToLower().Contains(str.ToLower())
+                    || dialogModel.Preview.ToLower().Contains(str.ToLower())) {
+                    fakeModel.Add(dialogModel);
+                }
+            }
+
+            DialogList.ItemsSource = fakeModel;
+        }
+
         private void LoadModel() {
             DialogList.ItemsSource = TelegramSession.Instance.Dialogs.Model.Dialogs;
 //            initDemo();

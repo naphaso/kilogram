@@ -22,7 +22,7 @@
 
 		<phone:Pivot Height="738" Title="" Margin="0,-40,0,0">
 			<phone:PivotItem CacheMode="{x:Null}" Header="conversations">
-				<Controls:DialogListControl/>
+				<Controls:DialogListControl Name="DialogsList" DialogSelected="OnDialogSelected"/>
 			</phone:PivotItem>
 			<phone:PivotItem CacheMode="{x:Null}" Header="messages">
 				<Grid/>

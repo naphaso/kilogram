@@ -25,8 +25,14 @@ namespace Telegram.UI.Pages {
             ChatMembersEdit.ContentText.TextChanged += ContentTextOnTextChanged;
             ChatMembersEdit.ContentText.GotFocus += ContentTextOnGotFocus;
             SelectableUsers.UserSelectedFromList += SelectableUsersOnUserSelectedFromList;
-           
+
+            BackKeyPress += delegate {
+                foreach (var userModel in SelectableUsers.GetUsers()) {
+                    userModel.IsCheckedInternal = false;
+                }
+            };
         }
+
 
         private void ContentTextOnGotFocus(object sender, RoutedEventArgs routedEventArgs) {
             ChatMembersEdit.ContentText.Select(ChatMembersEdit.ContentText.Text.Length, 0);
@@ -112,6 +118,10 @@ namespace Telegram.UI.Pages {
 
             messages_StatedMessage msg = await TelegramSession.Instance.Api.messages_createChat(inputUsers, ChatTitleEdit.ContentText.Text);
             TelegramSession.Instance.Updates.Process(msg);
+
+            foreach (var userModel in SelectableUsers.GetUsers()) {
+                userModel.IsCheckedInternal = false;
+            }
         }
     }
 }

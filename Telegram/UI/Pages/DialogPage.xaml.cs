@@ -98,6 +98,12 @@ namespace Telegram.UI {
                 else
                     HideNotice();
             };
+
+            model.PropertyChanged += delegate(object sender, PropertyChangedEventArgs args) {
+                if (args.PropertyName == "IsWaiting") {
+                    
+                }
+            };
         }
 
         public DialogPage() {

@@ -35,7 +35,6 @@ namespace Telegram.Model.Wrappers {
         public abstract int ForwardedId { get; }
         public abstract string Text { get; set;  }
         public abstract string Preview { get; }
-
         public abstract bool Unread { get; }
 
         public abstract DateTime Timestamp { get; set; }

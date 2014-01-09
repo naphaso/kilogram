@@ -356,6 +356,10 @@ namespace Telegram.Model.Wrappers {
             session.Updates.processUpdatePtsSeq(affectedHistory.pts, affectedHistory.seq);
         }
 
+        public override bool IsWaiting {
+            get { return false; }
+        }
+
         public override async Task LoadMore() {
             logger.info("LOADING MOOOOOOOOOOOOOOOOAR!!!!");
             await Task.Delay(TimeSpan.FromSeconds(5));

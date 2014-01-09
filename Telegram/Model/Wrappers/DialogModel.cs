@@ -36,6 +36,7 @@ namespace Telegram.Model.Wrappers {
         public abstract Task<bool> SendMessage(string message);
         public abstract Task RemoveAndClearDialog();
         public abstract Task ClearDialogHistory();
+        public abstract bool IsWaiting { get; }
 
         public abstract Task SendRead();
 

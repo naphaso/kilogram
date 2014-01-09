@@ -259,6 +259,10 @@ namespace Telegram.Model.Wrappers {
             throw new NotImplementedException();
         }
 
+        public override bool IsWaiting {
+            get { return chat.Constructor == Constructor.encryptedChatWaiting; }
+        }
+
 
         public void SetEncryptedChat(EncryptedChatConstructor chat, byte[] a) {
             this.chat = chat;
