@@ -58,11 +58,7 @@ namespace Telegram.UI {
                     model = new DialogModelPlain(TL.peerUser(userId), TelegramSession.Instance);
                     needDialogCreate = true;
                 }
-
-                
             }
-
-            TelegramSession.Instance.Dialogs.OpenedDialog = model;
 
             UpdateDataContext();
 
@@ -71,7 +67,6 @@ namespace Telegram.UI {
             // or this is new chat
             if (MessageLongListSelector.ItemsSource == null || MessageLongListSelector.ItemsSource.Count == 0)
                 ShowNotice();
-
         }
 
 
@@ -306,6 +301,17 @@ namespace Telegram.UI {
         private void OnOpenAttachment(object sender, GestureEventArgs e) {
             var element = (FrameworkElement)sender;
             MessageModel message = (MessageModel)element.DataContext;
+
+            if (!(message is MessageModelDelivered))
+                return;
+
+            MessageMedia media = ((MessageModelDelivered) message).MessageMedia;
+            
+            if (media.Constructor == Constructor.messageMediaPhoto) {
+                NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
+            } else if (media.Constructor == Constructor.messageMediaGeo) {
+                
+            }
 
             NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
         }

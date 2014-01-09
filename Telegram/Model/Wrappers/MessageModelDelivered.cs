@@ -350,6 +350,18 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        // may be null 
+        public MessageMedia MessageMedia {
+            get {
+                if (message.Constructor != Constructor.message)
+                    return null;
+
+                return ((MessageConstructor) message).media;
+            }
+        }
+
+        private BitmapImage locationBm;
+        private static int mapSize = 300;
         // it's OK to return a null, will be handled
         public override BitmapImage Attachment {
             get {
@@ -360,6 +372,10 @@ namespace Telegram.Model.Wrappers {
                 if (_previewPath != null) {
                     return Utils.Helpers.GetBitmapImageInternal(_previewPath);
                 }
+
+                // geo is cached
+                if (locationBm != null)
+                    return locationBm;
 
                 MessageMedia media = null;
 
@@ -390,9 +406,32 @@ namespace Telegram.Model.Wrappers {
                     PhotoConstructor photoConstructor = (PhotoConstructor) photo;
                     resultFileLocation = Helpers.GetPreviewFileLocation(photoConstructor);
                 } else if (media.Constructor == Constructor.messageMediaVideo) {
-                    resultFileLocation = null; // not implemented
+                    Video video = ((MessageMediaVideoConstructor) media).video;
+
+                    if (video.Constructor == Constructor.videoEmpty)
+                        return null;
+
+                    VideoConstructor videoConstructor = (VideoConstructor) video;
+                    resultFileLocation = Helpers.FileLocationGetVideoThumbLocation(videoConstructor);
                 } else if (media.Constructor == Constructor.messageMediaGeo) {
-                    resultFileLocation =  null; // not implemented
+                    MessageMediaGeoConstructor cons = (MessageMediaGeoConstructor) media;
+                    GeoPoint geoPoint = cons.geo;
+
+                    if (geoPoint.Constructor == Constructor.geoPointEmpty)
+                        return null;
+
+                    GeoPointConstructor geoPointConstructor = (GeoPointConstructor) geoPoint;
+
+
+                    locationBm = new BitmapImage();
+
+                    locationBm.UriSource = new Uri("https://maps.googleapis.com/maps/api/staticmap?center=" + geoPointConstructor.lat + "," + geoPointConstructor.lng + "&zoom=12&size=" + mapSize + "x" + mapSize + "&sensor=false&markers=color:red|" + geoPointConstructor.lat + "," + geoPointConstructor.lng);
+
+                    locationBm.ImageOpened += delegate {
+                        OnPropertyChanged("Attachment");
+                    };
+
+                    return new BitmapImage(new Uri("/Assets/UI/black-placeholder.png", UriKind.Relative));
                 }
 
                 if (resultFileLocation == null)
