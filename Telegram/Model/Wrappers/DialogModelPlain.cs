@@ -128,13 +128,16 @@ namespace Telegram.Model.Wrappers {
 
         public override string Preview {
             get {
+                if(messages.Count > 0) {
+                    MessageModel messageModel = messages.Last();
+                    if(messageModel.Delivered == false) {
+                        return ((MessageModelUndelivered) messageModel).Text;
+                    }
 
-                MessageModel messageModel = messages.Last();
-                if (messageModel.Delivered == false) {
-                    return ((MessageModelUndelivered) messageModel).Text;
+                    return messageModel.Preview;
+                } else {
+                    return "new conversation";
                 }
-
-                return messageModel.Preview;
             }
         }
 
