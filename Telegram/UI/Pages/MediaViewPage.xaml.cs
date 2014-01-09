@@ -256,7 +256,7 @@ namespace sdkImages.Scenarios {
                 Task.Run(() => TelegramSession.Instance.Files.DownloadVideo(mediaVideo.video, Handler)).ContinueWith(
                     (result) => {
                         Deployment.Current.Dispatcher.BeginInvoke(() => {
-                            VideoPlayerElement.Source = new Uri(result.Result, UriKind.Absolute);
+                            VideoPlayerElement.Source = new Uri("isostore:/" + result.Result, UriKind.Absolute);
                             PlaybackButton.Content = "play";
                             PlaybackButton.IsEnabled = true;
                             PlaybackProgress.Visibility = Visibility.Collapsed;

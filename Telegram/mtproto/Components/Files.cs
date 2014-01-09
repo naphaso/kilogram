@@ -143,7 +143,10 @@ namespace Telegram.MTProto.Components {
             int allChunksCount = chunksCount + (lastChunkSize != 0 ? 1 : 0);
 
             using(IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication()) {
-                using(Stream stream = new IsolatedStorageFileStream(GetVideoPath(video), FileMode.OpenOrCreate, FileAccess.Write, storage)) {
+                if (storage.FileExists(videoPath))
+                    return videoPath;
+
+                using(Stream stream = new IsolatedStorageFileStream(videoPath, FileMode.OpenOrCreate, FileAccess.Write, storage)) {
                     for (int i = 0; i < chunksCount; i++) {
                         handler((float)i * (float)chunkSize / (float)allSize);
                         Upload_fileConstructor chunk = (Upload_fileConstructor) await api.upload_getFile(inputFile, i*chunkSize, chunkSize);
