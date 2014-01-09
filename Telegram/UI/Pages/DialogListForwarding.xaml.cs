@@ -60,6 +60,12 @@ namespace Telegram.UI.Pages {
                     InputVideo iv = TL.inputVideo(((VideoConstructor)mmvc.video).id, ((VideoConstructor)mmvc.video).access_hash);
 
                     im = TL.inputMediaVideo(iv);
+                } else if (media.Constructor == Constructor.messageMediaGeo) {
+                    MessageMediaGeoConstructor mmgc = (MessageMediaGeoConstructor) media;
+                    GeoPointConstructor gpc = (GeoPointConstructor) mmgc.geo;
+
+                    InputGeoPoint point = TL.inputGeoPoint(gpc.lat, gpc.lng);
+                    im = TL.inputMediaGeoPoint(point);
                 }
 
                 if (im != null) {

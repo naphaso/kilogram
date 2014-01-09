@@ -225,7 +225,7 @@
                         <TextBlock toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="video" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                     </ListBoxItem>
                     <ListBoxItem>
-                        <TextBlock toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="location" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                        <TextBlock Tap="AttachLocation" toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="location" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                     </ListBoxItem>
                     <ListBoxItem>
                         <TextBlock toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="document" Style="{StaticResource PhoneTextExtraLargeStyle}"/>

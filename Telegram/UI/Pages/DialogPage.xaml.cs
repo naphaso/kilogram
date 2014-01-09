@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Navigation;
+using Windows.Devices.Geolocation;
 using Windows.UI.Core;
 using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
@@ -374,6 +375,31 @@ namespace Telegram.UI {
         private void OnCopyMessage(object sender, RoutedEventArgs e) {
             var message = ((sender as MenuItem).DataContext as MessageModel);
             Clipboard.SetText(message.Text);
+        }
+
+        private async void AttachLocation(object sender, GestureEventArgs e) {
+            Geolocator geolocator = new Geolocator();
+
+            Geoposition geoposition = await geolocator.GetGeopositionAsync(
+                maximumAge: TimeSpan.FromMinutes(5),
+                timeout: TimeSpan.FromSeconds(10)
+            );
+
+            if (geoposition == null)
+                return;
+
+            if (!(model is DialogModelPlain))
+                return;
+
+            MessageBoxResult result = MessageBox.Show("Send your location to " + model.Title + "?",
+"Confirm action", MessageBoxButton.OKCancel);
+
+            if (result == MessageBoxResult.OK) {
+                InputGeoPoint point = TL.inputGeoPoint(geoposition.Coordinate.Latitude, geoposition.Coordinate.Longitude);
+                InputMedia geoMedia = TL.inputMediaGeoPoint(point);
+
+                ((DialogModelPlain) model).SendMedia(geoMedia);
+            }
         }
     }
 }

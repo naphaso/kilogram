@@ -39,7 +39,7 @@
             <shell:ApplicationBarIconButton Click="OnCenterClick" IconUri="/Assets/UI/appbar.map.centerme.png" Text="center" />
 
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="send" />
+                <shell:ApplicationBarMenuItem Click="OnSendCoordinate" Text="send" />
                 <shell:ApplicationBarMenuItem Text="share" />
                 <shell:ApplicationBarMenuItem Text="send" />
             </shell:ApplicationBar.MenuItems>

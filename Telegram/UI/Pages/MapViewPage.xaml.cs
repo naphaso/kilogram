@@ -29,11 +29,12 @@ namespace Telegram.UI {
         public MapViewPage() {
             InitializeComponent();
 
-            GetMyMapLocationAsync();
             myPositionLayer.Add(myMapOverlay);
             Map.Layers.Add(myPositionLayer);
             ZoomLevel = 16;
             Map.ZoomLevel = ZoomLevel;
+
+            GetMyMapLocationAsync();
 
             DataContext = MediaTransitionHelper.Instance.From;
 
@@ -102,25 +103,6 @@ namespace Telegram.UI {
             }
         }
 
-        private void OnExpandMenuTap(object sender, GestureEventArgs e) {
-
-        }
-
-        private void OnSendClick(object sender, RoutedEventArgs e) {
-
-        }
-
-        private void OnSaveClick(object sender, RoutedEventArgs e) {
-
-        }
-
-        private void OnShareClick(object sender, RoutedEventArgs e) {
-
-        }
-
-        private void OnBrowseClick(object sender, RoutedEventArgs e) {
-
-        }
 
         private void OnCenterClick(object sender, EventArgs e) {
             GetMyMapLocationAsync();
@@ -154,6 +136,10 @@ namespace Telegram.UI {
         private void UserInfoClick(object sender, GestureEventArgs e) {
             if (userGeoCoordinate != null)
                 Map.Center = userGeoCoordinate;
+        }
+
+        private void OnSendCoordinate(object sender, EventArgs e) {
+            NavigationService.Navigate(new Uri("/UI/Pages/DialogListForwarding.xaml?fromMeida=1", UriKind.Relative));
         }
     }
 }
