@@ -121,6 +121,7 @@ namespace Telegram.MTProto {
                     sendCounter = 0;
                     connectTaskCompletionSource.TrySetResult(null);
                     ConnectedEvent();
+                    
                     ReadAsync();
                 } else {
                     logger.info("connection error: {0}", args.SocketError);

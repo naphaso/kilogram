@@ -59,6 +59,8 @@ namespace Telegram.MTProto.Components {
             }
         }
 
+        public DialogModel OpenedDialog { get; set; }
+
         public void Write(BinaryWriter writer) {
             if(model == null) {
                 writer.Write(0);
@@ -94,6 +96,11 @@ namespace Telegram.MTProto.Components {
             Deployment.Current.Dispatcher.BeginInvoke(delegate {
                 foreach (var dialogModel in model.Dialogs) {
                     dialogModel.UpdateTypings();
+
+                    DialogModel openedDialog = OpenedDialog;
+                    if(openedDialog != null) {
+                        openedDialog.OpenedRead();
+                    }
                 }
             });
         }
@@ -122,12 +129,24 @@ namespace Telegram.MTProto.Components {
 
             logger.info("receivong encrypted message in chat");
 
+            DialogModelEncrypted targetDialog = null;
+            foreach (var dialog in from dialogModel in model.Dialogs where dialogModel is DialogModelEncrypted && ((DialogModelEncrypted)dialogModel).Id == id select (DialogModelEncrypted)dialogModel) {
+                
+                targetDialog = dialog;
+                break;
+            }
+
+            if(targetDialog != null) {
+                targetDialog.ReceiveMessage(encryptedMessage);
+                Deployment.Current.Dispatcher.BeginInvoke(() => model.UpDialog(targetDialog));
+            } else {
+                logger.warning("encrypted message to unknown dialog");
+            }
+            
+            /*
             Deployment.Current.Dispatcher.BeginInvoke(() => {
-                foreach (var dialog in from dialogModel in model.Dialogs where dialogModel is DialogModelEncrypted && ((DialogModelEncrypted)dialogModel).Id == id select (DialogModelEncrypted)dialogModel) {
-                    dialog.ReceiveMessage(encryptedMessage);
-                    break;
-                }
-            });
+
+            });*/
         }
     }
 

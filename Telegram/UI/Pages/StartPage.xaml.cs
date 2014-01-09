@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,6 +54,8 @@ namespace Telegram.UI
             if (!TelegramSession.Instance.AuthorizationExists()) {
                 return;
             }
+
+            TelegramSession.Instance.Dialogs.OpenedDialog = null;
 
             InitializeComponent();
             this.BackKeyPress += delegate {

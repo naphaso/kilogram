@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using Telegram.Core.Logging;
@@ -23,6 +24,7 @@ namespace Telegram.Model.Wrappers {
         private byte[] key;
         private byte[] a;
         private long fingerprint;
+        private int ttl = 0;
         public DialogModelEncrypted(TelegramSession session, EncryptedChat chat, byte[] a) : base(session) {
             logger.info("encrypted chat created with a: {0}", BitConverter.ToString(a).Replace("-", "").ToLower());
             this.chat = chat;
@@ -106,7 +108,10 @@ namespace Telegram.Model.Wrappers {
                     }
                 }
 
-                Messages_sentEncryptedMessageConstructor sent = (Messages_sentEncryptedMessageConstructor) await session.Api.messages_sendEncrypted(TL.inputEncryptedChat(Id, AccessHash), messageId, data);
+                Messages_sentEncryptedMessageConstructor sent = (Messages_sentEncryptedMessageConstructor) await session.Api.messages_sendEncrypted(InputEncryptedChat, messageId, data);
+
+                MessageModel messageModel = new MessageModelEncryptedDelivered(TelegramSession.Instance.SelfId, OpponentId, sent.date, true, true, msg, TL.encryptedFileEmpty());
+                messages.Add(messageModel);
 
                 return true;
             } catch(Exception e) {
@@ -115,6 +120,19 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public override async Task SendRead() {
+            logger.info("send encrypted read history");
+            var result = await TelegramSession.Instance.Api.messages_readEncryptedHistory(InputEncryptedChat, TelegramSession.Instance.Updates.Date);
+            logger.info("read encrypted history result: {0}", result);
+        }
+
+        public InputEncryptedChat InputEncryptedChat {
+            get {
+                return TL.inputEncryptedChat(Id, AccessHash);
+            }
+        }
+
+        // in background thread
         public void ReceiveMessage(EncryptedMessage encryptedMessage) {
             try {
                 if(encryptedMessage.Constructor == Constructor.encryptedMessage) {
@@ -189,17 +207,42 @@ namespace Telegram.Model.Wrappers {
 
                     logger.info("decrypted message: {0}", decryptedMessage);
 
+                    if(decryptedMessage.Constructor == Constructor.decryptedMessageService) {
+                        DecryptedMessageAction action = ((DecryptedMessageServiceConstructor) decryptedMessage).action;
+                        if(action.Constructor == Constructor.decryptedMessageActionSetMessageTTL) {
+                            DecryptedMessageActionSetMessageTTLConstructor actionttl = (DecryptedMessageActionSetMessageTTLConstructor) action;
+                            UpdateTTL(actionttl.ttl_seconds);
+                        }
+                    }
 
+                    MessageModel messageModel = new MessageModelEncryptedDelivered(OpponentId, TelegramSession.Instance.SelfId, encryptedMessageConstructor.date, false, true, decryptedMessage, encryptedMessageConstructor.file);
+
+                    Deployment.Current.Dispatcher.BeginInvoke(() => {
+                        messages.Add(messageModel);
+
+                        if (this == TelegramSession.Instance.Dialogs.OpenedDialog) {
+                            OpenedRead();
+                        }
+                    });
                 }
             } catch(Exception e) {
                 logger.error("dialog model receive encrypted message exception: {0}", e);
             }
         }
 
-        public static byte[] CalcMsgKey(byte[] data) {
-            byte[] msgKey = new byte[16];
-            Array.Copy(Helpers.sha1(data), 0, msgKey, 0, 16);
-            return msgKey;
+        private void UpdateTTL(int ttlSeconds) {
+            this.ttl = ttlSeconds;
+        }
+
+        public override void UpdateTypings() {
+            base.UpdateTypings();
+
+            if(ttl != 0) {
+                List<MessageModel> toRemove = (from message in messages where (DateTime.Now - message.Timestamp) > TimeSpan.FromSeconds(ttl) select message).ToList();
+                foreach(var messageModel in toRemove) {
+                    messages.Remove(messageModel);
+                }
+            }
         }
 
         public override Task RemoveAndClearDialog() {
@@ -221,10 +264,13 @@ namespace Telegram.Model.Wrappers {
             if(this.a != null) {
                 logger.info("computation key based on a: {0} and m: {1}", BitConverter.ToString(this.a).Replace("-", "").ToLower(), TelegramSession.Instance.EncryptedChats.Modulo);
                 key = new BigInteger(1, chat.g_a_or_b).ModPow(new BigInteger(1, this.a), TelegramSession.Instance.EncryptedChats.Modulo).ToByteArrayUnsigned();
+                fingerprint = EncryptedChats.CalculateKeyFingerprint(key);
                 this.a = null;
                 logger.info("new calculated key: {0}", BitConverter.ToString(key).Replace("-", "").ToLower());
             }
             // TODO: on property changed
+
+
         }
 
 
@@ -246,6 +292,15 @@ namespace Telegram.Model.Wrappers {
                 writer.Write(1);
                 Serializers.Bytes.write(writer, a);
             }
+
+            if(messages == null) {
+                writer.Write(0);
+            } else {
+                writer.Write(messages.Count);
+                foreach(var messageModel in messages) {
+                    messageModel.Write(writer);
+                }
+            }
         }
 
         public override void Read(BinaryReader reader) {
@@ -254,7 +309,6 @@ namespace Telegram.Model.Wrappers {
             if(keyExists != 0) {
                 key = Serializers.Bytes.read(reader);
                 fingerprint = reader.ReadInt64();
-                fingerprint = EncryptedChats.CalculateKeyFingerprint(key);
             }
 
             
@@ -263,8 +317,25 @@ namespace Telegram.Model.Wrappers {
             if (aExists != 0) {
                 a = Serializers.Bytes.read(reader);
             }
+
+            int messagesCount = reader.ReadInt32();
+            for(int i = 0; i < messagesCount; i++) {
+                int type = reader.ReadInt32();
+                switch(type) {
+                    case 1:
+                        messages.Add(new MessageModelDelivered(reader));
+                        break;
+                    case 2:
+                        messages.Add(new MessageModelUndelivered(reader));
+                        break;
+                    case 3:
+                        messages.Add(new MessageModelEncryptedDelivered(reader));
+                        break;
+                }
+            }
         }
 
+         
 
 
         public int Id {

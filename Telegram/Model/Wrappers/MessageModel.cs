@@ -35,6 +35,8 @@ namespace Telegram.Model.Wrappers {
         public abstract string Text { get; set;  }
         public abstract string Preview { get; }
 
+        public abstract bool Unread { get; }
+
         public abstract DateTime Timestamp { get; set; }
 
         public abstract void Write(BinaryWriter writer);
@@ -44,6 +46,7 @@ namespace Telegram.Model.Wrappers {
         public abstract string TimeString { get; }
         public abstract UserModel Sender { get; }
 
+        public abstract void MarkRead();
         public abstract MessageDeliveryState MessageDeliveryStateProperty { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -53,5 +56,7 @@ namespace Telegram.Model.Wrappers {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        
     }
 }

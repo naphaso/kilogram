@@ -57,7 +57,11 @@ namespace Telegram.UI {
                     model = new DialogModelPlain(TL.peerUser(userId), TelegramSession.Instance);
                     needDialogCreate = true;
                 }
+
+                
             }
+
+            TelegramSession.Instance.Dialogs.OpenedDialog = model;
 
             UpdateDataContext();
 
@@ -66,6 +70,7 @@ namespace Telegram.UI {
             // or this is new chat
             if (MessageLongListSelector.ItemsSource == null || MessageLongListSelector.ItemsSource.Count == 0)
                 ShowNotice();
+
         }
 
 

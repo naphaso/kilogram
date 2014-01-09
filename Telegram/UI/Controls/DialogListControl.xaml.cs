@@ -47,6 +47,12 @@ namespace Telegram.UI.Controls {
         private void LoadModel() {
             DialogList.ItemsSource = TelegramSession.Instance.Dialogs.Model.Dialogs;
 //            initDemo();
+            DialogList.Loaded += (sender, args) => {
+                TelegramSession.Instance.Dialogs.Model.Dialogs.CollectionChanged += (sender2, args2) => {
+                    if (TelegramSession.Instance.Dialogs.Model.Dialogs.Count > 0)
+                        DialogList.ScrollTo(DialogList.ItemsSource[0]);
+                };
+            };
         }
 
         private void initDemo() {

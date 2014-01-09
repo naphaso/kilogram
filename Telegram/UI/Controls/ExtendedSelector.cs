@@ -50,11 +50,15 @@ namespace Telegram.UI.Controls {
             };
 
             Loaded += (sender, args) => {
+                if (ItemsSource.Count > 0)
+                    ScrollTo(ItemsSource[ItemsSource.Count - 1]);
+
                 ((INotifyCollectionChanged)ItemsSource).CollectionChanged += (sender2, args2) => {
                     if (ItemsSource.Count > 0 && args2.NewItems != null)
                         ScrollTo(ItemsSource[ItemsSource.Count-1]);
                 };
             };
         }
+
     }
 }

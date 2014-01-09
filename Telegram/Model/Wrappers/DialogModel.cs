@@ -37,6 +37,8 @@ namespace Telegram.Model.Wrappers {
         public abstract Task RemoveAndClearDialog();
         public abstract Task ClearDialogHistory();
 
+        public abstract Task SendRead();
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected TelegramSession session;
@@ -312,7 +314,7 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public void UpdateTypings() {
+        public virtual void UpdateTypings() {
             Peer peer = Peer;
             if (peer.Constructor == Constructor.peerUser) {
                 if (userTyping != null && DateTime.Now - userTyping.lastUpdate > TimeSpan.FromSeconds(5)) {
@@ -332,6 +334,19 @@ namespace Telegram.Model.Wrappers {
                     OnPropertyChanged("PreviewOrAction");
                     OnPropertyChanged("StatusOrAction");
                 }
+            }
+        }
+
+        public void OpenedRead() {
+            bool needSendRead = false;
+            foreach (var message in from message in messages where !message.IsOut && message.Unread select message) {
+                logger.info("message mark read");
+                message.MarkRead();
+                needSendRead = true;
+            }
+
+            if (needSendRead) {
+                SendRead();
             }
         }
 

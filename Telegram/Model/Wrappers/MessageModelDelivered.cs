@@ -179,6 +179,35 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public override bool Unread {
+            get {
+                switch (message.Constructor) {
+                    case Constructor.message:
+                        return ((MessageConstructor)message).unread;
+                    case Constructor.messageForwarded:
+                        return ((MessageForwardedConstructor)message).unread;
+                    case Constructor.messageService:
+                        return ((MessageServiceConstructor)message).unread;
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+            }
+        }
+
+        public override void MarkRead() {
+            switch (message.Constructor) {
+                case Constructor.message:
+                    ((MessageConstructor) message).unread = false;
+                    break;
+                case Constructor.messageForwarded:
+                    ((MessageForwardedConstructor) message).unread = false;
+                    break;
+                case Constructor.messageService:
+                    ((MessageServiceConstructor)message).unread = false;
+                    break;
+            }
+        }
+
         public override DateTime Timestamp {
             get {
                 return DateTimeExtensions.DateTimeFromUnixTimestampSeconds(UnixSecondsTime);

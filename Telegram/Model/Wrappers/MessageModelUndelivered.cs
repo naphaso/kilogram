@@ -36,6 +36,13 @@ namespace Telegram.Model.Wrappers {
             get { return false; }
         }
 
+        public override bool Unread {
+            get { return true; }
+        }
+
+        public override void MarkRead() {
+        }
+
         public override bool Delivered {
             get { return false; }
         }

@@ -54,6 +54,8 @@ namespace Telegram.Model.Wrappers {
             SubscribeToDialog();
         }
 
+
+
         private void SubscribeToDialog() {
             switch (dialog.peer.Constructor) {
                 case Constructor.peerChat:
@@ -83,6 +85,11 @@ namespace Telegram.Model.Wrappers {
         }
 
 
+        public override async Task SendRead() {
+            logger.info("plain chat send read: {0}", InputPeer);
+            var result = await TelegramSession.Instance.Api.messages_readHistory(InputPeer, 0, 0);
+            logger.info("read plain history result: {0}", result);
+        }
 
         private async Task MessagesRequest() {
             messages_Messages loadedMessages = await session.Api.messages_getHistory(TLStuff.PeerToInputPeer(dialog.peer), 0, -1, 100);

@@ -244,7 +244,7 @@ namespace Telegram.MTProto {
         private ulong cachedSalt;
 
         // transient
-        public static TelegramSession instance = loadIfExists();
+        private static TelegramSession instance = loadIfExists();
 
         private MTProtoGateway gateway = null;
         private volatile TLApi api = null;
@@ -586,7 +586,8 @@ namespace Telegram.MTProto {
                     logger.info("creating new mtproto gateway...");
                     gateway = new MTProtoGateway(MainDc, this, true, cachedSalt);
                     gateway.UpdatesEvent += updates.ProcessUpdates;
-        
+                    
+
                     while (true) {
                         try {
                             await gateway.ConnectAsync();
@@ -671,6 +672,12 @@ namespace Telegram.MTProto {
         public EncryptedChats EncryptedChats {
             get {
                 return encryptedChats;
+            }
+        }
+
+        public bool Connected {
+            get {
+                return gateway.Connected;
             }
         }
 

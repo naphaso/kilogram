@@ -82,7 +82,7 @@ namespace Telegram.Model.Wrappers {
             DialogModel targetDialogModel = null;
 
             foreach(DialogModel dialogModel in dialogs) {
-                if (TLStuff.PeerEquals(dialogModel.Peer, targetPeer)) {
+                if (!dialogModel.IsEncrypted && TLStuff.PeerEquals(dialogModel.Peer, targetPeer)) {
                     targetDialogModel = dialogModel;
                     break;
                 }
@@ -94,11 +94,19 @@ namespace Telegram.Model.Wrappers {
                     dialogs.Insert(0, targetDialogModel);
             } else {
                 logger.info("target dialog found, rearrange...");
-                    dialogs.Remove(targetDialogModel);
-                    dialogs.Insert(0, targetDialogModel);
+                UpDialog(targetDialogModel);
             }
 
             targetDialogModel.ProcessNewMessage(messageModel);
+
+            if(targetDialogModel == TelegramSession.Instance.Dialogs.OpenedDialog) {
+                targetDialogModel.OpenedRead();
+            }
+        }
+
+        public void UpDialog(DialogModel dialog) {
+            dialogs.Remove(dialog);
+            dialogs.Insert(0, dialog);
         }
 
         public void Write(BinaryWriter writer) {

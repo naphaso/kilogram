@@ -60,6 +60,10 @@ namespace Telegram.MTProto.Components {
             Read(reader);
         }
 
+        public int Date {
+            get { return date; }
+        }
+
 
         private void InitDifferenceExecutor() {
             DifferenceExecutor = new RequestTask(async delegate {
@@ -548,7 +552,7 @@ namespace Telegram.MTProto.Components {
 
 
         public void RequestDifference() {
-            if(TelegramSession.Instance.AuthorizationExists()) 
+            if (TelegramSession.Instance.AuthorizationExists())// && TelegramSession.Instance.Connected) 
                 DifferenceExecutor.Request();
         }
 
