@@ -327,7 +327,35 @@ namespace Telegram.MTProto {
 //            logger.info("call data: {0}", BitConverter.ToString(requestData));
             MTProtoRequest<T> request = new MTProtoRequest<T>(requestData);
             Submit(request);
-            return await request.Task;
+
+            MTProtoBadServerSaltException ex;
+            try {
+
+                return await request.Task;
+            }
+            catch (MTProtoBadServerSaltException e) {
+                ex = e;
+            }
+
+            for (int i = 0; i < 5; i++) {
+                try {
+                    MTProtoInitRequest initRequest = new MTProtoInitRequest();
+                    Submit(initRequest);
+                    config = await initRequest.Task;
+                    break;
+                } catch (MTProtoBadMessageException e) {
+                    if (e.ErrorCode == 32) {
+                        // broken seq
+                        throw new MTProtoBrokenSessionException();
+                    } else {
+                        logger.info("init connection failed: {0}", e);
+                    }
+                } catch (Exception e) {
+                    logger.info("init connection failed: {0}", e);
+                }
+            }
+
+            throw ex;
         }
 
         public void Submit(MTProtoRequest request) {

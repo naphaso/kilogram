@@ -109,9 +109,15 @@ namespace Telegram.UI {
                     HideNotice();
             };
 
+            if (model.IsWaiting) { 
+                messageEditor.IsEnabled = false;
+                messageEditor.Text = "Waiting for user...";
+            }
+
             model.PropertyChanged += delegate(object sender, PropertyChangedEventArgs args) {
                 if (args.PropertyName == "IsWaiting") {
-                    
+                    messageEditor.IsEnabled = true;
+                    messageEditor.Text = "";
                 }
             };
         }

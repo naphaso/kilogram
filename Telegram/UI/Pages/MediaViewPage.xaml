@@ -50,7 +50,7 @@
 				ManipulationStarted="OnManipulationStarted" ManipulationDelta="OnManipulationDelta"  
 				ManipulationCompleted="OnManipulationCompleted" ViewportChanged="viewport_ViewportChanged">
                 <Canvas x:Name="canvas">
-                    <Image x:Name="ImageElement" Source="/Assets/elk.jpg"  
+                    <Image x:Name="ImageElement" Source="/Assets/ApplicationIcon.png"  
 						RenderTransformOrigin="0,0"
 						ImageOpened="OnImageOpened">
                         <Image.RenderTransform>

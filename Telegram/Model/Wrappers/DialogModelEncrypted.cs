@@ -269,6 +269,8 @@ namespace Telegram.Model.Wrappers {
         public void SetEncryptedChat(EncryptedChatConstructor chat, byte[] a) {
             this.chat = chat;
 
+            OnPropertyChanged("IsWaiting");
+
             if(a != null) {
                 this.a = a;
             }
