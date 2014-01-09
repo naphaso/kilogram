@@ -14,6 +14,9 @@ namespace Telegram.UI.Models.Dialogs {
             if (model == null)
                 return ChatTemplate;
 
+            if (model.IsSecret)
+                return DialogTemplate;
+
             return model.IsChat ? ChatTemplate : DialogTemplate;
         }
     }
