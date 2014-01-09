@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -326,11 +327,25 @@ namespace Telegram.UI {
 
         private void OnDeleteMessage(object sender, RoutedEventArgs e) {
             var message = ((sender as MenuItem).DataContext as MessageModel);
+
+            DoDeleteMessage(message);
+        }
+
+        private async Task DoDeleteMessage(MessageModel message) {
+            List<int> idsDeleted = await TelegramSession.Instance.Api.messages_deleteMessages(new List<int>(message.Id));
+
+            if (idsDeleted.Count > 0) {
+                model.Messages.Remove(message);
+            }
         }
 
         private void OnForwardMessage(object sender, RoutedEventArgs e) {
             var message = ((sender as MenuItem).DataContext as MessageModel);
+            
+            if (message.Id == 0)
+                return;
 
+            NavigationService.Navigate(new Uri("/UI/Pages/DialogListForwarding.xaml?messageId=" + message.Id, UriKind.Relative));
         }
 
         private void OnCopyMessage(object sender, RoutedEventArgs e) {

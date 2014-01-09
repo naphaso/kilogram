@@ -212,6 +212,9 @@
     <Compile Include="UI\Pages\ChatSettings.xaml.cs">
       <DependentUpon>ChatSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Pages\DialogListForwarding.xaml.cs">
+      <DependentUpon>DialogListForwarding.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Pages\DialogPage.xaml.cs">
       <DependentUpon>DialogPage.xaml</DependentUpon>
     </Compile>
@@ -350,6 +353,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\ChatSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\DialogListForwarding.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

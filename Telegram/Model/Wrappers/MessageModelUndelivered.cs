@@ -65,6 +65,10 @@ namespace Telegram.Model.Wrappers {
             get { return null; }
         }
 
+        public override int Id {
+            get { return 0; }
+        }
+
         public override bool IsOut {
             get {
                 return true;
