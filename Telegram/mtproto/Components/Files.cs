@@ -135,6 +135,7 @@ namespace Telegram.MTProto.Components {
             TLApi api = await session.GetFileSession(video.dc_id);
             InputFileLocation inputFile = TL.inputVideoFileLocation(video.id, video.access_hash);
             string videoPath = GetVideoPath(video);
+            string tempVideoPath = videoPath + ".tmp";
 
             int allSize = video.size;
             int chunkSize = 128*1024;
@@ -146,7 +147,7 @@ namespace Telegram.MTProto.Components {
                 if (storage.FileExists(videoPath))
                     return videoPath;
 
-                using(Stream stream = new IsolatedStorageFileStream(videoPath, FileMode.OpenOrCreate, FileAccess.Write, storage)) {
+                using(Stream stream = new IsolatedStorageFileStream(tempVideoPath, FileMode.OpenOrCreate, FileAccess.Write, storage)) {
                     for (int i = 0; i < chunksCount; i++) {
                         handler((float)i * (float)chunkSize / (float)allSize);
                         Upload_fileConstructor chunk = (Upload_fileConstructor) await api.upload_getFile(inputFile, i*chunkSize, chunkSize);
@@ -161,6 +162,12 @@ namespace Telegram.MTProto.Components {
 
                     handler(1.0f);
                 }
+
+                if(storage.FileExists(videoPath)) {
+                    storage.DeleteFile(videoPath);
+                }
+
+                storage.MoveFile(tempVideoPath, videoPath);
             }
 
             return videoPath;
