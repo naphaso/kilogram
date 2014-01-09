@@ -291,6 +291,7 @@ namespace Telegram.MTProto {
             updates.EncryptedChatEvent += encryptedChats.UpdateChatHandler;
             updates.EncryptedMessageEvent += dialogs.ReceiveMessage;
             updates.EncryptedReadEvent += dialogs.EncryptedRead;
+            updates.EncryptedChatTypingEvent += dialogs.EncryptedTyping;
         }
 
         
@@ -580,13 +581,7 @@ namespace Telegram.MTProto {
         private static async Task SaveSessionTimer() {
             await Task.Delay(TimeSpan.FromSeconds(5));
             Instance.save();
-            if(DateTime.Now - lastSendStatus > TimeSpan.FromSeconds(60)) {
-                if(Instance.AuthorizationExists()) {
-                    Instance.Api.account_updateStatus(false);
-                }
-
-                lastSendStatus = DateTime.Now;
-            }
+            Instance.GoToOnline();
             SaveSessionTimer();
         }
 

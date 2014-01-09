@@ -141,6 +141,10 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public override void SendTyping(bool typing) {
+            TelegramSession.Instance.Api.messages_setTyping(InputPeer, false);
+        }
+
         public override bool IsSecret {
             get { return false; }
         }
@@ -244,6 +248,8 @@ namespace Telegram.Model.Wrappers {
                     return;
                 }
 
+                TelegramSession.Instance.Dialogs.Model.UpDialog(this);
+
                 int messageIndex = messages.IndexOf(undeliveredMessage);
                 if (messageIndex != -1) {
                     messages[messageIndex] =
@@ -310,6 +316,8 @@ namespace Telegram.Model.Wrappers {
                 else {
                     logger.error("not found undelivered message to confirmation");
                 }
+
+                TelegramSession.Instance.Dialogs.Model.UpDialog(this);
 
                 return true;
             }
