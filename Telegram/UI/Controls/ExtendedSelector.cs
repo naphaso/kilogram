@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
+using Telegram.Core.Logging;
+using Telegram.Model.Wrappers;
 
 namespace Telegram.UI.Controls {
     public class ExtendedSelector : LongListSelector {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(ExtendedSelector));
+
         public static readonly DependencyProperty SelectedItemProperty =
             DependencyProperty.Register("SelectedItem", typeof(object), typeof(ExtendedSelector), new PropertyMetadata(default(object)));
 
@@ -25,6 +29,8 @@ namespace Telegram.UI.Controls {
             get { return GetValue(SelectedItemProperty); }
             set { SetValue(SelectedItemProperty, value); }
         }
+
+        public DialogModel Model { get; set; }
 
         public ExtendedSelector() {
             SelectionMode = SelectionMode.Single;
@@ -49,16 +55,34 @@ namespace Telegram.UI.Controls {
                 }
             };
 
-            Loaded += (sender, args) => {
-                if (ItemsSource.Count > 0)
-                    ScrollTo(ItemsSource[ItemsSource.Count - 1]);
-
-                ((INotifyCollectionChanged)ItemsSource).CollectionChanged += (sender2, args2) => {
-                    if (ItemsSource.Count > 0 && args2.NewItems != null)
-                        ScrollTo(ItemsSource[ItemsSource.Count-1]);
-                };
-            };
+            Loaded += OnLoaded;
+            ItemRealized += OnItemRealized;
         }
+
+        private bool isLoading = false;
+
+        private void OnItemRealized(object sender, ItemRealizationEventArgs args) {
+            if(!isLoading && ItemsSource != null && Model != null && Model.LoadMorePossible() && ItemsSource.Count > 0) {
+                if(args.ItemKind == LongListSelectorItemKind.Item) {
+                    if(args.Container.Content == ItemsSource[0]) {
+                        isLoading = true;
+                        Model.LoadMore().ContinueWith((res) => { isLoading = false; });
+                    }
+                }
+            }
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs) {
+            if (ItemsSource.Count > 0)
+                ScrollTo(ItemsSource[ItemsSource.Count - 1]);
+
+            ((INotifyCollectionChanged)ItemsSource).CollectionChanged += (sender2, args2) => {
+                if (ItemsSource.Count > 0 && args2.NewItems != null)
+                    ScrollTo(ItemsSource[ItemsSource.Count - 1]);
+            };
+
+        }
+
 
     }
 }

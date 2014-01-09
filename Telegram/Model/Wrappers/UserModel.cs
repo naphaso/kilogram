@@ -326,6 +326,27 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public InputUser InputUser {
+            get {
+                switch(user.Constructor) {
+                    case Constructor.userEmpty:
+                        return TL.inputUserEmpty();
+                    case Constructor.userSelf:
+                        return TL.inputUserSelf();
+                    case Constructor.userContact:
+                        return TL.inputUserContact(((UserContactConstructor)user).id);
+                    case Constructor.userRequest:
+                        return TL.inputUserForeign(((UserRequestConstructor)user).id, ((UserRequestConstructor)user).access_hash);
+                    case Constructor.userForeign:
+                        return TL.inputUserForeign(((UserForeignConstructor)user).id, ((UserForeignConstructor)user).access_hash);
+                    case Constructor.userDeleted:
+                        throw new InvalidDataException("user deleted");
+                    default:
+                        throw new InvalidDataException("invalid constructor");
+                }
+            }
+        }
+
         public bool NotificationsEnabled {
             get {
                  

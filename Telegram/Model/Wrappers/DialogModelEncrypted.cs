@@ -430,5 +430,13 @@ namespace Telegram.Model.Wrappers {
 
             base.OpenedRead();
         }
+
+        public override Task LoadMore() {
+            throw new NotImplementedException();
+        }
+
+        public override bool LoadMorePossible() {
+            return false;
+        }
     }
 }

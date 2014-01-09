@@ -406,5 +406,7 @@ namespace Telegram.Model.Wrappers {
         }
 
 
+        public abstract Task LoadMore();
+        public abstract bool LoadMorePossible();
     }
 }

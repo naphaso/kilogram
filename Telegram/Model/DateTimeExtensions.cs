@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Telegram.Model {
     class DateTimeExtensions {
         private static readonly DateTime UnixEpoch =
-    new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).ToLocalTime();
+        
 
         public static long GetCurrentUnixTimestampMillis() {
             return (long)(DateTime.UtcNow - UnixEpoch).TotalMilliseconds;
