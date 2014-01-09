@@ -148,6 +148,10 @@ namespace Telegram.MTProto.Components {
 
             });*/
         }
+
+        public void EncryptedRead(int chatid, int maxdate, int date) {
+            Deployment.Current.Dispatcher.BeginInvoke(() => model.EncryptedRead(chatid, maxdate, date));
+        }
     }
 
 }
