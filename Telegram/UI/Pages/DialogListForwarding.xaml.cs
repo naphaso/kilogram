@@ -22,6 +22,7 @@ namespace Telegram.UI.Pages {
 
         }
 
+        private int fromMedia = 1;
         private List<int> messageId = new List<int>();
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
@@ -30,11 +31,44 @@ namespace Telegram.UI.Pages {
 
             if (NavigationContext.QueryString.TryGetValue("messageId", out uriParam)) {
                 messageId.Add(int.Parse(uriParam));
-            } 
+            } else if (NavigationContext.QueryString.TryGetValue("fromMeida", out uriParam)) {
+                fromMedia = int.Parse(uriParam);
+            }
         }
 
         private void OnDialogSelected(object sender, DialogModel model) {
             InputPeer inputPeer = null;
+
+            if (!(model is DialogModelPlain)) {
+                return;
+            }
+
+            DialogModelPlain dmp = (DialogModelPlain) model;
+
+            if (fromMedia == 1) {
+
+                MessageMedia media = MediaTransitionHelper.Instance.Media;
+
+                InputMedia im = null;
+                if (media.Constructor == Constructor.messageMediaPhoto) {
+                    MessageMediaPhotoConstructor mmpc = (MessageMediaPhotoConstructor) media;
+                    InputPhoto ip = TL.inputPhoto(((PhotoConstructor) mmpc.photo).id, ((PhotoConstructor) mmpc.photo).access_hash);
+
+                    im = TL.inputMediaPhoto(ip);
+                } else if (media.Constructor == Constructor.messageMediaVideo) {
+                    MessageMediaVideoConstructor mmvc = (MessageMediaVideoConstructor) media;
+                    InputVideo iv = TL.inputVideo(((VideoConstructor)mmvc.video).id, ((VideoConstructor)mmvc.video).access_hash);
+
+                    im = TL.inputMediaVideo(iv);
+                }
+
+                if (im != null) {
+                    dmp.SendMedia(im);
+                    NavigationService.GoBack();
+                }
+                 
+                return;
+            }
 
             if (messageId.Count == 0) {
                 logger.error("error forwarding, no messageId");

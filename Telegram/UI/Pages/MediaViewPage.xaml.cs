@@ -50,9 +50,6 @@ namespace sdkImages.Scenarios {
 
         private bool downloaded = false;
         private string videoSource = null;
-        protected override void OnNavigatedTo(NavigationEventArgs e) {
-            base.OnNavigatedTo(e);
-        }
 
         private UserModel author;
         public PinchAndZoom() {
@@ -266,7 +263,7 @@ namespace sdkImages.Scenarios {
         }
 
         private void OnSendClick(object sender, RoutedEventArgs e) {
-
+            NavigationService.Navigate(new Uri("/UI/Pages/DialogListForwarding.xaml?fromMeida=1", UriKind.Relative));
         }
 
         private void OnSaveClick(object sender, RoutedEventArgs e) {

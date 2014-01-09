@@ -15,7 +15,7 @@ namespace Telegram.UI {
             var toast = GetToastWithImgAndTitle(sender, message);
             toast.TextWrapping = TextWrapping.Wrap;
 
-            toast.Show();
+//            toast.Show();
 //            ShellToast toast = new ShellToast();
 //            toast.Content = "This is a local toast";
 //            toast.Title = "MYAPP";
