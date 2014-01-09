@@ -552,22 +552,22 @@ namespace Telegram.MTProto.Components {
                 DifferenceExecutor.Request();
         }
 
-        private void ProcessLinks(List<contacts_Link> links) {
+        private void Process(List<contacts_Link> links) {
             logger.info("need process links!");
         }
 
-        public void ProcessStatedMessage(messages_StatedMessage statedMessage) {
+        public void Process(messages_StatedMessage statedMessage) {
             switch(statedMessage.Constructor) {
                 case Constructor.messages_statedMessage:
-                    ProcessStatedMessage((Messages_statedMessageConstructor)statedMessage);
+                    Process((Messages_statedMessageConstructor)statedMessage);
                     break;
                 case Constructor.messages_statedMessageLink:
-                    ProcessStatedMessage((Messages_statedMessageLinkConstructor)statedMessage);
+                    Process((Messages_statedMessageLinkConstructor)statedMessage);
                     break;
             }
         }
 
-        private void ProcessStatedMessage(Messages_statedMessageConstructor statedMessage) {
+        private void Process(Messages_statedMessageConstructor statedMessage) {
             if(!processUpdatePtsSeq(statedMessage.pts, statedMessage.seq)) {
                 return;
             }
@@ -578,27 +578,30 @@ namespace Telegram.MTProto.Components {
             ProcessNewMessage(statedMessage.message);
         }
 
-        private void ProcessStatedMessage(Messages_statedMessageLinkConstructor statedMessage) {
+        private void Process(Messages_statedMessageLinkConstructor statedMessage) {
             if (!processUpdatePtsSeq(statedMessage.pts, statedMessage.seq)) {
                 return;
             }
 
             ProcessUsers(statedMessage.users);
             ProcessChats(statedMessage.chats);
-            ProcessLinks(statedMessage.links);
+            Process(statedMessage.links);
 
             ProcessNewMessage(statedMessage.message);
         }
 
-        public void ProcessStatedMessages(messages_StatedMessages messages) {
+        public void Process(messages_StatedMessages messages) {
             switch(messages.Constructor) {
                 case Constructor.messages_statedMessages:
-
+                    Process((Messages_statedMessagesConstructor)messages);
+                    break;
+                case Constructor.messages_statedMessagesLinks:
+                    Process((Messages_statedMessagesLinksConstructor)messages);
                     break;
             }
         }
 
-        private void ProcessStatedMessages(Messages_statedMessagesConstructor messages) {
+        private void Process(Messages_statedMessagesConstructor messages) {
             if(!processUpdatePtsSeq(messages.pts, messages.seq)) {
                 return;
             }
@@ -609,14 +612,14 @@ namespace Telegram.MTProto.Components {
             ProcessNewMessages(messages.messages);
         }
 
-        private void ProcessStatedMessages(Messages_statedMessagesLinksConstructor messages) {
+        private void Process(Messages_statedMessagesLinksConstructor messages) {
             if (!processUpdatePtsSeq(messages.pts, messages.seq)) {
                 return;
             }
 
             ProcessUsers(messages.users);
             ProcessChats(messages.chats);
-            ProcessLinks(messages.links);
+            Process(messages.links);
 
             ProcessNewMessages(messages.messages);
         }
