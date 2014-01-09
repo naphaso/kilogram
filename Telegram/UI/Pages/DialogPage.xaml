@@ -7,11 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing"
     xmlns:models="clr-namespace:Telegram.UI.Models"
-    xmlns:Controls="clr-namespace:Coding4Fun.Toolkit.Controls;assembly=Coding4Fun.Toolkit.Controls"
     xmlns:Telegram="clr-namespace:Telegram"
     xmlns:converters="clr-namespace:Telegram.UI.Converters"
     xmlns:controls="clr-namespace:Telegram.UI.Controls"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:controls1="clr-namespace:Coding4Fun.Toolkit.Controls;assembly=Coding4Fun.Toolkit.Controls"
     x:Class="Telegram.UI.DialogPage"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
@@ -48,7 +48,7 @@
         <converters:DialogStatusToStringConverter x:Key="StringConverter"/>
         <DataTemplate x:Key="TextChatInBubbleTemplate">
             <StackPanel Margin="0,12,0,6" HorizontalAlignment="Left" Orientation="Horizontal">
-                <Image Height="54" Width="54" Margin="6,7,22,0" VerticalAlignment="Top" Source="{Binding Sender.AvatarPath}"/>
+                <Image Tap="UserAvatarTap" Height="54" Width="54" Margin="6,7,22,0" VerticalAlignment="Top" Source="{Binding Sender.AvatarPath}"/>
                 <Grid Width="336" Height="Auto">
                     <Rectangle Fill="{StaticResource PhoneAccentBrush}" Margin="0,7,0,-1" />
                     <es:RegularPolygon Fill="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Left" InnerRadius="1" Margin="-16.667,21.328,0,0" PointCount="3" Stretch="Fill" UseLayoutRounding="False" Width="28" RenderTransformOrigin="0.5,0.5" StrokeThickness="0" Height="16" VerticalAlignment="Top">
@@ -58,7 +58,10 @@
                     </es:RegularPolygon>
                     <StackPanel Margin="10,19,10,10">
                         <TextBlock Text="{Binding Sender.FullName}" Opacity="0.7" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding ForwardedFrom}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        <StackPanel Tap="OnForwardedTap" Visibility="{Binding IsForwarded, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Forwarded Message"  Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                            <TextBlock Text="{Binding ForwardedFrom}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        </StackPanel>
                         <Image Tap="OnOpenAttachment" Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Text}" TextWrapping="Wrap"  VerticalAlignment="Top"/>
                         <TextBlock HorizontalAlignment="Right" Text="{Binding TimeString}" TextWrapping="Wrap"  VerticalAlignment="Top" Opacity="0.6"/>
@@ -77,7 +80,10 @@
         			</es:RegularPolygon>
         			<StackPanel Margin="10,19,10,10">
                         <TextBlock Text="{Binding Sender}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        				<TextBlock Text="{Binding ForwardedFrom}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        <StackPanel Tap="OnForwardedTap" Visibility="{Binding IsForwarded, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Forwarded Message"  Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                            <TextBlock Text="{Binding ForwardedFrom}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        </StackPanel>
                         <Image Tap="OnOpenAttachment" Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Text}" TextWrapping="Wrap"  VerticalAlignment="Top"/>
                         <TextBlock HorizontalAlignment="Right" Text="{Binding TimeString}" TextWrapping="Wrap"  VerticalAlignment="Top" Opacity="0.6"/>
@@ -103,7 +109,10 @@
                         </es:RegularPolygon>
                     </Grid>
                     <StackPanel Margin="10,19,10,10">
-                        <TextBlock Text="Binding ForwardedFrom}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        <StackPanel Visibility="{Binding IsForwarded, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Forwarded Message"  Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                            <TextBlock Text="{Binding ForwardedFrom}" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
+                        </StackPanel>
                         <Image Tap="OnOpenAttachment" Source="{Binding Attachment, Converter={StaticResource AttachmentSourceConverter}}" Visibility="{Binding Attachment, Converter={StaticResource VisibilityConverter}}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top"/>
                         <StackPanel  HorizontalAlignment="Right" Orientation="Horizontal">
@@ -167,7 +176,7 @@
 					ItemsSource="{Binding Items}" 
 					x:Name="MessageLongListSelector" LayoutMode="List" 
 					IsGroupingEnabled="False" BorderThickness="0" Margin="12,0" Height="544"/>
-				<Controls:ChatBubbleTextBox 
+				<controls1:ChatBubbleTextBox 
 					x:Name="messageEditor" 
 					TextWrapping="Wrap" 
 					Hint="type your message" 
@@ -189,19 +198,19 @@
             <Grid x:Name="AttachPopupLayoutRoot" Background="{StaticResource PhoneChromeBrush}" Width="480" Height="300">
                 <StackPanel>
                     <ListBoxItem>
-                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="photo" Tap="PickAndSendPhoto" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                        <TextBlock toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="photo" Tap="PickAndSendPhoto" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                     </ListBoxItem>
                     <ListBoxItem>
-                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="video" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                        <TextBlock toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="video" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                     </ListBoxItem>
                     <ListBoxItem>
-                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="location" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                        <TextBlock toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="location" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                     </ListBoxItem>
                     <ListBoxItem>
-                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="document" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                        <TextBlock toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="document" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                     </ListBoxItem>
                     <ListBoxItem>
-                        <TextBlock Controls:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="contact" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                        <TextBlock toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="contact" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                     </ListBoxItem>
                 </StackPanel>
             </Grid>

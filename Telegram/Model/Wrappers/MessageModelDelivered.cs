@@ -43,6 +43,31 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public override bool IsForwarded {
+            get {
+                return message.Constructor == Constructor.messageForwarded;
+            }
+        }
+
+        public override int ForwardedId {
+            get {
+                if (message.Constructor == Constructor.messageForwarded)
+                    return ((MessageForwardedConstructor) message).fwd_from_id;
+
+                return 0;
+            }
+        }
+
+        public override string ForwardedFrom {
+            get {
+                if (!IsForwarded)
+                    return null;
+
+                MessageForwardedConstructor msgCons = (MessageForwardedConstructor) message;
+                return "From " + TelegramSession.Instance.GetUser(msgCons.fwd_from_id).FullName;
+            }
+        }
+
         public override bool IsOut {
             get {
                 int myId = TelegramSession.Instance.SelfId;

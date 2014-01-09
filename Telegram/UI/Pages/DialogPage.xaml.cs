@@ -302,5 +302,19 @@ namespace Telegram.UI {
         private void OnOpenAttachment(object sender, GestureEventArgs e) {
             NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
         }
+
+        private void UserAvatarTap(object sender, GestureEventArgs e) {
+            var element = (FrameworkElement)sender;
+            MessageModel message = (MessageModel) element.DataContext;
+
+            NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?userId=" + message.Sender.Id, UriKind.Relative));
+        }
+
+        private void OnForwardedTap(object sender, GestureEventArgs e) {
+            var element = (FrameworkElement)sender;
+            MessageModel message = (MessageModel)element.DataContext;
+            
+            NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?userId=" + message.ForwardedId, UriKind.Relative));
+        }
     }
 }

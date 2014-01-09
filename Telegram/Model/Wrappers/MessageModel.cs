@@ -29,7 +29,9 @@ namespace Telegram.Model.Wrappers {
         public abstract bool IsService { get; }
         public abstract bool Delivered { get; }
         public abstract bool IsChat { get; }
-
+        public abstract string ForwardedFrom { get; }
+        public abstract bool IsForwarded { get; }
+        public abstract int ForwardedId { get; }
         public abstract string Text { get; set;  }
         public abstract string Preview { get; }
 
