@@ -149,6 +149,9 @@
     <Compile Include="UI\Converters\General.cs" />
     <Compile Include="UI\Converters\MessageList.cs" />
     <Compile Include="UI\Converters\UserList.cs" />
+    <Compile Include="UI\Converters\UserSelectableListControl.xaml.cs">
+      <DependentUpon>UserSelectableListControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Emoji\EmojiPhoneControl.xaml.cs">
       <DependentUpon>EmojiPhoneControl.xaml</DependentUpon>
     </Compile>
@@ -319,6 +322,10 @@
     <Page Include="UI\Controls\UserListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Converters\UserSelectableListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Emoji\EmojiPhoneControl.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>

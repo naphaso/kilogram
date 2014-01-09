@@ -89,14 +89,12 @@ namespace Telegram.UI {
         private void UpdateDataContext() {
             this.DataContext = model;
             MessageLongListSelector.ItemsSource = model.Messages;
-//            MessageLongListSelector.ItemRealized += delegate {
-//                if (MessageLongListSelector.ItemsSource == null ||
-//                    MessageLongListSelector.ItemsSource.Count == 0)
-//                    return;
-//
-//                MessageLongListSelector.ScrollTo(
-//                    MessageLongListSelector.ItemsSource[MessageLongListSelector.ItemsSource.Count - 1]);
-//            };
+            model.Messages.CollectionChanged += delegate {
+                if (MessageLongListSelector.ItemsSource == null || MessageLongListSelector.ItemsSource.Count == 0)
+                    ShowNotice();
+                else
+                    HideNotice();
+            };
         }
 
         public DialogPage() {

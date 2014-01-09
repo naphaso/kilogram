@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Telegram.UI.Controls.UserSelectableListControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:properties="clr-namespace:Coding4Fun.Toolkit.Controls.Properties;assembly=Coding4Fun.Toolkit.Controls"
+    xmlns:converters="clr-namespace:Telegram.UI.Converters"
+    xmlns:users="clr-namespace:Telegram.UI.Models.Users"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignWidth="480">
+    
+    <UserControl.Resources>
+        <!-- USER TEMPLATE SELECTOR -->
+        <converters:UserOnlineStatusColorConverter x:Key="OnlineColorConverter"/>
+
+        <DataTemplate x:Key="FriendOnlineTemplate">
+            <ListBoxItem>
+                <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Name="SelectionBox" Tap="SelectionBox_OnTap" IsChecked="{Binding IsCheckedInternal, Mode=TwoWay}" Content="" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Grid Height="62" Margin="0,6">
+                            <Image Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <TextBlock Text="{Binding FullName}" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+                            <TextBlock Text="{Binding Status}" Foreground="{Binding Status, Converter={StaticResource OnlineColorConverter}}" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </ListBoxItem>
+        </DataTemplate>
+
+    </UserControl.Resources>
+    
+    <Grid>
+        <ScrollViewer>
+            <StackPanel>
+                <phone:LongListSelector 
+                    ItemTemplate="{StaticResource FriendOnlineTemplate}"
+                    Name="FriendsList"
+                    LayoutMode="List"
+                VerticalAlignment="Top"/>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</UserControl>

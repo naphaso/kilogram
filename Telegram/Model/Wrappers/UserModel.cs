@@ -104,6 +104,8 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public bool IsCheckedInternal { get; set; }
+
         public User RawUser {
             get {
                  

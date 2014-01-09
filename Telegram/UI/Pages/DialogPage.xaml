@@ -170,7 +170,7 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
 
-            <shell:ApplicationBarIconButton Click="Dialog_Message_Send" IconUri="/Assets/UI/appbar.send.text.png" Text="edit info" />
+            <shell:ApplicationBarIconButton Click="Dialog_Message_Send" IconUri="/Assets/UI/appbar.send.text.png" Text="send" />
             <shell:ApplicationBarIconButton Click="Dialog_Attach" IconUri="/Assets/UI/appbar.attach.png" Text="attach" />
             <shell:ApplicationBarIconButton Click="Dialog_Emoji" IconUri="/Assets/UI/appbar.smile.png" Text="emoji" />
             <shell:ApplicationBarIconButton Click="Dialog_Manage" IconUri="/Assets/UI/appbar.manage.png" Text="manage" />
