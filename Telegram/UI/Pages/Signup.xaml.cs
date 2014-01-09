@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using Windows.UI.Core;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using Telegram.MTProto;
 using Telegram.Notifications;
@@ -31,6 +32,7 @@ namespace Telegram.UI {
         private readonly Login flow;
         private int _timerSeconds = 60;
         private Popup _progressPopup;
+        private ProgressIndicator progressIndicator;
 
         public SignupPhone() {
             InitializeComponent();
@@ -52,6 +54,7 @@ namespace Telegram.UI {
                     delegate {
                         RestartTimer();
                         ShowCodeScene();
+                        HeaderBlock.Text = "Your code";
                     });
 
             };
@@ -60,13 +63,17 @@ namespace Telegram.UI {
                 Deployment.Current.Dispatcher.BeginInvoke(
                     delegate {
                         ShowCodeScene();
+                        HeaderBlock.Text = "Your code";
                         codeControl.SetCodeInvalid();
                     });
             };
 
             flow.NeedSignupEvent += delegate(Login login) {
-                Deployment.Current.Dispatcher.BeginInvoke(
-                    ShowNameScene);
+                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    HeaderBlock.Text = "Your name";
+                    ShowNameScene();
+                });
             };
 
             flow.LoginSuccessEvent += delegate(Login login) {
@@ -111,15 +118,15 @@ namespace Telegram.UI {
         private void nextButton_Click(object sender, RoutedEventArgs e) {
             switch (_currentScreenState) {
                 case ScreenState.PhoneScreen:
-                    ShowProgress();
+                    ShowProgress("activating phone...");
                     flow.SetPhone(phoneControl.GetPhone());
                     break;
                 case ScreenState.CodeScreen:
-                    ShowProgress();
+                    ShowProgress("processing code...");
                     flow.SetCode(codeControl.GetCode());
                     break;
                 case ScreenState.NameScreen:
-                    ShowProgress();
+                    ShowProgress("registering user...");
                     flow.SetSignUp(nameControl.GetFirstName(), nameControl.GetLastName());
                     break;
                 default:
@@ -177,23 +184,32 @@ namespace Telegram.UI {
             }
         }
 
-        private void ShowProgress() {
+        private void ShowProgress(string text) {
             this.IsEnabled = false;
 
-            _progressPopup = new Popup();
-            UserControl content = new ProgressBarUserControl();
-            _progressPopup.Child = content;
+//            _progressPopup = new Popup();
+//            UserControl content = new ProgressBarUserControl();
+//            _progressPopup.Child = content;
+//
+//            _progressPopup.HorizontalAlignment = HorizontalAlignment.Center;
+//            _progressPopup.VerticalAlignment = VerticalAlignment.Center;
+//
+//            _progressPopup.VerticalOffset = (this.ActualHeight - content.ActualHeight) / 2;
+//            
+//            _progressPopup.IsOpen = true;
+            if (progressIndicator == null) {
+                progressIndicator = new ProgressIndicator();
+                SystemTray.SetProgressIndicator(this, progressIndicator);
+            }
 
-            _progressPopup.HorizontalAlignment = HorizontalAlignment.Center;
-            _progressPopup.VerticalAlignment = VerticalAlignment.Center;
+            progressIndicator.Text = text;
+            progressIndicator.IsIndeterminate = true;
+            progressIndicator.IsVisible = true;
 
-            _progressPopup.VerticalOffset = (this.ActualHeight - content.ActualHeight) / 2;
-            
-            _progressPopup.IsOpen = true;
         }
 
         private void HideProgress() {
-            this._progressPopup.IsOpen = false;
+            progressIndicator.IsVisible = false;
             this.IsEnabled = true;
         }
 

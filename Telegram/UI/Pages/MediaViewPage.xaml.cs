@@ -10,6 +10,8 @@
   
 */
 
+using System.IO;
+using System.IO.IsolatedStorage;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -20,6 +22,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Telegram.Model.Wrappers;
 using Telegram.MTProto;
 using Telegram.Resources;
 using Telegram.Utils;
@@ -46,32 +49,77 @@ namespace sdkImages.Scenarios {
         private MessageMedia media;
 
         private bool downloaded = false;
+        private string videoSource = null;
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
         }
 
+        private UserModel author;
         public PinchAndZoom() {
             InitializeComponent();
 
             media = MediaTransitionHelper.Instance.Media;
-
+            
             if (media.Constructor == Constructor.messageMediaPhoto) {
                 ImageViewportElement.Visibility = Visibility.Visible;
-                VideoPlayerElement.Visibility = Visibility.Collapsed;
-            }
+                PlaybackControls.Visibility = Visibility.Collapsed;
 
-            if (media.Constructor == Constructor.messageMediaVideo) {
+                MessageMediaPhotoConstructor cons = (MessageMediaPhotoConstructor) media;
+
+                if (cons.photo.Constructor == Constructor.photoEmpty) {
+
+                } else if (cons.photo.Constructor == Constructor.photo) {
+                    PhotoConstructor photoConstructor = (PhotoConstructor) cons.photo;
+                    author = TelegramSession.Instance.GetUser(photoConstructor.user_id);
+                    MetaInfoAuthor.Text = author.FullName;
+                    MetaInfoDate.Text = Formatters.FormatDialogDateTimestampUnix(photoConstructor.date);
+                }
+
+                DoLoadPhoto();
+                return;
+            } else if (media.Constructor == Constructor.messageMediaVideo) {
                 ImageViewportElement.Visibility = Visibility.Collapsed;
+                PlaybackControls.Visibility = Visibility.Visible;
                 VideoPlayerElement.Visibility = Visibility.Visible;
+                PlaybackButton.Visibility = Visibility.Visible;
 
                 MessageMediaVideoConstructor cons = (MessageMediaVideoConstructor) media;
-                PlaybackControls.Visibility = Visibility.Visible;
+
+                if (cons.video.Constructor == Constructor.videoEmpty) {
+
+                }
+                else if (cons.video.Constructor == Constructor.video) {
+                    VideoConstructor videoConstructor = (VideoConstructor) cons.video;
+                    author = TelegramSession.Instance.GetUser(videoConstructor.user_id);
+
+                    MetaInfoAuthor.Text = author.FullName;
+                    MetaInfoDate.Text = Formatters.FormatDialogDateTimestampUnix(videoConstructor.date);
+                }
+
+                VideoPlayerElement.MediaEnded += delegate {
+                    PlaybackButton.Visibility = Visibility.Visible;
+                };
+            }
+            else {
+                return;
             }
 
-//            BuildLocalizedApplicationBar();
         }
 
+        private async Task DoLoadPhoto() {
+            if (media.Constructor == Constructor.messageMediaPhoto) {
 
+                Photo photo = ((MessageMediaPhotoConstructor) media).photo;
+                if (photo.Constructor != Constructor.photo)
+                    return;
+
+                string filePath = await
+                    TelegramSession.Instance.Files.GetAvatar(
+                        Helpers.GetPreviewFileLocation((PhotoConstructor) photo));
+
+                ImageElement.Source = Helpers.GetBitmapImageInternal(filePath);
+            }
+        }
 
         /// <summary> 
         /// Either the user has manipulated the image or the size of the viewport has changed. We only 
@@ -218,19 +266,19 @@ namespace sdkImages.Scenarios {
         }
 
         private void OnSendClick(object sender, RoutedEventArgs e) {
-            throw new NotImplementedException();
+
         }
 
         private void OnSaveClick(object sender, RoutedEventArgs e) {
-            throw new NotImplementedException();
+
         }
 
         private void OnShareClick(object sender, RoutedEventArgs e) {
-            throw new NotImplementedException();
+
         }
 
         private void OnBrowseClick(object sender, RoutedEventArgs e) {
-            throw new NotImplementedException();
+
         }
 
         private void OnExpandMenuTap(object sender, GestureEventArgs e) {
@@ -256,19 +304,28 @@ namespace sdkImages.Scenarios {
                 Task.Run(() => TelegramSession.Instance.Files.DownloadVideo(mediaVideo.video, Handler)).ContinueWith(
                     (result) => {
                         Deployment.Current.Dispatcher.BeginInvoke(() => {
-                            VideoPlayerElement.Source = new Uri("isostore:/" + result.Result, UriKind.Absolute);
+                            videoSource = result.Result;
                             PlaybackButton.Content = "play";
                             PlaybackButton.IsEnabled = true;
                             PlaybackProgress.Visibility = Visibility.Collapsed;
+                            downloaded = true;
                         });
-
+                        
                     });
+
             }
             else {
-                VideoPlayerElement.Play();
-                VideoPlayerElement.MediaEnded += delegate {
-                    PlaybackProgress.Visibility = Visibility.Visible;
-                };
+                PlaybackButton.Visibility = Visibility.Collapsed;
+
+                if (videoSource == null)
+                    return;
+
+                using (var isf = IsolatedStorageFile.GetUserStoreForApplication()) {
+                    using (var isfs = new IsolatedStorageFileStream(videoSource, FileMode.Open, FileAccess.Read, FileShare.Read, isf)) {
+                        VideoPlayerElement.SetSource(isfs);
+                        VideoPlayerElement.Play();
+                    }
+                }
             }
         }
 

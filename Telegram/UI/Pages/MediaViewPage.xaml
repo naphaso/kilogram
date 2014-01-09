@@ -36,7 +36,7 @@
         <!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <Grid x:Name="PlaybackControls">
-				<MediaElement x:Name="VideoPlayerElement"  Margin="0" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<MediaElement x:Name="VideoPlayerElement"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="103,341">
 					<Button x:Name="PlaybackButton" Click="OnDownloadOrPlayClick" Content="download" VerticalAlignment="Center" Margin="0" Width="200"/>
 					<ProgressBar Name="PlaybackProgress" HorizontalAlignment="Center" VerticalAlignment="Center" Width="250" Margin="0,10,0,0">
@@ -50,8 +50,8 @@
 				ManipulationStarted="OnManipulationStarted" ManipulationDelta="OnManipulationDelta"  
 				ManipulationCompleted="OnManipulationCompleted" ViewportChanged="viewport_ViewportChanged">
                 <Canvas x:Name="canvas">
-                    <Image x:Name="ImageElement" Source="{Binding}"  
-						RenderTransformOrigin="0,0" CacheMode="BitmapCache"
+                    <Image x:Name="ImageElement" Source="/Assets/elk.jpg"  
+						RenderTransformOrigin="0,0"
 						ImageOpened="OnImageOpened">
                         <Image.RenderTransform>
                             <ScaleTransform x:Name="xform"/>
@@ -95,8 +95,8 @@
                 <Button Click="OnShareClick" Content="share" BorderThickness="0" Height="50" Padding="0" HorizontalContentAlignment="Left" FontFamily="Segoe WP SemiLight"/>
                 <Button Click="OnBrowseClick" Content="browse gallery" BorderThickness="0" Height="55" Padding="0" HorizontalContentAlignment="Left" FontFamily="Segoe WP SemiLight"/>
 			</StackPanel>
-			<TextBlock HorizontalAlignment="Left" Margin="23,14,0,0" TextWrapping="Wrap" Text="John Doe" VerticalAlignment="Top" FontFamily="Segoe WP Semibold"/>
-			<TextBlock HorizontalAlignment="Left" Margin="23,39,0,0" TextWrapping="Wrap" Text="today at 3:00a" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
+			<TextBlock Name="MetaInfoAuthor" HorizontalAlignment="Left" Margin="23,14,0,0" TextWrapping="Wrap" Text="John Doe" VerticalAlignment="Top" FontFamily="Segoe WP Semibold"/>
+			<TextBlock Name="MetaInfoDate" HorizontalAlignment="Left" Margin="23,39,0,0" TextWrapping="Wrap" Text="today at 3:00a" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
 		</Grid>
 	</Grid>
 </phone:PhoneApplicationPage>
