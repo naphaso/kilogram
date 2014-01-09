@@ -28,7 +28,7 @@ namespace Telegram.Model.Wrappers {
             Read(reader);
         }
 
-        public int Id {
+        public override int Id {
             get {
                 switch (message.Constructor) {
                     case Constructor.message:

@@ -17,6 +17,7 @@
         <converters:DialogStatusToStringConverter x:Key="StringConverter"/>
         <converters:DialogStatusToColorConverter x:Key="ColorConverter"/>
         <converters:MessageDeliveryStateConverter x:Key="StatusIconConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
         <DataTemplate x:Key="DialogTemplate">
             <ListBoxItem HorizontalContentAlignment="Stretch">
@@ -36,6 +37,7 @@
                         </Grid>
                         <Image Margin="12,12,0,12" VerticalAlignment="Top" Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" HorizontalAlignment="Left"/>
                         <TextBlock Text="{Binding Title}" LineStackingStrategy="BlockLineHeight" Margin="90,6,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42.5"/>
+                        <Image Margin="0,23,0,61" Source="/Assets/UI/secretchat-black-WVGA.png" Stretch="Fill" Height="21" Width="16" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="{Binding IsSecret, Converter={StaticResource BoolToVisibilityConverter}}"/>
                     </Grid>
                 </StackPanel>
             </ListBoxItem>
@@ -61,7 +63,7 @@
                     </Grid>
                         <TextBlock Text="{Binding PreviewOrAction, Converter={StaticResource StringConverter}}" TextWrapping="Wrap"  VerticalAlignment="Top" MaxHeight="53.2" FontFamily="Segoe WP" FontSize="18.667" Style="{StaticResource TextBlockFieldHint}" LineStackingStrategy="BlockLineHeight" HorizontalAlignment="Left" MaxWidth="300" Margin="90,73,0,-12" Height="25" Foreground="{Binding PreviewOrAction, Converter={StaticResource ColorConverter}}" />
                     <Image Margin="12,12,0,12" VerticalAlignment="Top" Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" HorizontalAlignment="Left"/>
-                    <TextBlock Text="{Binding Title}" LineStackingStrategy="BlockLineHeight" Height="42.5" Margin="90,6,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}"/>
+                        <TextBlock Text="{Binding Title}" LineStackingStrategy="BlockLineHeight" Height="42.5" Margin="90,6,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}"/>
                     </Grid>
             </StackPanel>
             </ListBoxItem>

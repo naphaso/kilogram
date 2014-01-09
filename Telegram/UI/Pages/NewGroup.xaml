@@ -21,11 +21,11 @@
 			<TextBlock Text="NEW GROUP" Style="{StaticResource PhoneTextNormalStyle}" Margin="0"/>
 		</StackPanel>
 		<StackPanel>
-			<Telegram:FormLatterEditPhoneControl Margin="0,0,0,16"/>
-			<Telegram:FormLatterEditPhoneControl/>
+			<Telegram:FormLatterEditPhoneControl Name="ChatTitleEdit" Margin="0,0,0,16" Width="440"/>
+			<Telegram:FormLatterEditPhoneControl Name="ChatMembersEdit" Width="440"/>
 		</StackPanel>
 
-		<Controls:UserListControl Margin="0,10,0,0" Height="534"/>
+		<Controls:UserSelectableListControl Name="SelectableUsers" Margin="0,10,0,0" Height="534"/>
 
 	</StackPanel>
     <phone:PhoneApplicationPage.ApplicationBar>

@@ -138,6 +138,10 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public override bool IsSecret {
+            get { return false; }
+        }
+
         public override void Write(BinaryWriter writer) {
             dialog.Write(writer);
             if(messages == null) {

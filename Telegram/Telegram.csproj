@@ -150,6 +150,9 @@
     <Compile Include="UI\Converters\General.cs" />
     <Compile Include="UI\Converters\MessageList.cs" />
     <Compile Include="UI\Converters\UserList.cs" />
+    <Compile Include="UI\Converters\UserSelectableListControl.xaml.cs">
+      <DependentUpon>UserSelectableListControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Emoji\EmojiPhoneControl.xaml.cs">
       <DependentUpon>EmojiPhoneControl.xaml</DependentUpon>
     </Compile>
@@ -212,6 +215,9 @@
     </Compile>
     <Compile Include="UI\Pages\ChatSettings.xaml.cs">
       <DependentUpon>ChatSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Pages\DialogListForwarding.xaml.cs">
+      <DependentUpon>DialogListForwarding.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Pages\DialogPage.xaml.cs">
       <DependentUpon>DialogPage.xaml</DependentUpon>
@@ -318,6 +324,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Converters\UserSelectableListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Emoji\EmojiPhoneControl.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -351,6 +361,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\ChatSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\DialogListForwarding.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

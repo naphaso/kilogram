@@ -50,15 +50,15 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="0,17,0,28">
             <TextBlock Text="TELEGRAM" Style="{StaticResource PhoneTextNormalStyle}" toolkit:TurnstileFeatherEffect.FeatheringIndex="1"/>
-            <phone:Pivot Margin="0,-20,0,0" Grid.Row="1" toolkit:TurnstileFeatherEffect.FeatheringIndex="0">
-                <phone:PivotItem Header="chats" Height="Auto" Margin="12,28,12,6">
+            <phone:Pivot Margin="0,-20,0,0" Grid.Row="1" toolkit:TurnstileFeatherEffect.FeatheringIndex="0" Height="668">
+                <phone:PivotItem Header="chats" Height="Auto" Margin="12,0,12,6">
                     <!--ContentPanel - place additional content here-->
-                    <Grid x:Name="ContentPanel" Grid.Row="1" Height="500">
+                    <Grid x:Name="ContentPanel" Grid.Row="1">
                         <controls:DialogListControl Name="DialogList"/>
                     </Grid>
                 </phone:PivotItem>
-                <phone:PivotItem Header="contacts">
-                    <Grid Grid.Row="1" Height="500">
+                <phone:PivotItem Header="contacts" Margin="12,0">
+                    <Grid Grid.Row="1" Height="Auto">
                         <controls:UserListControl Name="ContactList"/>
                     </Grid>
                 </phone:PivotItem>

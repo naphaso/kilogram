@@ -8,7 +8,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    d:DesignHeight="100" d:DesignWidth="480" Height="48">
+    d:DesignHeight="100" Height="48" HorizontalAlignment="Left" Width="Auto">
 	<UserControl.Resources>
 		<Style x:Key="PhoneTextBoxMonoStyle" TargetType="toolkit:PhoneTextBox">
 			<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilyNormal}"/>
@@ -146,11 +146,11 @@
 		</Style>
 	</UserControl.Resources>
     
-	<Grid x:Name="LayoutRoot">
+	<Grid x:Name="LayoutRoot" HorizontalAlignment="Left" Width="480">
 		<Rectangle Fill="#FF999999" Height="1" VerticalAlignment="Bottom" StrokeThickness="0" Margin="0"/>
 		<StackPanel Orientation="Horizontal">
 			<TextBlock x:Name="TitleText"  HorizontalAlignment="Left" TextWrapping="Wrap" Text="Subject :" VerticalAlignment="Center" Foreground="#FF999999" FontSize="26.667"/>
-			<toolkit:PhoneTextBox x:Name="ContentText"  TextWrapping="NoWrap"  Text="Some Text Which is Hardcoded" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Margin="0,-10,0,-20" FontSize="26.667" AcceptsReturn="True" Foreground="White" SelectionForeground="{x:Null}" SelectionBackground="{x:Null}" CaretBrush="White" Style="{StaticResource PhoneTextBoxMonoStyle}" Width="398" HorizontalAlignment="Left"/>
+			<toolkit:PhoneTextBox x:Name="ContentText"  TextWrapping="NoWrap"  Text="Some Text Which is asd a das da as d" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Margin="0,-10,0,-20" FontSize="26.667" AcceptsReturn="True" Foreground="White" SelectionForeground="{x:Null}" SelectionBackground="{x:Null}" CaretBrush="White" Style="{StaticResource PhoneTextBoxMonoStyle}" HorizontalAlignment="Left" Width="343"/>
 		</StackPanel>
 
 	</Grid>

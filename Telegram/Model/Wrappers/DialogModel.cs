@@ -30,7 +30,7 @@ namespace Telegram.Model.Wrappers {
         public abstract Peer Peer { get; }
         public abstract string Preview { get; }
         public abstract bool IsChat { get; }
-
+        public abstract bool IsSecret { get; }
         public abstract void Write(BinaryWriter writer);
         public abstract void Read(BinaryReader reader);
         public abstract Task<bool> SendMessage(string message);

@@ -30,26 +30,16 @@
 
         <!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-                     		<Grid Width="336" Height="Auto" VerticalAlignment="Top" Margin="0">
-        			<Grid Opacity="0.7">
-        				<Rectangle Fill="{StaticResource PhoneAccentBrush}" Margin="0,7,0,-1" />
-        				<es:RegularPolygon Fill="{StaticResource PhoneAccentBrush}" InnerRadius="1" Margin="0,0,12,-8" PointCount="3" Stretch="Fill" Stroke="Black" UseLayoutRounding="False" RenderTransformOrigin="0.5,0.5" StrokeThickness="0" HorizontalAlignment="Right" Width="28" Height="16" VerticalAlignment="Bottom">
-        					<es:RegularPolygon.RenderTransform>
-        						<CompositeTransform Rotation="-90"/>
-        					</es:RegularPolygon.RenderTransform>
-        				</es:RegularPolygon>
-        			</Grid>
-        			<StackPanel Margin="10,19,10,10">
-                        <TextBlock Text="Binding ForwardedFrom}" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"  VerticalAlignment="Top"/>
-                        <Image Source="/Assets/train.jpg" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-        				<TextBlock Text="Binding Text}" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
-                        <StackPanel  HorizontalAlignment="Right" Orientation="Horizontal">
-						<TextBlock Text="7:40" TextWrapping="Wrap" Margin="24,0,0,0" VerticalAlignment="Top" Opacity="0.6"/>
-                        <Image Height="24" Width="24" Margin="5,2,0,0" VerticalAlignment="Center" Source="/Assets/UI/message.state.sending-WVGA.png" HorizontalAlignment="Right" />
-        				</StackPanel>
-					</StackPanel>
-        		</Grid>  
+                     		                <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
+                    <StackPanel Orientation="Horizontal">
+                    	<CheckBox Content="" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    	<Grid Height="62" Margin="0,6">
+                    		<Image Source="{Binding AvatarPath}" Stretch="Fill" Height="62" Width="62" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    		<TextBlock Text="{Binding FullName}" Margin="80,-7,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource PhoneTextLargeStyle}" Height="42"/>
+                    		<TextBlock Text="{Binding Status}" Foreground="{Binding Status, Converter={StaticResource OnlineColorConverter}}" HorizontalAlignment="Left" Margin="80,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource TextBlockFieldHint}"/>
+                    	</Grid>
+                    </StackPanel>
+                </StackPanel>  
         </Grid>
 	</Grid>
 
