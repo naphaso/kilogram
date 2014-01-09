@@ -44,6 +44,18 @@ namespace Telegram.Model.Wrappers {
             get { return false; }
         }
 
+        public override string ForwardedFrom {
+            get { return null; }
+        }
+
+        public override bool IsForwarded {
+            get { return false; }
+        }
+
+        public override int ForwardedId {
+            get { return 0; }
+        }
+
         public override string Text {
             get { return _text; }
             set { _text = value; }
