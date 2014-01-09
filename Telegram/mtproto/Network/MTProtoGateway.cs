@@ -267,6 +267,8 @@ namespace Telegram.MTProto {
                     if(config == null) {
                         throw new MTProtoInitException();
                     }
+
+                    gateway.ConnectedEvent += () => ReconnectEvent();
                 }
 
                 logger.info("connection established, config: {0}", config);
@@ -277,7 +279,7 @@ namespace Telegram.MTProto {
 
 //                if (!gatewayConnected.Task.IsCompleted)
 //                    gatewayConnected.SetResult(true);
-                gateway.ConnectedEvent += () => ReconnectEvent();
+                
                 //var handler = ReconnectEvent;
                 //if(handler != null) ReconnectEvent();
 

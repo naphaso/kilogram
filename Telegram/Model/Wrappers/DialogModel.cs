@@ -337,7 +337,7 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        public void OpenedRead() {
+        public virtual void OpenedRead() {
             bool needSendRead = false;
             foreach (var message in from message in messages where !message.IsOut && message.Unread select message) {
                 logger.info("message mark read");

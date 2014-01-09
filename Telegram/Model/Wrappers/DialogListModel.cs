@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using Telegram.Core.Logging;
 using Telegram.MTProto;
+using Telegram.UI.Controls;
 using Telegram.Utils;
 
 namespace Telegram.Model.Wrappers {
@@ -157,6 +159,14 @@ namespace Telegram.Model.Wrappers {
                         break;
                     }
                 }
+            }
+        }
+
+        public void EncryptedRead(int chatid, int maxdate, int date) {
+            var chats = from dialog in dialogs where dialog.IsEncrypted && ((DialogModelEncrypted) dialog).Id == chatid select dialog;
+            if(chats.Any()) {
+                DialogModelEncrypted dialog = (DialogModelEncrypted) chats.First();
+                dialog.MarkEncryptedRead(maxdate, date);
             }
         }
     }

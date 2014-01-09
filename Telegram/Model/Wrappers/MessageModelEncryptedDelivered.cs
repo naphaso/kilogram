@@ -56,6 +56,10 @@ namespace Telegram.Model.Wrappers {
             get { return null; }
         }
 
+        public override int Id {
+            get { return 0; }
+        }
+
         public override bool IsOut {
             get { return output; }
         }
@@ -92,6 +96,8 @@ namespace Telegram.Model.Wrappers {
 
         public override void MarkRead() {
             unread = false;
+
+            OnPropertyChanged("MessageDeliveryStateProperty");
         }
 
         public override string Text {
@@ -155,6 +161,18 @@ namespace Telegram.Model.Wrappers {
 
         public override MessageDeliveryState MessageDeliveryStateProperty {
             get { return GetMessageDeliveryState(); }
+        }
+
+        public bool IsSetTTL {
+            get {
+                return message.Constructor == Constructor.decryptedMessageService && ((DecryptedMessageServiceConstructor) message).action.Constructor == Constructor.decryptedMessageActionSetMessageTTL;
+            }
+        }
+
+        public int Date {
+            get {
+                return date;
+            }
         }
     }
 }

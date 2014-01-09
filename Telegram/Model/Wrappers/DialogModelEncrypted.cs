@@ -238,16 +238,6 @@ namespace Telegram.Model.Wrappers {
             this.ttl = ttlSeconds;
         }
 
-        public override void UpdateTypings() {
-            base.UpdateTypings();
-
-            if(ttl != 0) {
-                List<MessageModel> toRemove = (from message in messages where (DateTime.Now - message.Timestamp) > TimeSpan.FromSeconds(ttl) select message).ToList();
-                foreach(var messageModel in toRemove) {
-                    messages.Remove(messageModel);
-                }
-            }
-        }
 
         public override Task RemoveAndClearDialog() {
             throw new NotImplementedException();
@@ -280,6 +270,7 @@ namespace Telegram.Model.Wrappers {
 
         public override void Write(BinaryWriter writer) {
             chat.Write(writer);
+            writer.Write(ttl);
 
             if(key == null) {
                 writer.Write(0);
@@ -309,6 +300,7 @@ namespace Telegram.Model.Wrappers {
 
         public override void Read(BinaryReader reader) {
             chat = TL.Parse<EncryptedChat>(reader);
+            ttl = reader.ReadInt32();
             int keyExists = reader.ReadInt32();
             if(keyExists != 0) {
                 key = Serializers.Bytes.read(reader);
@@ -374,6 +366,57 @@ namespace Telegram.Model.Wrappers {
 
         public void SetA(byte[] a) {
             this.a = a;
+        }
+
+        private async Task DelayedDestroyMessage(MessageModel message) {
+            await Task.Delay(TimeSpan.FromSeconds(ttl));
+            if(messages.Contains(message)) {
+                messages.Remove(message);
+            }
+        }
+
+        public void MarkEncryptedRead(int maxDate, int date) {
+            for(int i = messages.Count - 1; i >= 0; i--) {
+                MessageModel meseModel = messages[i];
+                MessageModelEncryptedDelivered message = meseModel as MessageModelEncryptedDelivered;
+                if(message != null) {
+                    if (message.Date > maxDate) {
+                        continue;
+                    }
+
+                    if (message.IsSetTTL) {
+                        break;
+                    }
+
+                    if(message.Unread) {
+                        message.MarkRead();
+
+                        if(ttl != 0) {
+                            DelayedDestroyMessage(message);
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void OpenedRead() {
+            if(ttl != 0) {
+                for(int i = messages.Count - 1; i >= 0; i--) {
+                    MessageModel meseModel = messages[i];
+                    MessageModelEncryptedDelivered message = meseModel as MessageModelEncryptedDelivered;
+                    if(message != null && !message.IsOut) {
+                        if(message.IsSetTTL) {
+                            break;
+                        }
+
+                        if(message.Unread) {
+                            DelayedDestroyMessage(message);
+                        }
+                    }
+                }
+            }
+
+            base.OpenedRead();
         }
     }
 }
