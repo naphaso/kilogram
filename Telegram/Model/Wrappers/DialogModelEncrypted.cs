@@ -129,6 +129,8 @@ namespace Telegram.Model.Wrappers {
                 MessageModel messageModel = new MessageModelEncryptedDelivered(TelegramSession.Instance.SelfId, OpponentId, sent.date, true, true, msg, TL.encryptedFileEmpty());
                 messages.Add(messageModel);
 
+                TelegramSession.Instance.Dialogs.Model.UpDialog(this);
+
                 return true;
             } catch(Exception e) {
                 logger.error("send encrypted message exception: {0}", e);
@@ -437,6 +439,10 @@ namespace Telegram.Model.Wrappers {
 
         public override bool LoadMorePossible() {
             return false;
+        }
+
+        public override void SendTyping(bool typing) {
+            session.Api.messages_setEncryptedTyping(InputEncryptedChat, typing);
         }
     }
 }

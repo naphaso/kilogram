@@ -92,6 +92,11 @@ namespace Telegram.MTProto.Components {
             Deployment.Current.Dispatcher.BeginInvoke(() => model.SetUserTyping(chatid, userid));
         }
 
+        public void EncryptedTyping(int chatid) {
+            logger.debug("typing in encrypted chat {0}", chatid);
+            Deployment.Current.Dispatcher.BeginInvoke(() => model.EncryptedTyping(chatid));
+        }
+
         public void UpdateTypings() {
             Deployment.Current.Dispatcher.BeginInvoke(delegate {
                 foreach (var dialogModel in model.Dialogs) {
@@ -152,6 +157,8 @@ namespace Telegram.MTProto.Components {
         public void EncryptedRead(int chatid, int maxdate, int date) {
             Deployment.Current.Dispatcher.BeginInvoke(() => model.EncryptedRead(chatid, maxdate, date));
         }
+
+
     }
 
 }

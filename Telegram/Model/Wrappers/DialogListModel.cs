@@ -162,6 +162,14 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
+        public void EncryptedTyping(int chatid) {
+            var chats = from dialog in dialogs where dialog.IsEncrypted && ((DialogModelEncrypted)dialog).Id == chatid select dialog;
+            if (chats.Any()) {
+                DialogModelEncrypted dialog = (DialogModelEncrypted)chats.First();
+                dialog.SetTyping();
+            }
+        }
+
         public void EncryptedRead(int chatid, int maxdate, int date) {
             var chats = from dialog in dialogs where dialog.IsEncrypted && ((DialogModelEncrypted) dialog).Id == chatid select dialog;
             if(chats.Any()) {
@@ -169,5 +177,7 @@ namespace Telegram.Model.Wrappers {
                 dialog.MarkEncryptedRead(maxdate, date);
             }
         }
+
+
     }
 }

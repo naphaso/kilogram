@@ -55,7 +55,7 @@ namespace Telegram.Model.Wrappers {
             }
         }
 
-        protected InputPeer InputPeer {
+        public InputPeer InputPeer {
             get {
                 Peer peer = Peer;
                 if (peer.Constructor == Constructor.peerChat) {
@@ -408,5 +408,7 @@ namespace Telegram.Model.Wrappers {
 
         public abstract Task LoadMore();
         public abstract bool LoadMorePossible();
+
+        public abstract void SendTyping(bool typing);
     }
 }

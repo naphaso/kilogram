@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Navigation;
 using Windows.Devices.Geolocation;
+using System.Windows.Threading;
 using Windows.UI.Core;
 using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
@@ -61,6 +62,8 @@ namespace Telegram.UI {
                 }
             }
 
+            TelegramSession.Instance.Dialogs.OpenedDialog = model;
+
             UpdateDataContext();
 
             // init notice
@@ -82,6 +85,13 @@ namespace Telegram.UI {
                 ToggleAttach();
                 e.Cancel = true;
                 return;
+            }
+
+            lock(typingLock) {
+                if(typing) {
+                    timer.Stop();
+                    model.SendTyping(false);
+                }
             }
 
             NavigationService.Navigate(new Uri("/UI/Pages/StartPage.xaml", UriKind.Relative));
@@ -117,6 +127,11 @@ namespace Telegram.UI {
                     MainPanel.Margin = new Thickness(0, 0, 0, 0);
             };
 
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += TimerOnTick;
+            
+
             messageEditor.TextChanged += MessageEditorOnTextChanged;
 
             EmojiPanelControl.BackspaceClick += EmojiPanelControlOnBackspaceClick;
@@ -125,9 +140,34 @@ namespace Telegram.UI {
 
         }
 
+        private void TimerOnTick(object sender, EventArgs eventArgs) {
+            lock(typingLock) {
+                if(typing && DateTime.Now - lastTextChanged > TimeSpan.FromSeconds(5)) {
+                    model.SendTyping(false);
+                    typing = false;
+                    timer.Stop();
+                }
+            }
+        }
 
+        private object typingLock = new object();
+        private bool typing = false;
+        private DateTime lastTextChangedSended = DateTime.Now - TimeSpan.FromDays(10);
+        private DateTime lastTextChanged = DateTime.Now - TimeSpan.FromDays(10);
+        private DispatcherTimer timer;
         private void MessageEditorOnTextChanged(object sender, TextChangedEventArgs textChangedEventArgs) {
-            
+            lock(typingLock) {
+                if(typing == false) {
+                    model.SendTyping(true);
+                    lastTextChangedSended = DateTime.Now;
+                    typing = true;
+                    timer.Start();
+                } else if(DateTime.Now - lastTextChangedSended > TimeSpan.FromSeconds(5)) {
+                    model.SendTyping(true);
+                    lastTextChangedSended = DateTime.Now;
+                }
+                lastTextChanged = DateTime.Now;
+            }
         }
 
         private void EmojiPanelControlOnKeyboardClick(object sender, object args) {
@@ -176,6 +216,13 @@ namespace Telegram.UI {
         private void Dialog_Message_Send(object sender, EventArgs e) {
             var text = messageEditor.Text;
             messageEditor.Text = "";
+
+            lock (typingLock) {
+                if (typing) {
+                    timer.Stop();
+                    model.SendTyping(false);
+                }
+            }
 
             if (needDialogCreate) {
                 model.SendMessage(text).ContinueWith((result) => {
