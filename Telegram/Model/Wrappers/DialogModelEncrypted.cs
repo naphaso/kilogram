@@ -71,6 +71,10 @@ namespace Telegram.Model.Wrappers {
             get { return false; }
         }
 
+        public override bool IsSecret {
+            get { return true; }
+        }
+
 
         public override async Task<bool> SendMessage(string message) {
             try {
