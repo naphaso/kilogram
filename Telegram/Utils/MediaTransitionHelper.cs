@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Model.Wrappers;
 using Telegram.MTProto;
 
 namespace Telegram.Utils {
@@ -13,6 +14,8 @@ namespace Telegram.Utils {
             get { return instance ?? (instance = new MediaTransitionHelper()); }
         }
 
+
+        public UserModel From { get; set; }
         public MessageMedia Media { get; set; }
     }
 }

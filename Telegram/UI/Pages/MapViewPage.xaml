@@ -27,8 +27,8 @@
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
             <maps:Map Name="Map" Tap="Map_OnTap"/>
             <Grid Tap="UserInfoClick" Margin="0,32,0,0" Height="76" VerticalAlignment="Top" Background="#CC000000">
-            	<Image Margin="17,12,409,10" Source="/Assets/UI/placeholder.user.cyan-WXGA.png" Stretch="Fill" Width="54" Height="54"/>
-            	<TextBlock HorizontalAlignment="Left" Margin="84,3,0,0" TextWrapping="Wrap" Text="John Doe" VerticalAlignment="Top" FontFamily="Segoe WP SemiLight" FontSize="32"/>
+            	<Image Margin="17,12,409,10" Source="{Binding AvatarPath}" Stretch="Fill" Width="54" Height="54"/>
+            	<TextBlock HorizontalAlignment="Left" Margin="84,3,0,0" TextWrapping="Wrap" Text="{Binding FullName}" VerticalAlignment="Top" FontFamily="Segoe WP SemiLight" FontSize="32"/>
             	<TextBlock Name="DistanceTextBlock" HorizontalAlignment="Left" Margin="84,45,0,0" TextWrapping="Wrap" Text="200m away" VerticalAlignment="Top" FontFamily="Segoe WP SemiLight" FontSize="16" Style="{StaticResource TextBlockFieldHint}"/>
             </Grid>
         </Grid>

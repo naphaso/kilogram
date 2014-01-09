@@ -12,6 +12,8 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
+using Telegram.MTProto;
+using Telegram.Utils;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Telegram.UI {
@@ -22,6 +24,7 @@ namespace Telegram.UI {
         private GeoCoordinate userGeoCoordinate;
         private GeoCoordinate myGeoCoordinate;
 
+        private GeoPointConstructor point; 
         public int ZoomLevel { get; set; }
         public MapViewPage() {
             InitializeComponent();
@@ -30,11 +33,20 @@ namespace Telegram.UI {
             myPositionLayer.Add(myMapOverlay);
             Map.Layers.Add(myPositionLayer);
             ZoomLevel = 16;
+            Map.ZoomLevel = ZoomLevel;
 
-            // FIXME: get real user position
-            userGeoCoordinate = new GeoCoordinate(56.5, 85);
-            AddPushpin(userGeoCoordinate, "John Doe");
+            DataContext = MediaTransitionHelper.Instance.From;
+
+            MessageMedia media = MediaTransitionHelper.Instance.Media;
+            MessageMediaGeoConstructor geoMedia = (MessageMediaGeoConstructor) media;
+
+            point = (GeoPointConstructor) geoMedia.geo;
+
+            userGeoCoordinate = new GeoCoordinate(point.lat, point.lng);
+            AddPushpin(userGeoCoordinate, MediaTransitionHelper.Instance.From.FullName);
+
             CalculateDistanceBetweenMeAndUser();
+            UserInfoClick(this, null);
         }
 
         private void CalculateDistanceBetweenMeAndUser() {

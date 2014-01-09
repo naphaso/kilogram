@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -425,7 +426,7 @@ namespace Telegram.Model.Wrappers {
 
                     locationBm = new BitmapImage();
 
-                    locationBm.UriSource = new Uri("https://maps.googleapis.com/maps/api/staticmap?center=" + geoPointConstructor.lat + "," + geoPointConstructor.lng + "&zoom=12&size=" + mapSize + "x" + mapSize + "&sensor=false&markers=color:red|" + geoPointConstructor.lat + "," + geoPointConstructor.lng);
+                    locationBm.UriSource = new Uri("https://maps.googleapis.com/maps/api/staticmap?center=" + geoPointConstructor.lat + "," + geoPointConstructor.lng.ToString().Replace(",", ".") + "&zoom=12&size=" + mapSize + "x" + mapSize + "&sensor=false&markers=color:red|" + geoPointConstructor.lat.ToString().Replace(",", ".") + "," + geoPointConstructor.lng.ToString().Replace(",", "."));
 
                     locationBm.ImageOpened += delegate {
                         OnPropertyChanged("Attachment");

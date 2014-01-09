@@ -1325,6 +1325,7 @@
     <Content Include="Assets\UI\appbar.share.png" />
     <Content Include="Assets\UI\appbar.smile.png" />
     <Content Include="Assets\UI\appbar.transport.play.png" />
+    <Content Include="Assets\UI\black-placeholder.png" />
     <Content Include="Assets\UI\chat.nomessages-720p.png" />
     <Content Include="Assets\UI\chat.nomessages-WVGA.png" />
     <Content Include="Assets\UI\chat.nomessages-WXGA.png" />

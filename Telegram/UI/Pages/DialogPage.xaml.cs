@@ -323,6 +323,8 @@ namespace Telegram.UI {
 
                 NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
             } else if (media.Constructor == Constructor.messageMediaGeo) {
+                MediaTransitionHelper.Instance.From = message.Sender;
+
                 NavigationService.Navigate(new Uri("/UI/Pages/MapViewPage.xaml?mode=view", UriKind.Relative));
             }
 
