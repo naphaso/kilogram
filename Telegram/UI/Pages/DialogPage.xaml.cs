@@ -300,6 +300,9 @@ namespace Telegram.UI {
         }
 
         private void OnOpenAttachment(object sender, GestureEventArgs e) {
+            var element = (FrameworkElement)sender;
+            MessageModel message = (MessageModel)element.DataContext;
+
             NavigationService.Navigate(new Uri("/UI/Pages/MediaViewPage.xaml", UriKind.Relative));
         }
 
@@ -315,6 +318,24 @@ namespace Telegram.UI {
             MessageModel message = (MessageModel)element.DataContext;
             
             NavigationService.Navigate(new Uri("/UI/Pages/UserProfile.xaml?userId=" + message.ForwardedId, UriKind.Relative));
+        }
+
+        private void OnMessageContextMenuOpened(object sender, RoutedEventArgs e) {
+            
+        }
+
+        private void OnDeleteMessage(object sender, RoutedEventArgs e) {
+            var message = ((sender as MenuItem).DataContext as MessageModel);
+        }
+
+        private void OnForwardMessage(object sender, RoutedEventArgs e) {
+            var message = ((sender as MenuItem).DataContext as MessageModel);
+
+        }
+
+        private void OnCopyMessage(object sender, RoutedEventArgs e) {
+            var message = ((sender as MenuItem).DataContext as MessageModel);
+            Clipboard.SetText(message.Text);
         }
     }
 }
