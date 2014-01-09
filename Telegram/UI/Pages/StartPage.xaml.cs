@@ -60,8 +60,11 @@ namespace Telegram.UI
             InitializeComponent();
             this.BackKeyPress += delegate {
                 TelegramSession.Instance.save();
-                Application.Current.Terminate();
+                TelegramSession.Instance.GoToOffline().ContinueWith((res) => Application.Current.Terminate());
+                Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith((res) => Application.Current.Terminate());
             };
+
+            
 
             DialogList.DialogSelected += delegate(object sender, DialogModel model) {
                 int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(model);
@@ -70,6 +73,8 @@ namespace Telegram.UI
 
             ContactList.AddressbookUserSelected += ContactListOnAddressbookUserSelected;
             ContactList.TelegramUserSelected += ContactListOnTelegramUserSelected;
+
+
         }
 
         private void ContactListOnTelegramUserSelected(object sender, UserModel user) {

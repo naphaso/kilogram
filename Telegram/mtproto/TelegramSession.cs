@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Windows.Phone.PersonalInformation;
+using Microsoft.Phone.Controls;
+using Telegram.Annotations;
 using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto.Components;
@@ -574,10 +576,28 @@ namespace Telegram.MTProto {
 
         // save timer
         private static bool saveSessionTimerInitialized = false;
+        private static DateTime lastSendStatus = DateTime.Now - TimeSpan.FromSeconds(120);
         private static async Task SaveSessionTimer() {
             await Task.Delay(TimeSpan.FromSeconds(5));
             Instance.save();
+            if(DateTime.Now - lastSendStatus > TimeSpan.FromSeconds(60)) {
+                if(Instance.AuthorizationExists()) {
+                    Instance.Api.account_updateStatus(false);
+                }
+
+                lastSendStatus = DateTime.Now;
+            }
             SaveSessionTimer();
+        }
+
+        public async Task GoToOnline() {
+            if(AuthorizationExists())
+                await Api.account_updateStatus(false);
+        }
+
+        public async Task GoToOffline() {
+            if (AuthorizationExists())
+                await Api.account_updateStatus(true);
         }
         // save timer end
 
@@ -609,7 +629,12 @@ namespace Telegram.MTProto {
                     establishedTask.SetResult(null);
 
                     updates.RequestDifference();
-                    gateway.ReconnectEvent += updates.RequestDifference;
+                    gateway.ReconnectEvent += () => {
+                        GoToOnline();
+                        updates.RequestDifference();
+                    };
+
+                    GoToOnline();
 
                     if(!saveSessionTimerInitialized) {
                         SaveSessionTimer();

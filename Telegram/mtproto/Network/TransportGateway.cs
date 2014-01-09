@@ -47,7 +47,11 @@ namespace Telegram.MTProto {
         private NetworkGatewayState state;
 
         protected virtual void OnReceive(byte[] packet) {
-            InputEvent(this, packet);
+            try {
+                InputEvent(this, packet);
+            } catch(Exception e) {
+                logger.error("failed to process network packet: {0}", e);
+            }
         }
 
         public TransportGateway() {

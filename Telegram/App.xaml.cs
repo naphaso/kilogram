@@ -77,14 +77,15 @@ namespace Telegram
 
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
-        private void Application_Activated(object sender, ActivatedEventArgs e)
-        {
+        private void Application_Activated(object sender, ActivatedEventArgs e) {
+            TelegramSession.Instance.GoToOnline();
         }
 
         // Code to execute when the application is deactivated (sent to background)
         // This code will not execute when the application is closing
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
+            TelegramSession.Instance.GoToOffline();
             TelegramSession.Instance.save();
         }
 
@@ -92,12 +93,14 @@ namespace Telegram
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
+            TelegramSession.Instance.GoToOffline();
             TelegramSession.Instance.save();
         }
 
         // Code to execute if a navigation fails
         private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
+            TelegramSession.Instance.GoToOffline();
             TelegramSession.Instance.save();
 
             if (Debugger.IsAttached)

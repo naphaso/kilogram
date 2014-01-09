@@ -127,7 +127,46 @@ namespace Telegram.Model.Wrappers {
         }
 
         public override string Preview {
-            get { return Text; }
+            get {
+
+                if (message.Constructor == Constructor.decryptedMessage) {
+
+                    string preview = ((DecryptedMessageConstructor)message).message;
+                    DecryptedMessageMedia media = ((DecryptedMessageConstructor)message).media;
+
+                    if (media.Constructor == Constructor.decryptedMessageMediaAudio) {
+                        preview = "audio";
+                    }
+                    else if (media.Constructor == Constructor.decryptedMessageMediaContact) {
+                        preview = "contact";
+                    }
+                    else if (media.Constructor == Constructor.decryptedMessageMediaPhoto) {
+                        preview = "photo";
+                    }
+                    else if (media.Constructor == Constructor.decryptedMessageMediaGeoPoint) {
+                        preview = "location";
+                    }
+                    else if (media.Constructor == Constructor.decryptedMessageMediaVideo) {
+                        preview = "video";
+                    }
+                    else if (media.Constructor == Constructor.decryptedMessageMediaDocument) {
+                        preview = "document";
+                    }
+
+                    return preview;
+                }
+                else if (message.Constructor == Constructor.decryptedMessageService) {
+                    DecryptedMessageAction action = ((DecryptedMessageServiceConstructor)message).action;
+
+                    if(action.Constructor == Constructor.decryptedMessageActionSetMessageTTL) {
+                        return "set timeout";
+                    } else {
+                        return "service";
+                    }
+                }
+
+                return "";
+            }
         }
 
         public override bool Unread {

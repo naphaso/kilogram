@@ -66,7 +66,19 @@ namespace Telegram.Model.Wrappers {
 
 
         public override string Preview {
-            get { return "preview"; }
+            get {
+                if (messages.Count > 0) {
+                    MessageModel messageModel = messages.Last();
+                    if (messageModel.Delivered == false) {
+                        return ((MessageModelUndelivered)messageModel).Text;
+                    }
+
+                    return messageModel.Preview;
+                }
+                else {
+                    return "new conversation";
+                }
+            }
         }
 
         public override bool IsChat {

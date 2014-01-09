@@ -228,7 +228,11 @@ namespace Telegram.MTProto {
 
             using(MemoryStream messageStream = new MemoryStream(message, false))
             using(BinaryReader messageReader = new BinaryReader(messageStream)) {
-                processMessage(remoteMessageId, remoteSequence, messageReader);    
+                try {
+                    processMessage(remoteMessageId, remoteSequence, messageReader);
+                } catch(Exception e) {
+                    logger.error("failed to process message: {0}", e);
+                }
             }
         }
 
@@ -678,7 +682,12 @@ namespace Telegram.MTProto {
                 int innerSequence = messageReader.ReadInt32();
                 int innerLength = messageReader.ReadInt32();
                 long beginPosition = messageReader.BaseStream.Position;
-                if(!processMessage(innerMessageId, sequence, messageReader)) {
+                try {
+                    if(!processMessage(innerMessageId, sequence, messageReader)) {
+                        messageReader.BaseStream.Position = beginPosition + innerLength;
+                    }
+                } catch(Exception e) {
+                    logger.error("failed to process message in contailer: {0}", e);
                     messageReader.BaseStream.Position = beginPosition + innerLength;
                 }
             }
