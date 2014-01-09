@@ -120,7 +120,8 @@ namespace Telegram.MTProto {
                     state = NetworkGatewayState.ESTABLISHED;
                     sendCounter = 0;
                     connectTaskCompletionSource.TrySetResult(null);
-                    ConnectedEvent();
+                    var handler = ConnectedEvent;
+                    if(handler != null) handler();
                     
                     ReadAsync();
                 } else {
