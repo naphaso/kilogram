@@ -53,9 +53,11 @@ namespace Telegram.Model.Wrappers {
 
         public override bool IsContact {
             get {
+                if (message.Constructor != Constructor.message)
+                    return false;
+
                 MessageMedia media = ((MessageConstructor)message).media;
                 return media.Constructor == Constructor.messageMediaContact;
-
             }
         }
 
