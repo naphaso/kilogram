@@ -374,7 +374,7 @@ namespace Telegram.Model.Wrappers {
             
             try {
                 if(messages.Count > 0 && messages[0] is MessageModelDelivered) {
-                    messages_Messages loadedMessages = await TelegramSession.Instance.Api.messages_getHistory(InputPeer, 0, messages[0].Id, 10);
+                    messages_Messages loadedMessages = await TelegramSession.Instance.Api.messages_getHistory(InputPeer, 0, messages[0].Id, 30);
                     loadMorePossible = Process(loadedMessages);
                 }
             } catch(Exception e) {
@@ -397,9 +397,7 @@ namespace Telegram.Model.Wrappers {
             TelegramSession.Instance.Updates.ProcessUsers(loadedMessages.users);
             TelegramSession.Instance.Updates.ProcessChats(loadedMessages.chats);
 
-            foreach (var message in loadedMessages.messages) {
-                messages.Insert(0, new MessageModelDelivered(message));
-            }
+            messages.AddRange(from message in loadedMessages.messages select new MessageModelDelivered(message));
 
             return loadedMessages.messages.Any();
         }
@@ -408,9 +406,7 @@ namespace Telegram.Model.Wrappers {
             TelegramSession.Instance.Updates.ProcessUsers(loadedMessages.users);
             TelegramSession.Instance.Updates.ProcessChats(loadedMessages.chats);
 
-            foreach(var message in loadedMessages.messages) {
-                messages.Insert(0, new MessageModelDelivered(message));
-            }
+            messages.AddRange(from message in loadedMessages.messages select new MessageModelDelivered(message));
 
             return loadedMessages.messages.Any();
         }
