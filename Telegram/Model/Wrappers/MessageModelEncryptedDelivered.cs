@@ -85,6 +85,14 @@ namespace Telegram.Model.Wrappers {
             get { return false; }
         }
 
+        public override bool IsContact {
+            get { return false; }
+        }
+
+        public override string ContactName {
+            get { return ""; }
+        }
+
         public override int ForwardedId {
             get { return 0; }
         }

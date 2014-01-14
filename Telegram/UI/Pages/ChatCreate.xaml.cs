@@ -32,5 +32,9 @@ namespace Telegram.UI.Pages {
 
             UserControl.FilterTelegramUsersByName(searchQuery);
         }
+
+        private void NewSecretChat(object sender, GestureEventArgs e) {
+            NavigationService.Navigate(new Uri("/UI/Pages/NewSecretChat.xaml", UriKind.Relative));
+        }
     }
 }

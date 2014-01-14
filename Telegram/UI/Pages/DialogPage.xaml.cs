@@ -74,6 +74,23 @@ namespace Telegram.UI {
                 ShowNotice();
         }
 
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e) {
+            base.OnNavigatingFrom(e);
+            if (EmojiPopup.IsOpen) {
+                ToggleEmoji();
+            }
+
+            if (AttachPopup.IsOpen) {
+                ToggleAttach();
+            }
+
+            lock (typingLock) {
+                if (typing) {
+                    timer.Stop();
+                    model.SendTyping(false);
+                }
+            }
+        }
 
         protected override void OnBackKeyPress(CancelEventArgs e) {
             if (EmojiPopup.IsOpen) {
@@ -450,7 +467,10 @@ namespace Telegram.UI {
         }
 
         private void OnMessageContextMenuOpened(object sender, RoutedEventArgs e) {
-            
+            if (model is DialogModelEncrypted) {
+                ContextMenu menu = sender as ContextMenu;
+                menu.Items.Clear();
+            }
         }
 
         private void OnDeleteMessage(object sender, RoutedEventArgs e) {
@@ -510,6 +530,39 @@ namespace Telegram.UI {
             var photo = new PhotoChooserTask { ShowCamera = true };
             photo.Completed += docChooserTask_Completed;
             photo.Show();
+        }
+
+        private void PickAndSendContact(object sender, GestureEventArgs e) {
+            int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(model);
+            NavigationService.Navigate(new Uri("/UI/Pages/SendContact.xaml?modelId=" + modelId, UriKind.Relative));
+        }
+
+        private void OnContactTap(object sender, GestureEventArgs e) {
+            var element = (FrameworkElement)sender;
+            MessageModel message = (MessageModel)element.DataContext;
+
+            if (!(message is MessageModelDelivered))
+                return;
+
+            MessageModelDelivered messageDelivered = (MessageModelDelivered) message;
+            MessageMedia media = messageDelivered.MessageMedia;
+            if (media.Constructor != Constructor.messageMediaContact)
+                return;
+
+            MessageMediaContactConstructor mediaContact = (MessageMediaContactConstructor) media;
+
+            SaveContactTask saveContactTask = new SaveContactTask();
+            saveContactTask.Completed += new EventHandler<SaveContactResult>(saveContactTask_Completed);
+
+            saveContactTask.FirstName = mediaContact.first_name;
+            saveContactTask.LastName = mediaContact.last_name;
+            saveContactTask.MobilePhone = "+" + mediaContact.phone_number;
+            
+            saveContactTask.Show();
+        }
+
+        private void saveContactTask_Completed(object sender, SaveContactResult e) {
+            logger.info("User saved successfully");
         }
     }
 }

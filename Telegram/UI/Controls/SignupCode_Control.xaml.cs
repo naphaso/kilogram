@@ -26,7 +26,7 @@ namespace Telegram
         }
 
         public void SetTimerTime(int seconds) {
-            TimerTextBlock.Text = "We will call you in 0:" + seconds;
+            TimerTextBlock.Text = "We will call you in 0:" + seconds.ToString("00");
         }
 
         public void CallingNow() {
