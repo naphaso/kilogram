@@ -235,15 +235,15 @@ namespace Telegram.MTProto {
                 inputStream.Seek(0, SeekOrigin.Begin);
                 inputStream.SetLength(0);
             } else {
-                Array.Copy(buffer, (int) inputStream.Position, buffer, 0,(int) remaining);
-                /*
+                //Array.Copy(buffer, (int) inputStream.Position, buffer, 0,(int) remaining);
+                
                 for (int i = 0; i < remaining; i++) {
                     buffer[i] = buffer[inputStream.Position + i];
                 }
-                 * */
+                
 
                 inputStream.SetLength(remaining);
-                inputStream.Seek(remaining, SeekOrigin.Begin);
+                inputStream.Seek(0, SeekOrigin.End);
             }
         }
 
