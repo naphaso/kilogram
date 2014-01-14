@@ -450,7 +450,10 @@ namespace Telegram.UI {
         }
 
         private void OnMessageContextMenuOpened(object sender, RoutedEventArgs e) {
-            
+            if (model is DialogModelEncrypted) {
+                ContextMenu menu = sender as ContextMenu;
+                menu.Items.Clear();
+            }
         }
 
         private void OnDeleteMessage(object sender, RoutedEventArgs e) {

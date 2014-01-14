@@ -20,8 +20,12 @@
 		<StackPanel Margin="0,0,0,546">
             <toolkit:PhoneTextBox Name="SearchBox" TextChanged="OnSearchBoxTextChanged" Height="72" 
             Hint="search" TextWrapping="Wrap" AcceptsReturn="True"/>
-			<TextBlock Tap="NewGroupTap" TextWrapping="Wrap" Text="new group" Margin="12,12,0,12" FontSize="32" FontFamily="Segoe WP SemiLight"/>
-			<TextBlock TextWrapping="Wrap" Text="new secret chat" Margin="12,12,0,12" FontSize="32" FontFamily="Segoe WP SemiLight"/>
+            <ListBoxItem>
+                <TextBlock toolkit:TiltEffect.IsTiltEnabled="True" Tap="NewGroupTap" TextWrapping="Wrap" Text="new group" Margin="12,12,0,12" FontSize="32" FontFamily="Segoe WP SemiLight"/>
+            </ListBoxItem>
+            <ListBoxItem>
+                <TextBlock Tap="NewSecretChat" toolkit:TiltEffect.IsTiltEnabled="True" TextWrapping="Wrap" Text="new secret chat" Margin="12,12,0,12" FontSize="32" FontFamily="Segoe WP SemiLight"/>
+            </ListBoxItem>
 		</StackPanel>
        
 		<Controls:UserListControl Name="UserControl" Margin="10,222,10,0" VerticalAlignment="Top" Height="536"/>

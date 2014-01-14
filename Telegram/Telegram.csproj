@@ -243,6 +243,9 @@
     <Compile Include="UI\Pages\NewGroup.xaml.cs">
       <DependentUpon>NewGroup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Pages\NewSecretChat.xaml.cs">
+      <DependentUpon>NewSecretChat.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Pages\SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
@@ -398,6 +401,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\NewGroup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\NewSecretChat.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
