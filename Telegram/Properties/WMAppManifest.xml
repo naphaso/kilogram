@@ -25,11 +25,9 @@
     <Tokens>
       <PrimaryToken TokenID="TelegramToken" TaskName="_default">
         <TemplateFlip>
-          <SmallImageURI IsRelative="true" IsResource="false">
-          </SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">Assets\UI\chat.nomessages-WVGA.png</SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsRelative="true" IsResource="false">
-          </BackgroundImageURI>
+          <BackgroundImageURI IsRelative="true" IsResource="false">Assets\UI\chat.nomessages-WVGA.png</BackgroundImageURI>
           <Title>Telegram</Title>
           <BackContent>
           </BackContent>

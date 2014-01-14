@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Windows.Devices.Geolocation;
 using System.Windows.Threading;
@@ -213,7 +214,7 @@ namespace Telegram.UI {
         }
 
         private bool IsPrivate() {
-            return false;
+            return model is DialogModelEncrypted;
         }
 
         private void EmojiGridListSelectorOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs) {
@@ -260,7 +261,7 @@ namespace Telegram.UI {
             photo.Show();
         }
 
-        void photoChooserTask_Completed(object sender, PhotoResult e) {
+        void docChooserTask_Completed(object sender, PhotoResult e) {
             try {
                 if (e.ChosenPhoto == null)
                     return;
@@ -272,6 +273,50 @@ namespace Telegram.UI {
 
             } catch (Exception exception) {
                 Debug.WriteLine("Exception in photoChooserTask_Completed " + exception.Message);
+            }
+        }
+
+        private static void GetImageSizeAspect(int h, int w, out int nh, out int nw) {
+            int longestSide = w > h ? w : h;
+
+            float aspectRatio = longestSide / 800;
+
+            nh = (int) (h / aspectRatio);
+            nw = (int) (w / aspectRatio);
+        }
+
+        void photoChooserTask_Completed(object sender, PhotoResult e) {
+            try {
+                if (e.ChosenPhoto == null)
+                    return;
+                BitmapImage image = new BitmapImage();
+                image.SetSource(e.ChosenPhoto);
+                WriteableBitmap wb = new WriteableBitmap(image);
+                int rw, rh;
+                GetImageSizeAspect(image.PixelHeight, image.PixelWidth, out rh, out rw);
+
+                MemoryStream ms = new MemoryStream();
+                wb.SaveJpeg(ms, rw, rh, 0, 87);
+                ms.Position = 0;
+
+                Task.Run(() => {
+                    StartUploadPhotoAndDispose(e.OriginalFileName, ms);
+                });
+
+                if (AttachPopup.IsOpen)
+                    ToggleAttach();
+
+            } catch (Exception exception) {
+                Debug.WriteLine("Exception in photoChooserTask_Completed " + exception.Message);
+            }
+        }
+
+        private async Task StartUploadPhotoAndDispose(string name, MemoryStream stream) {
+            try {
+                await StartUploadPhoto(name, stream);
+            }
+            finally {
+                stream.Dispose();
             }
         }
 

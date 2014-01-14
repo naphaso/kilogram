@@ -57,7 +57,7 @@ namespace Telegram.MTProto {
         public TransportGateway() {
             socket = null;
             state = NetworkGatewayState.INIT;
-            inputStream = new MemoryStream(4096);
+            inputStream = new MemoryStream(16000);
         }
 
         private void TryReconnect() {
@@ -216,7 +216,12 @@ namespace Telegram.MTProto {
                     continue;
                 }
 
-                OnReceive(packet);
+                try {
+                    OnReceive(packet);
+                }
+                catch (Exception ex) {
+                    logger.error("OnReceive error {0}", ex);
+                }
 
                 if (inputStream.Length - inputStream.Position < 12) {
                     break;
@@ -230,56 +235,61 @@ namespace Telegram.MTProto {
                 inputStream.Seek(0, SeekOrigin.Begin);
                 inputStream.SetLength(0);
             } else {
+                Array.Copy(buffer, (int) inputStream.Position, buffer, 0,(int) remaining);
+                /*
                 for (int i = 0; i < remaining; i++) {
                     buffer[i] = buffer[inputStream.Position + i];
                 }
+                 * */
 
                 inputStream.SetLength(remaining);
-                inputStream.Seek(0, SeekOrigin.End);
+                inputStream.Seek(remaining, SeekOrigin.Begin);
             }
         }
 
         private int sendCounter = 0;
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public bool TransportSend(byte[] packet) {
             //logger.debug("network send packet");
+            lock (this) {
+                if (state != NetworkGatewayState.ESTABLISHED) {
+                    logger.warning("send error, state not established");
+                    return false;
+                }
 
-            if (state != NetworkGatewayState.ESTABLISHED) {
-                logger.warning("send error, state not established");
-                return false;
-            }
+                using (MemoryStream memoryStream = new MemoryStream()) {
+                    using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream)) {
+                        Crc32 crc32 = new Crc32();
+                        binaryWriter.Write(packet.Length + 12);
+                        binaryWriter.Write(sendCounter);
+                        binaryWriter.Write(packet);
+                        binaryWriter.Write(
+                            crc32.ComputeHash(memoryStream.GetBuffer(), 0, 8 + packet.Length).Reverse().ToArray());
 
-            using (MemoryStream memoryStream = new MemoryStream()) {
-                using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream)) {
-                    Crc32 crc32 = new Crc32();
-                    binaryWriter.Write(packet.Length + 12);
-                    binaryWriter.Write(sendCounter);
-                    binaryWriter.Write(packet);
-                    binaryWriter.Write(crc32.ComputeHash(memoryStream.GetBuffer(), 0, 8 + packet.Length).Reverse().ToArray());
+                        byte[] transportPacket = memoryStream.ToArray();
 
-                    byte[] transportPacket = memoryStream.ToArray();
+                        //logger.info("send transport packet: {0}", BitConverter.ToString(transportPacket).Replace("-",""));
 
-                    //logger.info("send transport packet: {0}", BitConverter.ToString(transportPacket).Replace("-",""));
+                        var args = new SocketAsyncEventArgs();
+                        args.SetBuffer(transportPacket, 0, transportPacket.Length);
 
-                    var args = new SocketAsyncEventArgs();
-                    args.SetBuffer(transportPacket, 0, transportPacket.Length);
-
-                    try {
-                        socket.SendAsync(args);
-                    } catch (Exception e) {
-                        logger.warning("transport packet send error: {0}", e);
-                        /*
+                        try {
+                            socket.SendAsync(args);
+                        }
+                        catch (Exception e) {
+                            logger.warning("transport packet send error: {0}", e);
+                            /*
                         if(state != NetworkGatewayState.DISPOSED) {
                             state = NetworkGatewayState.INIT;
                             Connect(host, port);
                         }*/
-                        TryReconnect();
-                        return false;
-                    }
+                            TryReconnect();
+                            return false;
+                        }
 
-                    sendCounter++;
-                    return true;
+                        sendCounter++;
+                        return true;
+                    }
                 }
             }
         }

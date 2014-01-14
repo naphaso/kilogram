@@ -24,9 +24,15 @@ namespace Telegram.Core.Logging {
         }
 
         private void logWithLevel(LoggingLevel targetLevel, string format, params object[] args) {
-            if (targetLevel >= level) {
-                string outFormat = String.Format("[{0}] {1} {2}: {3}", Thread.CurrentThread.GetHashCode(), targetLevel, typeName, format);
-                Debug.WriteLine(outFormat, args);
+            try {
+                if (targetLevel >= level) {
+                    string outFormat = String.Format("[{0}] {1} {2}: {3}", Thread.CurrentThread.GetHashCode(),
+                        targetLevel, typeName, format);
+                    Debug.WriteLine(outFormat, args);
+                }
+            }
+            catch (Exception ex) {
+                
             }
         }
 

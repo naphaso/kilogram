@@ -223,7 +223,7 @@ namespace Telegram.MTProto {
                 }
 
                 //logger.info("salt: {0}, session {1}, msgid {2}, seqno {3}", remoteSalt, remoteSessionId, remoteMessageId, remoteSequence);
-//                logger.info("gateway on input: {0}", BitConverter.ToString(message).Replace("-", "").ToLower());
+                logger.info("gateway on input: {0}", BitConverter.ToString(message).Replace("-", "").ToLower());
             }
 
             using(MemoryStream messageStream = new MemoryStream(message, false))
