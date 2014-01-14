@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 ﻿using System.Diagnostics;
 ﻿using System.IO.IsolatedStorage;
 ﻿using System.Linq;
+﻿using System.Net.Sockets;
 ﻿using System.Runtime.CompilerServices;
 ﻿using System.Threading.Tasks;
 ﻿using System.Windows;
@@ -364,6 +365,18 @@ namespace Telegram.Model.Wrappers {
 
         public void ProcessNewMessage(MessageModel messageModel) {
             logger.info("processing message and adding to observable collection");
+            if (messageModel is MessageModelDelivered) {
+                MessageModelDelivered newMessage = (MessageModelDelivered) messageModel;
+                var selectedMessages = from message in messages
+                    where message is MessageModelDelivered && ((MessageModelDelivered) message).Id == messageModel.Id
+                    select message;
+                if (selectedMessages.Any()) {
+                    logger.info("message with this ID already in list");
+                    return;
+                }
+
+            }
+
             messages.Add(messageModel);
             Peer peer = Peer;
             if (peer.Constructor == Constructor.peerUser) {

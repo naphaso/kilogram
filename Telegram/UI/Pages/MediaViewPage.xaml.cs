@@ -267,7 +267,17 @@ namespace sdkImages.Scenarios {
         }
 
         private void OnSaveClick(object sender, RoutedEventArgs e) {
+            if (media.Constructor == Constructor.messageMediaPhoto) {
+                WriteableBitmap wbm = new WriteableBitmap(_bitmap);
 
+                Photo photo = ((MessageMediaPhotoConstructor)media).photo;
+                if (photo.Constructor != Constructor.photo)
+                    return;
+
+                PhotoConstructor photoCons = (PhotoConstructor) photo;
+
+                wbm.SaveToMediaLibrary(photoCons.caption == "" ? Helpers.GenerateRandomUlong().ToString("X") : photoCons.caption);
+            }
         }
 
         private void OnShareClick(object sender, RoutedEventArgs e) {

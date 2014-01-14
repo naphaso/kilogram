@@ -214,7 +214,7 @@ namespace Telegram.Model.Wrappers {
                     await session.Api.messages_sendMedia(InputPeer, media, randomId);
 
                 Message message;
-                int pts, seq, id;
+                int pts, seq;
                 if (sentMessage.Constructor == Constructor.messages_statedMessage) {
                     Messages_statedMessageConstructor sentMessageConstructor =
         (Messages_statedMessageConstructor)sentMessage;
@@ -244,6 +244,7 @@ namespace Telegram.Model.Wrappers {
                 }
 
                 if (!session.Updates.processUpdatePtsSeq(pts, seq)) {
+                    logger.error("send media process updates failed");
                     messages.Remove(undeliveredMessage);
                     return;
                 }
@@ -252,8 +253,17 @@ namespace Telegram.Model.Wrappers {
 
                 int messageIndex = messages.IndexOf(undeliveredMessage);
                 if (messageIndex != -1) {
-                    messages[messageIndex] =
-                        new MessageModelDelivered(message);
+                    MessageModel messageModel = new MessageModelDelivered(message);
+                    MessageModelDelivered newMessage = (MessageModelDelivered)messageModel;
+                    var selectedMessages = from msg in messages
+                                            where msg is MessageModelDelivered && ((MessageModelDelivered)msg).Id == messageModel.Id
+                                            select msg;
+                    if (selectedMessages.Any()) {
+                        messages.RemoveAt(messageIndex);
+                    } else { 
+                        messages[messageIndex] =
+                            new MessageModelDelivered(message);
+                    }
                 } else {
                     logger.error("not found undelivered message to confirmation");
                 }
@@ -375,8 +385,7 @@ namespace Telegram.Model.Wrappers {
             try {
                 if(messages.Count > 0 && messages[0] is MessageModelDelivered) {
                     messages_Messages loadedMessages = await TelegramSession.Instance.Api.messages_getHistory(InputPeer, 0, messages[0].Id, 30);
-                    //loadMorePossible =
-                    Process(loadedMessages);
+                    loadMorePossible = Process(loadedMessages);
                 }
             } catch(Exception e) {
                 logger.error("load more exception: {0}", e);
