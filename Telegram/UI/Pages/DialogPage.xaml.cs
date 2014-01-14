@@ -505,5 +505,11 @@ namespace Telegram.UI {
                 ((DialogModelPlain) model).SendMedia(geoMedia);
             }
         }
+
+        private void PickAndSendDoc(object sender, GestureEventArgs e) {
+            var photo = new PhotoChooserTask { ShowCamera = true };
+            photo.Completed += docChooserTask_Completed;
+            photo.Show();
+        }
     }
 }

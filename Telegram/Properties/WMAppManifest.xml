@@ -18,6 +18,7 @@
       <Capability Name="ID_CAP_ISV_CAMERA" />
       <Capability Name="ID_CAP_CONTACTS" />
       <Capability Name="ID_CAP_PHONEDIALER" />
+      <Capability Name="ID_CAP_MEDIALIB_PHOTO" />
     </Capabilities>
     <Tasks>
       <DefaultTask Name="_default" NavigationPage="UI/Pages/StartPage.xaml" />
