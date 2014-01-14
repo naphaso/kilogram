@@ -43,7 +43,7 @@ namespace Telegram.Utils {
             suppressNotifications = true;
 
             foreach(var element in list) {
-                Add(element);
+                Insert(0, element);
             }
 
             suppressNotifications = false;
@@ -59,7 +59,7 @@ namespace Telegram.Utils {
             suppressNotifications = true;
 
             foreach (var element in list) {
-                Add(element);
+                Insert(0, element);
             }
 
             suppressNotifications = false;
