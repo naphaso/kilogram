@@ -311,8 +311,17 @@ namespace Telegram.MTProto {
                 T obj = (T) Activator.CreateInstance(constructorType);
                 ((TLObject) (object) obj).Read(reader);
                 return obj;
+            } else if(typeof(T) == typeof(bool)) {
+                uint code = reader.ReadUInt32();
+                if(code == 0x997275b5) {
+                    return (T) (object) true;
+                } else if(code == 0xbc799737) {
+                    return (T) (object) false;
+                } else {
+                    throw new Exception("unknown bool value");
+                }
             } else {
-                return Activator.CreateInstance<T>();
+                throw new Exception("unknown return type");
             }
         }
 

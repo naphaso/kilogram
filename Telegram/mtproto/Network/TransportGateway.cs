@@ -212,7 +212,8 @@ namespace Telegram.MTProto {
                 //logger.debug("response data: {0}", BitConverter.ToString(packet));
 
                 if(!checksum.SequenceEqual(validChecksum)) {
-                    logger.warning("invalid checksum!");
+                    logger.warning("invalid checksum! skip");
+                    continue;
                 }
 
                 OnReceive(packet);

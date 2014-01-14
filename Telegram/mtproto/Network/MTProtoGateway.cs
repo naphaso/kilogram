@@ -559,9 +559,16 @@ namespace Telegram.MTProto {
                 case 0x3072cfa1: // gzip_packed
                     logger.debug("MSG gzip_packed");
                     return HandleGzipPacked(messageId, sequence, messageReader);
-                default:
-                    //logger.debug("other message: {}", encodeHexString(unparsedPart.array(), unparsedPart.position(), unparsedPart.remaining()));
+                case 0xe317af7e:
+                case 0xd3f45784:
+                case 0x2b2fbd4e:
+                case 0x78d4dec1:
+                case 0x725b04c3:
+                case 0x74ae4240:
                     return HandleUpdate(messageId, sequence, messageReader);
+                default:
+                    logger.debug("unknown message: {0}", code);
+                    return false;
             }
         }
 
