@@ -60,12 +60,13 @@ namespace Telegram.UI.Controls {
         }
 
         private bool isLoading = false;
-
+        private object loadMoreScrollItem = null;
         private void OnItemRealized(object sender, ItemRealizationEventArgs args) {
             if(!isLoading && ItemsSource != null && Model != null && Model.LoadMorePossible() && ItemsSource.Count > 0) {
                 if(args.ItemKind == LongListSelectorItemKind.Item) {
                     if(args.Container.Content == ItemsSource[0]) {
                         isLoading = true;
+                        loadMoreScrollItem = ItemsSource[0];
                         //var currentItem = ItemsSource[0];
                         Model.LoadMore().ContinueWith((res) => { isLoading = false; /* if(ItemsSource.Contains(currentItem)) ScrollTo(currentItem); */} /*, TaskScheduler.FromCurrentSynchronizationContext()*/);
                     }
@@ -80,6 +81,12 @@ namespace Telegram.UI.Controls {
             ((INotifyCollectionChanged)ItemsSource).CollectionChanged += (sender2, args2) => {
                 if (ItemsSource.Count > 0 && args2.NewItems != null)
                     ScrollTo(ItemsSource[ItemsSource.Count - 1]);
+                if(args2.Action == NotifyCollectionChangedAction.Reset) {
+                    if(loadMoreScrollItem != null) {
+                        ScrollTo(loadMoreScrollItem);
+                        loadMoreScrollItem = null;
+                    }
+                }
             };
 
         }
