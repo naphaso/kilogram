@@ -538,7 +538,31 @@ namespace Telegram.UI {
         }
 
         private void OnContactTap(object sender, GestureEventArgs e) {
+            var element = (FrameworkElement)sender;
+            MessageModel message = (MessageModel)element.DataContext;
+
+            if (!(message is MessageModelDelivered))
+                return;
+
+            MessageModelDelivered messageDelivered = (MessageModelDelivered) message;
+            MessageMedia media = messageDelivered.MessageMedia;
+            if (media.Constructor != Constructor.messageMediaContact)
+                return;
+
+            MessageMediaContactConstructor mediaContact = (MessageMediaContactConstructor) media;
+
+            SaveContactTask saveContactTask = new SaveContactTask();
+            saveContactTask.Completed += new EventHandler<SaveContactResult>(saveContactTask_Completed);
+
+            saveContactTask.FirstName = mediaContact.first_name;
+            saveContactTask.LastName = mediaContact.last_name;
+            saveContactTask.MobilePhone = "+" + mediaContact.phone_number;
             
+            saveContactTask.Show();
+        }
+
+        private void saveContactTask_Completed(object sender, SaveContactResult e) {
+            logger.info("User saved successfully");
         }
     }
 }
