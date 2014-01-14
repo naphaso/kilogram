@@ -375,7 +375,8 @@ namespace Telegram.Model.Wrappers {
             try {
                 if(messages.Count > 0 && messages[0] is MessageModelDelivered) {
                     messages_Messages loadedMessages = await TelegramSession.Instance.Api.messages_getHistory(InputPeer, 0, messages[0].Id, 30);
-                    loadMorePossible = Process(loadedMessages);
+                    //loadMorePossible =
+                    Process(loadedMessages);
                 }
             } catch(Exception e) {
                 logger.error("load more exception: {0}", e);
