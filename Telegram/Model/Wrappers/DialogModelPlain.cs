@@ -381,7 +381,7 @@ namespace Telegram.Model.Wrappers {
 
         public override async Task LoadMore() {
             logger.info("LOADING MOOOOOOOOOOOOOOOOAR!!!!");
-            await Task.Delay(TimeSpan.FromSeconds(5));
+            
             
             try {
                 if(messages.Count > 0 && messages[0] is MessageModelDelivered) {
@@ -408,18 +408,28 @@ namespace Telegram.Model.Wrappers {
             TelegramSession.Instance.Updates.ProcessUsers(loadedMessages.users);
             TelegramSession.Instance.Updates.ProcessChats(loadedMessages.chats);
 
+
+            if(!loadedMessages.messages.Any())
+                return false;
+
+
             messages.AddRange(from message in loadedMessages.messages select new MessageModelDelivered(message));
 
-            return loadedMessages.messages.Any();
+            return true;
         }
 
         private bool Process(Messages_messagesSliceConstructor loadedMessages) {
             TelegramSession.Instance.Updates.ProcessUsers(loadedMessages.users);
             TelegramSession.Instance.Updates.ProcessChats(loadedMessages.chats);
 
+
+            if (!loadedMessages.messages.Any())
+                return false;
+
+
             messages.AddRange(from message in loadedMessages.messages select new MessageModelDelivered(message));
 
-            return loadedMessages.messages.Any();
+            return true;
         }
 
         

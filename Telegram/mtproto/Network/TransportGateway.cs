@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Ionic.Crc;
 using Telegram.Core.Logging;
 using Telegram.MTProto.Crypto;
 using Telegram.MTProto.Exceptions;
@@ -301,12 +302,13 @@ namespace Telegram.MTProto {
 
                 using (MemoryStream memoryStream = new MemoryStream()) {
                     using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream)) {
-                        Crc32 crc32 = new Crc32();
+                        //Crc32 crc32 = new Crc32();
+                        CRC32 crc32 = new CRC32();
                         binaryWriter.Write(packet.Length + 12);
                         binaryWriter.Write(sendCounter);
                         binaryWriter.Write(packet);
-                        binaryWriter.Write(
-                            crc32.ComputeHash(memoryStream.GetBuffer(), 0, 8 + packet.Length).Reverse().ToArray());
+                        crc32.SlurpBlock(memoryStream.GetBuffer(), 0, 8+packet.Length);
+                        binaryWriter.Write(crc32.Crc32Result);
 
                         byte[] transportPacket = memoryStream.ToArray();
 

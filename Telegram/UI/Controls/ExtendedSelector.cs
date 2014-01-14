@@ -66,8 +66,8 @@ namespace Telegram.UI.Controls {
                 if(args.ItemKind == LongListSelectorItemKind.Item) {
                     if(args.Container.Content == ItemsSource[0]) {
                         isLoading = true;
-                        var currentItem = ItemsSource[0];
-                        Model.LoadMore().ContinueWith((res) => { isLoading = false; if(ItemsSource.Contains(currentItem)) ScrollTo(currentItem); }, TaskScheduler.FromCurrentSynchronizationContext());
+                        //var currentItem = ItemsSource[0];
+                        Model.LoadMore().ContinueWith((res) => { isLoading = false; /* if(ItemsSource.Contains(currentItem)) ScrollTo(currentItem); */} /*, TaskScheduler.FromCurrentSynchronizationContext()*/);
                     }
                 }
             }

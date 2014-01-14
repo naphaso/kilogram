@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
+using Telegram.Core.Logging;
 
 namespace Telegram.Utils {
     public class ObservableCollectionUI<T> : ObservableCollection<T> {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(ObservableCollectionUI<T>));
         // Override the event so this class can access it
         public override event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -19,6 +21,8 @@ namespace Telegram.Utils {
         private volatile bool suppressNotifications = false;
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
+            //logger.debug("OBSERVABLE COLLECTION CHANGED suppress: {0}, event {1}", suppressNotifications, e);
+
             if(suppressNotifications) {
                 return;
             }
