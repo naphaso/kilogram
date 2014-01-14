@@ -74,6 +74,23 @@ namespace Telegram.UI {
                 ShowNotice();
         }
 
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e) {
+            base.OnNavigatingFrom(e);
+            if (EmojiPopup.IsOpen) {
+                ToggleEmoji();
+            }
+
+            if (AttachPopup.IsOpen) {
+                ToggleAttach();
+            }
+
+            lock (typingLock) {
+                if (typing) {
+                    timer.Stop();
+                    model.SendTyping(false);
+                }
+            }
+        }
 
         protected override void OnBackKeyPress(CancelEventArgs e) {
             if (EmojiPopup.IsOpen) {
@@ -513,6 +530,15 @@ namespace Telegram.UI {
             var photo = new PhotoChooserTask { ShowCamera = true };
             photo.Completed += docChooserTask_Completed;
             photo.Show();
+        }
+
+        private void PickAndSendContact(object sender, GestureEventArgs e) {
+            int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(model);
+            NavigationService.Navigate(new Uri("/UI/Pages/SendContact.xaml?modelId=" + modelId, UriKind.Relative));
+        }
+
+        private void OnContactTap(object sender, GestureEventArgs e) {
+            
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq.Mapping;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -47,6 +48,26 @@ namespace Telegram.Model.Wrappers {
         public override bool IsForwarded {
             get {
                 return message.Constructor == Constructor.messageForwarded;
+            }
+        }
+
+        public override bool IsContact {
+            get {
+                MessageMedia media = ((MessageConstructor)message).media;
+                return media.Constructor == Constructor.messageMediaContact;
+
+            }
+        }
+
+        public override string ContactName {
+            get {
+                MessageMedia media = ((MessageConstructor)message).media;
+
+                if (media.Constructor != Constructor.messageMediaContact)
+                    return "";
+
+                MessageMediaContactConstructor mediaContact = (MessageMediaContactConstructor) media;
+                return mediaContact.first_name + " " + mediaContact.last_name;
             }
         }
 
