@@ -12,6 +12,7 @@ using System.Windows.Media;
 using Telegram.Core.Logging;
 using Telegram.MTProto.Crypto;
 using Telegram.MTProto.Exceptions;
+using Telegram.MTProto.Network;
 
 namespace Telegram.MTProto {
 
@@ -28,10 +29,11 @@ namespace Telegram.MTProto {
         private TaskCompletionSource<object> connectTaskCompletionSource;
 
         private Socket socket;
-        private MemoryStream inputStream;
+        //private MemoryStream inputStream;
         private TelegramDC dc;
         private int endpointIndex;
-        
+
+        private CborInput input;
 
 
         public event MTProtoInputHandler InputEvent;
@@ -57,7 +59,9 @@ namespace Telegram.MTProto {
         public TransportGateway() {
             socket = null;
             state = NetworkGatewayState.INIT;
-            inputStream = new MemoryStream(16000);
+            //inputStream = new MemoryStream(16000);
+            input = new CborInputMoveBuffer(512 * 1024);
+            input.InputEvent += CheckInput;
         }
 
         private void TryReconnect() {
@@ -167,8 +171,9 @@ namespace Telegram.MTProto {
             if (state == NetworkGatewayState.ESTABLISHED) {
                 if (args.SocketError == SocketError.Success && socket.Connected && args.BytesTransferred > 0) {
                     //logger.debug("input transport data: {0}", BitConverter.ToString(args.Buffer, 0, args.BytesTransferred));
-                    inputStream.Write(args.Buffer, 0, args.BytesTransferred);
-                    CheckInput();
+                    //inputStream.Write(args.Buffer, 0, args.BytesTransferred);
+                    //CheckInput();
+                    input.AddChunk(args.Buffer, 0, args.BytesTransferred);
                     ReadAsync(args.Buffer);
                 } else if(state != NetworkGatewayState.DISPOSED) {
                     logger.info("read error {0}, reconnecting", args.SocketError);
@@ -185,6 +190,42 @@ namespace Telegram.MTProto {
         }
 
         private void CheckInput() {
+
+            if(!input.HasBytes(12)) {
+                return;
+            }
+
+            int packetLength = (int) input.ReadInt32();
+            if(packetLength < 12) {
+                logger.error("invalid packet length: {0}", packetLength);
+                return;
+            }
+
+            while(input.HasBytes(packetLength)) {
+                uint len = input.GetInt32();
+                uint seq = input.GetInt32();
+                byte[] packet = input.GetBytes(packetLength - 12);
+                int checksum = (int)input.GetInt32();
+                int validChecksum = input.Crc32(-packetLength, packetLength - 4);
+
+                if (checksum != validChecksum) {
+                    logger.warning("invalid checksum! skip");
+                    continue;
+                }
+
+                try {
+                    OnReceive(packet);
+                } catch (Exception ex) {
+                    logger.error("OnReceive error {0}", ex);
+                }
+
+                if(input.HasBytes(4)) {
+                    packetLength = (int) input.ReadInt32();
+                } else {
+                    break;
+                }
+            }
+            /*
             //logger.debug("check input started");
             if (inputStream.Length < 12) {
                 //logger.debug("input too short");
@@ -204,6 +245,7 @@ namespace Telegram.MTProto {
                 int seq = binaryReader.ReadInt32();
                 byte[] packet = binaryReader.ReadBytes(packetLength - 12);
                 byte[] checksum = binaryReader.ReadBytes(4);
+                
 
                 Crc32 crc32 = new Crc32();
                 byte[] validChecksum = crc32.ComputeHash(inputStream.GetBuffer(), (int)inputStream.Position - 4 - packet.Length - 8, 8 + packet.Length).Reverse().ToArray();
@@ -244,7 +286,7 @@ namespace Telegram.MTProto {
 
                 inputStream.SetLength(remaining);
                 inputStream.Seek(0, SeekOrigin.End);
-            }
+            }*/
         }
 
         private int sendCounter = 0;
