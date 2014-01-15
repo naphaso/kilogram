@@ -342,7 +342,7 @@ namespace Telegram.UI {
 //                Deployment.Current.Dispatcher.BeginInvoke(() => {
 //                    UploadProgressBar.Visibility = Visibility.Collapsed;
 //                });
-
+                logger.info("START upload photo");
                 if (!(model is DialogModelPlain)) 
                     return;
 
@@ -352,9 +352,11 @@ namespace Telegram.UI {
                     await TelegramSession.Instance.Files.UploadFile(name, stream, delegate { });
 
                 InputMedia media = TL.inputMediaUploadedPhoto(file);
-
+                logger.info("END upload photo");
 
                 Deployment.Current.Dispatcher.BeginInvoke(() => {
+                    logger.info("Send media in UI thread");
+
                     plainModel.SendMedia(media);
                 });
 //                Deployment.Current.Dispatcher.BeginInvoke(() => {

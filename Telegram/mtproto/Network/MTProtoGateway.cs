@@ -23,6 +23,7 @@ namespace Telegram.MTProto {
         public abstract void OnException(Exception exception);
         public abstract bool Confirmed { get; }
         public abstract bool Responded { get; }
+        public abstract void OnSendSuccess();
     }
 
     public abstract class MTProtoRequestUnconfirmed : MTProtoRequest {
@@ -44,7 +45,6 @@ namespace Telegram.MTProto {
 
         public override void OnSend(BinaryWriter writer) {
             writer.Write(requestData);
-            requestData = null;
         }
 
         public override void OnResponse(BinaryReader reader) {
@@ -64,6 +64,10 @@ namespace Telegram.MTProto {
 
         public override bool Responded {
             get { return true; }
+        }
+
+        public override void OnSendSuccess() {
+            requestData = null;
         }
 
         private byte[] requestData;
@@ -106,6 +110,10 @@ namespace Telegram.MTProto {
             get { return true; }
         }
 
+        public override void OnSendSuccess() {
+            
+        }
+
         public override bool Confirmed {
             get { return true; }
         }
@@ -143,6 +151,10 @@ namespace Telegram.MTProto {
 
         public override bool Responded {
             get { return false; }
+        }
+
+        public override void OnSendSuccess() {
+            
         }
     }
 
@@ -424,7 +436,12 @@ namespace Telegram.MTProto {
                         if(requests[0].Responded) {
                             runningRequests.Add(messageId, requests[0]);    
                         }
-                        RawSend(messageId, session.GenerateSequence(requests[0].Confirmed), memory.ToArray());
+                        bool result = RawSend(messageId, session.GenerateSequence(requests[0].Confirmed), memory.ToArray());
+
+                        if (result)
+                            requests[0].OnSendSuccess();
+                        else 
+                            pendingRequests.Add(requests[0]);
                     }
                 }
             } else {
@@ -458,7 +475,15 @@ namespace Telegram.MTProto {
                     container = memoryStream.ToArray();
                 }
 
-                RawSend(GetNewMessageId(), session.GenerateSequence(false), container);
+                bool status = RawSend(GetNewMessageId(), session.GenerateSequence(false), container);
+                if (status) {
+                    foreach (var req in requests) {
+                        req.OnSendSuccess();
+                    }
+                }
+                else {
+                    pendingRequests.AddRange(requests);
+                }
             }
         }
 
@@ -466,7 +491,7 @@ namespace Telegram.MTProto {
             return new MemoryStream(new byte[len], 0, len,
                                     true, true);
         }
-        private void RawSend(ulong messageId, int sequence, byte[] packet) {
+        private bool RawSend(ulong messageId, int sequence, byte[] packet) {
             //logger.info("raw send packet: {0}", BitConverter.ToString(packet).Replace("-", ""));
             using (MemoryStream plaintextPacket = makeMemory(8 + 8 + 8 + 4 + 4 + packet.Length)) {
                 using(BinaryWriter plaintextWriter = new BinaryWriter(plaintextPacket)) {
@@ -490,7 +515,7 @@ namespace Telegram.MTProto {
                             writer.Write(msgKey);
                             writer.Write(ciphertext);
 
-                            gateway.TransportSend(ciphertextPacket.GetBuffer());
+                            return gateway.TransportSend(ciphertextPacket.GetBuffer());
                         }
                     }
                 }

@@ -63,6 +63,9 @@ namespace Telegram.Model.Wrappers {
 
         public override string ContactName {
             get {
+                if (message.Constructor != Constructor.message)
+                    return "";
+
                 MessageMedia media = ((MessageConstructor)message).media;
 
                 if (media.Constructor != Constructor.messageMediaContact)

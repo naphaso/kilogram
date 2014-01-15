@@ -81,7 +81,7 @@ namespace Telegram.MTProto {
             state = NetworkGatewayState.INIT;
             connectRetries--;
             endpointIndex = (endpointIndex + 1)%dc.Endpoints.Count;
-            Task.Delay(3000).ContinueWith(delegate { Connect(dc); });
+            Task.Delay(1000).ContinueWith(delegate { Connect(dc); });
         }
 
 
