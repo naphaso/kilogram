@@ -354,4 +354,57 @@ namespace Telegram.MTProto {
             }
         }
     }
+
+    public class TransportGatewayAsync : IDisposable {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(TransportGatewayAsync));
+
+        private TelegramDC dc;
+        private AsyncSocket socket;
+        private CborInput input;
+
+        public TransportGatewayAsync(TelegramDC dc) {
+            this.dc = dc;
+            socket = null;
+            input = new CborInputMoveBuffer(512 * 1024);
+            input.InputEvent += CheckInput;
+            Queue<int> asd;
+            
+        }
+
+        public async Task Run() {
+            while (true) {
+                try {
+                    foreach (var telegramEndpoint in dc.Endpoints) {
+                        try {
+                            socket = new AsyncSocket();
+                            await socket.Connect(telegramEndpoint.Host, telegramEndpoint.Port);
+                            break;
+                        } catch (TelegramSocketException e) {
+                            logger.info("connect to {0}:{1} error: {2}", telegramEndpoint.Host, telegramEndpoint.Port, e);
+                            socket = null;
+                        }
+                    }
+
+                    if (socket == null) {
+                        await Task.Delay(TimeSpan.FromSeconds(3));
+                        continue;
+                    }
+
+
+
+                } catch (Exception e) {
+                    logger.info("connection error: {0}", e);
+                }
+            }
+        }
+
+        private void CheckInput() {
+            
+        }
+
+
+        public void Dispose() {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -114,6 +114,7 @@
     <Compile Include="MTProto\Components\Files.cs" />
     <Compile Include="MTProto\Components\UpdatesProcessor.cs" />
     <Compile Include="MTProto\Crypto\MD5Digest.cs" />
+    <Compile Include="MTProto\Network\AsyncSocket.cs" />
     <Compile Include="MTProto\Network\CborInput.cs" />
     <Compile Include="MTProto\Network\CborInputChunks.cs" />
     <Compile Include="MTProto\Network\CborInputCyclicBuffer.cs" />
