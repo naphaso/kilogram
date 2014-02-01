@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Windows.Phone.Networking.NetworkOperators;
 using Windows.UI.Core;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -187,16 +188,6 @@ namespace Telegram.UI {
         private void ShowProgress(string text) {
             this.IsEnabled = false;
 
-//            _progressPopup = new Popup();
-//            UserControl content = new ProgressBarUserControl();
-//            _progressPopup.Child = content;
-//
-//            _progressPopup.HorizontalAlignment = HorizontalAlignment.Center;
-//            _progressPopup.VerticalAlignment = VerticalAlignment.Center;
-//
-//            _progressPopup.VerticalOffset = (this.ActualHeight - content.ActualHeight) / 2;
-//            
-//            _progressPopup.IsOpen = true;
             if (progressIndicator == null) {
                 progressIndicator = new ProgressIndicator();
                 SystemTray.SetProgressIndicator(this, progressIndicator);

@@ -60,14 +60,7 @@ namespace Telegram.UI.Pages {
         }
 
         private void UpdateParticipantsText() {
-            string fullText = ChatMembersEdit.ContentText.Text;
-            if (fullText.LastIndexOf(";") == -1) {
-                ChatMembersEdit.ContentText.Text = GetSelectedUserList();
-                return;
-            }
-
-            string currentMember = fullText.Substring(fullText.LastIndexOf(";")+1);
-            ChatMembersEdit.ContentText.Text = GetSelectedUserList() + currentMember;
+            ChatMembersEdit.ContentText.Text = GetSelectedUserList();
         }
 
         public string GetSelectedUserList() {

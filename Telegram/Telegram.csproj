@@ -215,6 +215,9 @@
     <Compile Include="UI\Controls\ThreeDotUserControl.xaml.cs">
       <DependentUpon>ThreeDotUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Pages\BlockedUsers.xaml.cs">
+      <DependentUpon>BlockedUsers.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Pages\ChatCreate.xaml.cs">
       <DependentUpon>ChatCreate.xaml</DependentUpon>
     </Compile>
@@ -370,6 +373,10 @@
     <Page Include="UI\Controls\ThreeDotUserControl.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Pages\BlockedUsers.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\ChatCreate.xaml">
       <SubType>Designer</SubType>
@@ -1490,6 +1497,9 @@
     </Reference>
     <Reference Include="Coding4Fun.Toolkit.Storage">
       <HintPath>..\packages\Coding4Fun.Toolkit.Storage.2.0.7\lib\windowsphone8\Coding4Fun.Toolkit.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="libphonenumber-csharp-portable">
+      <HintPath>..\packages\libphonenumber-csharp-portable.1.0.0.2\lib\libphonenumber-csharp-portable.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit">

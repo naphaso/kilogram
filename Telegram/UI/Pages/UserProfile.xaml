@@ -80,11 +80,12 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
 
-            <shell:ApplicationBarIconButton Click="Share_Click" IconUri="/Assets/UI/appbar.share.png" Text="new dialog" />
-            <shell:ApplicationBarIconButton Click="Edit_Click" IconUri="/Assets/UI/appbar.edit.png" Text="search" />
+            <shell:ApplicationBarIconButton Click="Share_Click" IconUri="/Assets/UI/appbar.share.png" Text="share" />
+            <shell:ApplicationBarIconButton Click="Edit_Click" IconUri="/Assets/UI/appbar.edit.png" Text="edit" />
 
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Click="Block_Click" Text="block" />
+                <shell:ApplicationBarMenuItem Click="Delete_Click" Text="delete" />
             </shell:ApplicationBar.MenuItems>
 
         </shell:ApplicationBar>

@@ -17,7 +17,6 @@
     <UserControl.Resources>
         <!-- USER TEMPLATE SELECTOR -->
         <converters:UserOnlineStatusColorConverter x:Key="OnlineColorConverter"/>
-
         <DataTemplate x:Key="ContactTemplate">
             <ListBoxItem>
                 <StackPanel Orientation="Horizontal" toolkit:TiltEffect.IsTiltEnabled="True" Height="62" Margin="0,6">

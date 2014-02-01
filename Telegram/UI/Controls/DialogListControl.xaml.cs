@@ -50,15 +50,18 @@ namespace Telegram.UI.Controls {
                 return;
             }
 
-            ObservableCollection<DialogModel> fakeModel = new ObservableCollection<DialogModel>();
-            foreach (var dialogModel in TelegramSession.Instance.Dialogs.Model.Dialogs) {
-                if (dialogModel.Title.ToLower().Contains(str.ToLower())
-                    || dialogModel.Preview.ToLower().Contains(str.ToLower())) {
-                    fakeModel.Add(dialogModel);
-                }
-            }
-
-            DialogList.ItemsSource = fakeModel;
+//            ObservableCollection<DialogModel> fakeModel = new ObservableCollection<DialogModel>();
+//            foreach (var dialogModel in TelegramSession.Instance.Dialogs.Model.Dialogs) {
+//                if (dialogModel.Title.ToLower().Contains(str.ToLower())
+//                    || dialogModel.Preview.ToLower().Contains(str.ToLower())) {
+//                    fakeModel.Add(dialogModel);
+//                }
+//            }
+            var filter = str.ToLower();
+            var result =
+                TelegramSession.Instance.Dialogs.Model.Dialogs.Where(
+                    dialog => dialog.Title.ToLower().Contains(filter) || dialog.Preview.ToLower().Contains(filter));
+            DialogList.ItemsSource = result.ToList();
         }
 
         private void LoadModel() {
@@ -72,29 +75,6 @@ namespace Telegram.UI.Controls {
             };
         }
 
-        private void initDemo() {
-            var items = new ObservableCollection<DialogItem> {
-                new DialogItem() {Avatar = "2", Preview = "Hi there!", Timestamp = "9:56a", Title = "Jane Doe"},
-                new DialogItem() {
-                    Avatar = "3",
-                    Preview = "Stay awhile and listen.",
-                    Timestamp = "1:21a",
-                    Title = "Decard Kain"
-                }
-            };
-            items.Add(new DialogItem() {Avatar = "1", Preview = "Hello.", Timestamp = "11:21a", Title = "John Doe"});
-
-            DialogList.ItemsSource = items;
-
-            items.Add(new DialogItem() {
-                Avatar = "4",
-                Preview = "Stay awhile and listen.",
-                Timestamp = "1:21a",
-                Title = "Decard Kain"
-            });
-            DialogList.ItemsSource = new ObservableCollection<DialogItem>(items.OrderBy(i => i.Timestamp));
-
-        }
 
         private void OnClearChatHistory(object sender, RoutedEventArgs e) {
             MessageBoxResult result = MessageBox.Show("You are about to clear chat hostory. Continue?",

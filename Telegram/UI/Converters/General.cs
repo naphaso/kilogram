@@ -7,10 +7,10 @@ using System.Windows;
 using System.Windows.Data;
 using Telegram.Core.Logging;
 using Telegram.Model.Wrappers;
+using Telegram.Utils;
 
 namespace Telegram.UI.Converters {
     public class BoolToVisibilityConverter : IValueConverter {
-        private static readonly Logger logger = LoggerFactory.getLogger(typeof(BoolToVisibilityConverter));
 
         #region IValueConverter Members
 
@@ -29,6 +29,28 @@ namespace Telegram.UI.Converters {
         public object ConvertBack(object value, Type targetType,
             object parameter, System.Globalization.CultureInfo culture) {
             return false;
+        }
+
+        #endregion
+    }
+
+    public class PhoneStringConverter : IValueConverter
+    {
+
+        #region IValueConverter Members
+
+
+        public object Convert(object value, Type targetType,
+            object parameter, System.Globalization.CultureInfo culture)
+        {
+            string number = (string)value;
+            return Formatters.FormatPhoneNumberWithCulture(number, culture);
+        }
+
+        public object ConvertBack(object value, Type targetType,
+            object parameter, System.Globalization.CultureInfo culture)
+        {
+            return value;
         }
 
         #endregion
