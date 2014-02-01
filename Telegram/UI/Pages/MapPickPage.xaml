@@ -1,0 +1,49 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="Telegram.UI.Pages.MapPickPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps"
+    xmlns:telegram="clr-namespace:Telegram"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="true"
+    shell:SystemTray.Opacity="0.8">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--ContentPanel - place additional content here-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
+            <maps:Map Name="Map" Tap="Map_OnTap"/>
+            <Grid Margin="0,32,0,0" Height="76" VerticalAlignment="Top" Background="#CC000000">
+                   <TextBlock VerticalAlignment="Center" FontSize="24" Margin="16,0" Text="SHARE LOCATION"></TextBlock>
+            </Grid>
+        </Grid>
+    </Grid>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar Mode="Default" Opacity="0.8" IsMenuEnabled="True" IsVisible="True">
+
+            <shell:ApplicationBarIconButton IsEnabled="false" Click="OnCheckinClick" IconUri="/Assets/UI/appbar.map.checkin.png" Text="center" />
+            <shell:ApplicationBarIconButton Click="OnCenterClick" IconUri="/Assets/UI/appbar.map.centerme.png" Text="center" />
+            
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="road" Click="OnRoadModeClick" />
+                <shell:ApplicationBarMenuItem Text="aerial" Click="OnAerialMode"/>
+                <shell:ApplicationBarMenuItem Text="hybrid" Click="OnHybridMode"/>
+                <shell:ApplicationBarMenuItem Text="terrain" Click="OnTerrainMode"/>
+            </shell:ApplicationBar.MenuItems>
+
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+</phone:PhoneApplicationPage>
