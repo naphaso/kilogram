@@ -257,11 +257,15 @@ namespace Telegram {
         public SignupPhone_Control() {
             InitializeComponent();
             CountryCodePicker.ItemsSource = countries;
-            CountryCodePicker.SelectedIndex = 173; // Россия, Раша, RSA! УРА! УРА!
+            CountryCodePicker.SelectedIndex = 173;
+            CountryCodeBox.TextChanged += CountryCodeBox_OnTextChanged;
         }
 
         private void CountryCodePicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            CountryCodeBox.TextChanged -= CountryCodeBox_OnTextChanged;
             CountryCodeBox.Text = "+" + ((CountryModel)this.CountryCodePicker.SelectedItem).Ext;
+            CountryCodeBox.TextChanged += CountryCodeBox_OnTextChanged;
+
             PhoneNumberBox.Focus();
         }
 
