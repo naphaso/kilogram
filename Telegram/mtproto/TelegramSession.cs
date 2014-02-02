@@ -567,6 +567,7 @@ namespace Telegram.MTProto {
             }
         }
 
+        
         private TaskCompletionSource<object> establishedTask = new TaskCompletionSource<object>();
 
         public Task Established {
@@ -574,6 +575,7 @@ namespace Telegram.MTProto {
                 return establishedTask.Task;
             }
         }
+         
 
         // save timer
         private static bool saveSessionTimerInitialized = false;
@@ -614,7 +616,7 @@ namespace Telegram.MTProto {
                     }
                     api = new TLApi(gateway);
                     logger.info("connection established, notifying");
-                    establishedTask.SetResult(null);
+                    //establishedTask.SetResult(null);
 
                     updates.RequestDifference();
 

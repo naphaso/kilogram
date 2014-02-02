@@ -68,7 +68,8 @@ namespace Telegram.UI
 
             DialogList.DialogSelected += delegate(object sender, DialogModel model) {
                 int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(model);
-                NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml?modelId=" + modelId, UriKind.Relative));
+                TelegramSession.Instance.Dialogs.OpenedDialog = model;
+                NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml", UriKind.Relative));
             };
 
             ContactList.AddressbookUserSelected += ContactListOnAddressbookUserSelected;

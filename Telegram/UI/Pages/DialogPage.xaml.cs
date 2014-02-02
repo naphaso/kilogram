@@ -36,47 +36,54 @@ namespace Telegram.UI {
 
         private DialogModel model = null;
         private volatile bool needDialogCreate = false;
+
+
+
         protected override void OnNavigatedTo(NavigationEventArgs e) {
             base.OnNavigatedTo(e);
 
             string uriParam = "";
 
-            if (NavigationContext.QueryString.TryGetValue("modelId", out uriParam)) {
-                model = TelegramSession.Instance.Dialogs.Model.Dialogs[(int.Parse(uriParam))];
+//            if (NavigationContext.QueryString.TryGetValue("modelId", out uriParam)) {
+//                model = TelegramSession.Instance.Dialogs.Model.Dialogs[(int.Parse(uriParam))];
+//
+////                PhoneApplicationService.Current.State["MapMedia"] = geoMedia;
+////                NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml?modelId=" + returnToModelId + "&action=sendMedia&content=MapMedia", UriKind.Relative));
+//                if (NavigationContext.QueryString.TryGetValue("action", out uriParam)) {
+//                    string action = uriParam;
+//                    
+//                    NavigationContext.QueryString.TryGetValue("content", out uriParam);
+//                    string content = uriParam;
+//
+//                    DoAction(action, content);
+//                }
+//            } else
+//            if (NavigationContext.QueryString.TryGetValue("userId", out uriParam))
+//            {
+//                int userId = int.Parse(uriParam);
+//                var targetPeer = TL.peerUser(userId);
+//
+//                foreach (DialogModel dialogModel in TelegramSession.Instance.Dialogs.Model.Dialogs)
+//                {
+//                    if (dialogModel is DialogModelEncrypted) continue;
+//
+//                    if (TLStuff.PeerEquals(dialogModel.Peer, targetPeer))
+//                    {
+//                        model = dialogModel;
+//                        break;
+//                    }
+//                }
+//
+//                if (model == null)
+//                {
+//                    model = new DialogModelPlain(TL.peerUser(userId), TelegramSession.Instance);
+//                    needDialogCreate = true;
+//                }
+//            }
 
-//                PhoneApplicationService.Current.State["MapMedia"] = geoMedia;
-//                NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml?modelId=" + returnToModelId + "&action=sendMedia&content=MapMedia", UriKind.Relative));
-                if (NavigationContext.QueryString.TryGetValue("action", out uriParam)) {
-                    string action = uriParam;
-                    
-                    NavigationContext.QueryString.TryGetValue("content", out uriParam);
-                    string content = uriParam;
+            //TelegramSession.Instance.Dialogs.OpenedDialog = model;
 
-                    DoAction(action, content);
-                }
-            } else if (NavigationContext.QueryString.TryGetValue("userId", out uriParam)) {
-                int userId = int.Parse(uriParam);
-                var targetPeer = TL.peerUser(userId);
-
-                foreach (DialogModel dialogModel in TelegramSession.Instance.Dialogs.Model.Dialogs) {
-                    if (dialogModel is DialogModelEncrypted)
-                        continue;
-                    
-                    if (TLStuff.PeerEquals(dialogModel.Peer, targetPeer)) {
-                        model = dialogModel;
-                        break;
-                    }
-                }
-
-                if (model == null) {
-                    model = new DialogModelPlain(TL.peerUser(userId), TelegramSession.Instance);
-                    needDialogCreate = true;
-                }
-            }
-
-            TelegramSession.Instance.Dialogs.OpenedDialog = model;
-
-            UpdateDataContext();
+            ///UpdateDataContext();
 
             // init notice
             // FIXME: assure that no actual history received from server
@@ -164,8 +171,14 @@ namespace Telegram.UI {
         public DialogPage() {
 
             session = TelegramSession.Instance;
+            model = TelegramSession.Instance.Dialogs.OpenedDialog;
+            
+            
 
             InitializeComponent();
+
+            UpdateDataContext();
+
             DisableEditBox();
 
             messageEditor.GotFocus += delegate {
