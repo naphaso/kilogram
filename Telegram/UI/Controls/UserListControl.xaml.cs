@@ -6,7 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Navigation;
+using Windows.Foundation.Metadata;
 using Windows.Phone.PersonalInformation;
 using Windows.Storage.Streams;
 using Microsoft.Phone.Controls;
@@ -32,7 +34,6 @@ namespace Telegram.UI.Controls {
         private ObservableCollection<UserUiModel> userList = new ObservableCollection<UserUiModel>();
         public UserListControl() {
             InitializeComponent();
-
             Contacts contacts = new Contacts();
 
             contacts.SearchCompleted += ContactsOnSearchCompleted;
@@ -45,18 +46,19 @@ namespace Telegram.UI.Controls {
         }
 
         public void FilterTelegramUsersByName(string filter) {
-            if (filter == "")
+            if (filter == "") {
                 FriendsList.ItemsSource = friendList;
-
-            ObservableCollection<UserModel> filteredCollection = new ObservableCollection<UserModel>();
-
-            foreach (var userModel in friendList) {
-                if (userModel.FullName.ToLower().Contains(filter)) {
-                    filteredCollection.Add(userModel);
-                }
+                return;
             }
 
-            FriendsList.ItemsSource = filteredCollection;
+//            foreach (var userModel in friendList) {
+//                if (userModel.FullName.ToLower().Contains(filter)) {
+//                    filteredCollection.Add(userModel);
+//                }
+//            }
+//            
+            var result = friendList.Where(c => c.FullName.ToLower().Contains(filter));
+            FriendsList.ItemsSource = result.ToList();
         }
 
         private void ContactsOnSearchCompleted(object sender, ContactsSearchEventArgs e) {

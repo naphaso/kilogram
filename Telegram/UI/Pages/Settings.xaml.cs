@@ -57,19 +57,24 @@ namespace Telegram.UI
 
             var selector = (LongListSelector) sender;
 
-            if (selector.SelectedItem.GetType() != typeof (MainSettingsItem))
+            if (selector.SelectedItem == null)
                 return;
 
-            var item = (MainSettingsItem) selector.SelectedItem;
+            int item = selector.ItemsSource.IndexOf(selector.SelectedItem);
 
-            if (item.Name == "notifications") {
-                Debug.WriteLine("Selected notifications");
-                NavigationService.Navigate(new Uri("/UI/Pages/SettingsNotification.xaml", UriKind.Relative));
+            switch (item) {
+                case 0: // notifications
+                    NavigationService.Navigate(new Uri("/UI/Pages/SettingsNotification.xaml", UriKind.Relative));
+                    break;
+                case 1: // blocked users
+                    NavigationService.Navigate(new Uri("/UI/Pages/BlockedUsers.xaml", UriKind.Relative));
+                    break;
+
+                case 2: // support
+                    break;
             }
-            else {
-                Debug.WriteLine("Uknown selection");
-            }
-            
+
+            selector.SelectedItem = null;
         }
 
         private void OnChangeAvatar(object sender, GestureEventArgs e) {

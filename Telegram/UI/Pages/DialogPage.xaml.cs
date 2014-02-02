@@ -43,6 +43,17 @@ namespace Telegram.UI {
 
             if (NavigationContext.QueryString.TryGetValue("modelId", out uriParam)) {
                 model = TelegramSession.Instance.Dialogs.Model.Dialogs[(int.Parse(uriParam))];
+
+//                PhoneApplicationService.Current.State["MapMedia"] = geoMedia;
+//                NavigationService.Navigate(new Uri("/UI/Pages/DialogPage.xaml?modelId=" + returnToModelId + "&action=sendMedia&content=MapMedia", UriKind.Relative));
+                if (NavigationContext.QueryString.TryGetValue("action", out uriParam)) {
+                    string action = uriParam;
+                    
+                    NavigationContext.QueryString.TryGetValue("content", out uriParam);
+                    string content = uriParam;
+
+                    DoAction(action, content);
+                }
             } else if (NavigationContext.QueryString.TryGetValue("userId", out uriParam)) {
                 int userId = int.Parse(uriParam);
                 var targetPeer = TL.peerUser(userId);
@@ -72,6 +83,16 @@ namespace Telegram.UI {
             // or this is new chat
             if (MessageLongListSelector.ItemsSource == null || MessageLongListSelector.ItemsSource.Count == 0)
                 ShowNotice();
+        }
+
+        private void DoAction(string action, string content) {
+            if (!(model is DialogModelPlain))
+                return;
+
+            if (action == "sendMedia") {
+                InputMedia media = (InputMedia) PhoneApplicationService.Current.State[content];
+                ((DialogModelPlain)model).SendMedia(media);
+            }
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e) {
@@ -504,28 +525,30 @@ namespace Telegram.UI {
         }
 
         private async void AttachLocation(object sender, GestureEventArgs e) {
-            Geolocator geolocator = new Geolocator();
-
-            Geoposition geoposition = await geolocator.GetGeopositionAsync(
-                maximumAge: TimeSpan.FromMinutes(5),
-                timeout: TimeSpan.FromSeconds(10)
-            );
-
-            if (geoposition == null)
-                return;
-
-            if (!(model is DialogModelPlain))
-                return;
-
-            MessageBoxResult result = MessageBox.Show("Send your location to " + model.Title + "?",
-"Confirm action", MessageBoxButton.OKCancel);
-
-            if (result == MessageBoxResult.OK) {
-                InputGeoPoint point = TL.inputGeoPoint(geoposition.Coordinate.Latitude, geoposition.Coordinate.Longitude);
-                InputMedia geoMedia = TL.inputMediaGeoPoint(point);
-
-                ((DialogModelPlain) model).SendMedia(geoMedia);
-            }
+//            Geolocator geolocator = new Geolocator();
+//
+//            Geoposition geoposition = await geolocator.GetGeopositionAsync(
+//                maximumAge: TimeSpan.FromMinutes(5),
+//                timeout: TimeSpan.FromSeconds(10)
+//            );
+//
+//            if (geoposition == null)
+//                return;
+//
+//            if (!(model is DialogModelPlain))
+//                return;
+//
+//            MessageBoxResult result = MessageBox.Show("Send your location to " + model.Title + "?",
+//"Confirm action", MessageBoxButton.OKCancel);
+//
+//            if (result == MessageBoxResult.OK) {
+//                InputGeoPoint point = TL.inputGeoPoint(geoposition.Coordinate.Latitude, geoposition.Coordinate.Longitude);
+//                InputMedia geoMedia = TL.inputMediaGeoPoint(point);
+//
+//                ((DialogModelPlain) model).SendMedia(geoMedia);
+//            }
+            int modelId = TelegramSession.Instance.Dialogs.Model.Dialogs.IndexOf(model);
+            NavigationService.Navigate(new Uri("/UI/Pages/MapPickPage.xaml?fromModelId=" + modelId, UriKind.Relative));
         }
 
         private void PickAndSendDoc(object sender, GestureEventArgs e) {

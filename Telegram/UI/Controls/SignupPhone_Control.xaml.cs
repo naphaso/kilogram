@@ -1,17 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Shell;
+using PhoneNumbers;
+using Telegram.Core.Logging;
 using Telegram.Model;
+using Telegram.Utils;
 
 namespace Telegram {
+
     public partial class SignupPhone_Control : UserControl {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof(SignupPhone_Control));
+
         private List<CountryModel> countries = new List<CountryModel>() {
             new CountryModel() {Name = "Afghanistan", Ext = "93"},
             new CountryModel() {Name = "Albania", Ext = "355"},
@@ -257,11 +265,16 @@ namespace Telegram {
         public SignupPhone_Control() {
             InitializeComponent();
             CountryCodePicker.ItemsSource = countries;
-            CountryCodePicker.SelectedIndex = 173; // Россия, Раша, RSA! УРА! УРА!
+            CountryCodePicker.SelectedIndex = 173;
+            CountryCodeBox.TextChanged += CountryCodeBox_OnTextChanged;
+            
         }
 
         private void CountryCodePicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            CountryCodeBox.TextChanged -= CountryCodeBox_OnTextChanged;
             CountryCodeBox.Text = "+" + ((CountryModel)this.CountryCodePicker.SelectedItem).Ext;
+            CountryCodeBox.TextChanged += CountryCodeBox_OnTextChanged;
+
             PhoneNumberBox.Focus();
         }
 

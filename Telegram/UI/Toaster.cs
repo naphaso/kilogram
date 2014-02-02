@@ -14,12 +14,16 @@ namespace Telegram.UI {
         public static void Show(string sender, string message) {
             var toast = GetToastWithImgAndTitle(sender, message);
             toast.TextWrapping = TextWrapping.Wrap;
-
+            toast.Show();
 //            toast.Show();
 //            ShellToast toast = new ShellToast();
 //            toast.Content = "This is a local toast";
 //            toast.Title = "MYAPP";
 //            toast.Show();
+        }
+
+        public static void ShowNetworkError() {
+            Show("Telegram", "Unable to complete request because of network problems.");
         }
 
         private static ToastPrompt GetToastWithImgAndTitle(string header, string content) {

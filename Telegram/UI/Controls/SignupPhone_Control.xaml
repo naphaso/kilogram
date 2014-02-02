@@ -38,7 +38,7 @@
                 <toolkit:ListPicker ItemTemplate="{StaticResource ListPickerItemTemplate}" FullModeItemTemplate="{StaticResource ListPickerFullModeItemTemplate}" Name="CountryCodePicker" Margin="12,3,12,0" VerticalAlignment="Top" SelectionChanged="CountryCodePicker_OnSelectionChanged" FullModeHeader="Your Country" CacheMode="BitmapCache"/>
 				<TextBlock Name="PhoneNumberHinTextBlock" TextWrapping="Wrap" Text="Your phone number" Style="{StaticResource TextBlockFieldHint}" Margin="12,15,0,-20"/>
 				<StackPanel x:Name="stackPanel" Height="101" Orientation="Horizontal">
-					<TextBox TextChanged="CountryCodeBox_OnTextChanged" Name="CountryCodeBox" Height="72" TextWrapping="Wrap" Text="+7" Margin="0,14" HorizontalAlignment="Left" Width="130"/>
+					<TextBox Name="CountryCodeBox" Height="72" TextWrapping="Wrap" Text="+7" Margin="0,14" HorizontalAlignment="Left" Width="130"/>
                     <TextBox InputScope="Digits" Name="PhoneNumberBox"  Height="72" TextWrapping="Wrap" Margin="0,15,0,14" BorderThickness="3" HorizontalContentAlignment="Left" Width="320"/>
 				</StackPanel>
 			</StackPanel>

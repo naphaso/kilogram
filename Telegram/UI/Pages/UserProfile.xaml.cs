@@ -14,6 +14,7 @@ using Telegram.Core.Logging;
 using Telegram.Model;
 using Telegram.Model.Wrappers;
 using Telegram.MTProto;
+using Telegram.Utils;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Telegram.UI {
@@ -39,7 +40,7 @@ namespace Telegram.UI {
 
         private void UpdateDataContext() {
             this.DataContext = model;
-            PhoneButtonUserControl.Content.Text = model.PhoneNumber;
+            PhoneButtonUserControl.Content.Text = Formatters.FormatPhoneNumber(model.PhoneNumber);
         }
 
         public UserProfile() {
@@ -47,7 +48,7 @@ namespace Telegram.UI {
         }
 
         private void Share_Click(object sender, EventArgs e) {
-            throw new NotImplementedException();
+
         }
 
         private void Edit_Click(object sender, EventArgs e) {
@@ -55,7 +56,22 @@ namespace Telegram.UI {
         }
 
         private void Block_Click(object sender, EventArgs e) {
-            throw new NotImplementedException();
+            DoBlockUser(model.InputUser);
+        }
+
+        private void Delete_Click(object sender, EventArgs e) {
+
+        }
+
+        private async Task DoBlockUser(InputUser iUser) {
+            bool result = await TelegramSession.Instance.Api.contacts_block(iUser);
+            
+            if (!result) {
+                Toaster.ShowNetworkError();
+                return;
+            }
+
+            NavigationService.GoBack();
         }
 
         private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e) {

@@ -118,7 +118,7 @@ namespace Telegram
             if (Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger
-                Debugger.Break();
+//                Debugger.Break();
             }
             e.Handled = true;
         }

@@ -220,7 +220,11 @@
 					ItemTemplate="{StaticResource UserSelectingTemplate}"
 					ItemsSource="{Binding Items}" 
 					x:Name="MessageLongListSelector" LayoutMode="List" 
-					IsGroupingEnabled="False" BorderThickness="0" Margin="12,0" Height="544"/>
+					IsGroupingEnabled="False"
+                    BorderThickness="0"
+                    Margin="12,0"
+                    Height="544"
+                    VerticalAlignment="Bottom"/>
 				<controls1:ChatBubbleTextBox 
 					x:Name="messageEditor" 
 					TextWrapping="Wrap" 

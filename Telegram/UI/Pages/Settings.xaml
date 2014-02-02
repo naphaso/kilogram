@@ -6,13 +6,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:converters="clr-namespace:Telegram.UI.Converters"
     x:Class="Telegram.UI.Settings"
     mc:Ignorable="d"
     d:DataContext="{d:DesignData MainSettingsData.xaml}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 	<phone:PhoneApplicationPage.Resources>
-		<Style x:Key="TextBlockStatus" TargetType="TextBlock">
+        <converters:PhoneStringConverter x:Key="PhoneConverter"/>
+
+        <Style x:Key="TextBlockStatus" TargetType="TextBlock">
 			<Setter Property="Foreground" Value="{StaticResource PhoneAccentBrush}"/>
 		</Style>
 		<Style x:Key="TextBlockPhoneNumber" TargetType="TextBlock">
@@ -47,7 +50,7 @@
 						<Run Text="{Binding SelfUser.FullName}"/>
 					</TextBlock>
                     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding SelfUser.Status}" VerticalAlignment="Center" Style="{StaticResource TextBlockStatus}"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="0,0,-53,0" TextWrapping="Wrap" Text="{Binding SelfUser.PhoneNumber}" VerticalAlignment="Center" Style="{StaticResource TextBlockPhoneNumber}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="0,0,-53,0" TextWrapping="Wrap" Text="{Binding SelfUser.PhoneNumber, Converter={StaticResource PhoneConverter}}" VerticalAlignment="Center" Style="{StaticResource TextBlockPhoneNumber}"/>
 				</StackPanel>
 			</Grid>
 
@@ -65,10 +68,12 @@
                     IsGroupingEnabled="False" Background="{x:Null}" >
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="0,0,0,0">
-                            <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
-                            <TextBlock Text="{Binding Header}" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource TextBlockFieldHint}"/>
-                        </StackPanel>
+                        <ListBoxItem>
+                            <StackPanel toolkit:TiltEffect.IsTiltEnabled="True">
+                                <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                                <TextBlock Text="{Binding Header}" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource TextBlockFieldHint}"/>
+                            </StackPanel>
+                        </ListBoxItem>
                     </DataTemplate>
                 </phone:LongListSelector.ItemTemplate>
             </phone:LongListSelector>
