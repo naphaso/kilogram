@@ -142,7 +142,7 @@ namespace Telegram.Model.Wrappers {
         }
 
         public override void SendTyping(bool typing) {
-            if(TelegramSession.Instance.Connected)
+            //if(TelegramSession.Instance.Connected)
                 TelegramSession.Instance.Api.messages_setTyping(InputPeer, false);
         }
 

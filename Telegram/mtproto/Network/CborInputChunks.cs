@@ -8,6 +8,10 @@ namespace Telegram.MTProto.Network {
         private List<MemoryStream> chunks = new List<MemoryStream>();
         public event InputHandler InputEvent;
 
+        public void Clear() {
+            chunks.Clear();
+        }
+
         public void AddChunk(byte[] chunk) {
             if(chunk.Length == 0) {
                 return;

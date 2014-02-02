@@ -17,6 +17,10 @@ namespace Telegram.MTProto.Network {
             writeIndex = 0;
         }
 
+        public void Clear() {
+            readIndex = 0;
+            writeIndex = 0;
+        }
 
 
         public void AddChunk(byte[] chunk) {

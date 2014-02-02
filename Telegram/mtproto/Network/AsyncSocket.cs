@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Core.Logging;
 
 namespace Telegram.MTProto.Network {
     public class TelegramSocketException : Exception {
@@ -16,7 +17,10 @@ namespace Telegram.MTProto.Network {
             : base(message) {
         }
     }
+
     public class AsyncSocket {
+        private static readonly Logger logger = LoggerFactory.getLogger(typeof (AsyncSocket));
+
         private Socket socket;
 
         public AsyncSocket() {
@@ -26,15 +30,13 @@ namespace Telegram.MTProto.Network {
         public async Task Connect(string host, int port) {
             TaskCompletionSource<object> connectSource = new TaskCompletionSource<object>();
             try {
-                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-                args.RemoteEndPoint = new DnsEndPoint(host, port);
+                var args = new SocketAsyncEventArgs {RemoteEndPoint = new DnsEndPoint(host, port)};
                 EventHandler<SocketAsyncEventArgs> connectHandler = delegate(object sender, SocketAsyncEventArgs eventArgs) {
                     try {
-                        if (eventArgs.SocketError == SocketError.Success) {
+                        if (eventArgs.LastOperation == SocketAsyncOperation.Connect && eventArgs.SocketError == SocketError.Success) {
                             connectSource.TrySetResult(null);
                         } else {
-                            connectSource.TrySetException(
-                                new TelegramSocketException("unable to connect to server: " + eventArgs.SocketError));
+                            connectSource.TrySetException(new TelegramSocketException("unable to connect to server: " + eventArgs.LastOperation + ", " + eventArgs.SocketError));
                         }
                     } catch (Exception e) {
                         connectSource.TrySetException(new TelegramSocketException("socket exception", e));
@@ -43,8 +45,7 @@ namespace Telegram.MTProto.Network {
 
                 args.Completed += connectHandler;
 
-                bool async = socket.ConnectAsync(args);
-                if (!async) {
+                if (!socket.ConnectAsync(args)) {
                     connectHandler(this, args);
                 }
             } catch (Exception e) {
@@ -55,9 +56,9 @@ namespace Telegram.MTProto.Network {
         }
 
         public async Task<byte[]> Read() {
-            TaskCompletionSource<byte[]> readSource = new TaskCompletionSource<byte[]>();
+            var readSource = new TaskCompletionSource<byte[]>();
             try {
-                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+                var args = new SocketAsyncEventArgs();
                 args.SetBuffer(new byte[1024 * 8], 0, 1024 * 8);
                 EventHandler<SocketAsyncEventArgs> receiveHandler = delegate(object sender, SocketAsyncEventArgs eventArgs) {
                     try {
@@ -66,7 +67,7 @@ namespace Telegram.MTProto.Network {
                             if (args.BytesTransferred == 0) {
                                 readSource.TrySetException(new TelegramSocketException("disconnected"));
                             } else {
-                                byte[] chunk = new byte[args.BytesTransferred];
+                                var chunk = new byte[args.BytesTransferred];
                                 Array.Copy(eventArgs.Buffer, eventArgs.Offset, chunk, 0, eventArgs.BytesTransferred);
                                 readSource.TrySetResult(chunk);
                             }
@@ -80,8 +81,7 @@ namespace Telegram.MTProto.Network {
 
                 args.Completed += receiveHandler;
 
-                bool async = socket.ReceiveAsync(args);
-                if (!async) {
+                if (!socket.ReceiveAsync(args)) {
                     receiveHandler(this, args);
                 }
             } catch (Exception e) {
@@ -96,9 +96,9 @@ namespace Telegram.MTProto.Network {
         }
 
         public async Task Send(byte[] data, int offset, int length) {
-            TaskCompletionSource<object> sendSource = new TaskCompletionSource<object>();
+            var sendSource = new TaskCompletionSource<object>();
             try {
-                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+                var args = new SocketAsyncEventArgs();
                 args.SetBuffer(data, offset, length);
                 EventHandler<SocketAsyncEventArgs> sendHandler = delegate(object sender, SocketAsyncEventArgs eventArgs) {
                     try {
@@ -114,17 +114,22 @@ namespace Telegram.MTProto.Network {
 
                 args.Completed += sendHandler;
 
-                bool async = socket.SendAsync(args);
-                if (!async) {
+                if (!socket.SendAsync(args)) {
+                    
                     sendHandler(this, args);
                 }
             } catch (Exception e) {
+                logger.error("sending exception: {0}", e);
                 sendSource.TrySetException(new TelegramSocketException("send error", e));
             }
 
             await sendSource.Task;
         }
 
-
+        public void Dispose() {
+            try {
+                socket.Close();
+            } catch {}
+        }
     }
 }

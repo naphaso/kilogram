@@ -13,5 +13,7 @@
         ulong GetInt64();
         int Crc32(int currentReadPositionOffset, int length);
         byte[] GetBytes(int count);
+
+        void Clear();
     }
 }

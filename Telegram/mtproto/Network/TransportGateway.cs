@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using Ionic.Crc;
+using Telegram.Annotations;
 using Telegram.Core.Logging;
-using Telegram.MTProto.Crypto;
 using Telegram.MTProto.Exceptions;
-using Telegram.MTProto.Network;
 
-namespace Telegram.MTProto {
+namespace Telegram.MTProto.Network {
 
     public delegate void MTProtoInputHandler(object sender, byte[] data);
 
     public delegate void MTProtoConnectedHandler();
+
+    public delegate void MTProtoDisconnectedHandler();
 
     class TransportGateway : IDisposable {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof (TransportGateway));
@@ -39,6 +36,7 @@ namespace Telegram.MTProto {
 
         public event MTProtoInputHandler InputEvent;
         public event MTProtoConnectedHandler ConnectedEvent;
+        
 
         enum NetworkGatewayState {
             INIT,
@@ -355,6 +353,11 @@ namespace Telegram.MTProto {
         }
     }
 
+    public class MTProtoTransportException : Exception {
+        public MTProtoTransportException(string message) : base(message) {}
+        public MTProtoTransportException(string message, Exception innerException) : base(message, innerException) {}
+    }
+
     public class TransportGatewayAsync : IDisposable {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(TransportGatewayAsync));
 
@@ -362,49 +365,168 @@ namespace Telegram.MTProto {
         private AsyncSocket socket;
         private CborInput input;
 
+        private bool disposed = false;
+
+        private int sendCounter = 0;
+
+
+        public event MTProtoInputHandler InputEvent;
+        public event MTProtoConnectedHandler ConnectedEvent;
+        public event MTProtoDisconnectedHandler DisconnectedEvent;
+
+        private void OnInputEvent(object sender, byte[] data) {
+            var handler = InputEvent;
+            if (handler != null) handler(sender, data);
+        }
+
+        private void OnConnectedEvent() {
+            var handler = ConnectedEvent;
+            if (handler != null) handler();
+        }
+
+        private void OnDisconnectedEvent() {
+            var handler = DisconnectedEvent;
+            if (handler != null) handler();
+        }
+
         public TransportGatewayAsync(TelegramDC dc) {
             this.dc = dc;
             socket = null;
             input = new CborInputMoveBuffer(512 * 1024);
             input.InputEvent += CheckInput;
-            Queue<int> asd;
-            
         }
 
         public async Task Run() {
-            while (true) {
+            while (!disposed) {
+                
                 try {
+                    logger.info("starting connection...");
+                    AsyncSocket tempSocket = null;
                     foreach (var telegramEndpoint in dc.Endpoints) {
+                        logger.debug("connecting to {}:{}...", telegramEndpoint.Host, telegramEndpoint.Port);
                         try {
-                            socket = new AsyncSocket();
-                            await socket.Connect(telegramEndpoint.Host, telegramEndpoint.Port);
+                            tempSocket = new AsyncSocket();
+                            await tempSocket.Connect(telegramEndpoint.Host, telegramEndpoint.Port);
+                            logger.debug("connect success");
                             break;
                         } catch (TelegramSocketException e) {
                             logger.info("connect to {0}:{1} error: {2}", telegramEndpoint.Host, telegramEndpoint.Port, e);
-                            socket = null;
+                            tempSocket = null;
                         }
                     }
 
-                    if (socket == null) {
+                    if (tempSocket == null) {
+                        logger.warning("connection failed... wait 2 seconds and retry");
                         await Task.Delay(TimeSpan.FromSeconds(3));
                         continue;
                     }
 
+                    lock (this) {
+                        socket = tempSocket;
+                        sendCounter = 0;
+                    }
 
+                    
+
+                    logger.debug("send connected event...");
+                    OnConnectedEvent();
+
+                    input.Clear();
+                    while (!disposed) {
+                        logger.debug("reading new chunk...");
+                        input.AddChunk(await socket.Read());
+                    }
 
                 } catch (Exception e) {
                     logger.info("connection error: {0}", e);
                 }
+
+                lock (this) {
+                    socket = null;
+                }
+
+                logger.debug("disconnected");
+                OnDisconnectedEvent();
             }
         }
 
         private void CheckInput() {
-            
+            if (!input.HasBytes(12)) {
+                return;
+            }
+
+            int packetLength = (int)input.ReadInt32();
+            if (packetLength < 12) {
+                logger.error("invalid packet length: {0}", packetLength);
+                return;
+            }
+
+            while (input.HasBytes(packetLength)) {
+                uint len = input.GetInt32();
+                uint seq = input.GetInt32();
+                byte[] packet = input.GetBytes(packetLength - 12);
+                int checksum = (int)input.GetInt32();
+                int validChecksum = input.Crc32(-packetLength, packetLength - 4);
+
+                if (checksum != validChecksum) {
+                    logger.warning("invalid checksum! skip");
+                    continue;
+                }
+
+                try {
+                    OnInputEvent(this, packet);
+                } catch (Exception ex) {
+                    logger.error("OnReceive error {0}", ex);
+                }
+
+                if (input.HasBytes(4)) {
+                    packetLength = (int)input.ReadInt32();
+                } else {
+                    break;
+                }
+            }
+        }
+
+        public async Task Send(byte[] packet) {
+            AsyncSocket socketToSend;
+            logger.debug("transport send...");
+            lock (this) {
+                if (socket == null) {
+                    logger.debug("socket == null");
+                    throw new MTProtoTransportException("not connected");
+                }
+                logger.debug("socket != null");
+                socketToSend = socket;
+            }
+
+            try {
+                using (MemoryStream memoryStream = new MemoryStream()) {
+                    using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream)) {
+                        CRC32 crc32 = new CRC32();
+                        binaryWriter.Write(packet.Length + 12);
+                        binaryWriter.Write(Interlocked.Increment(ref sendCounter) - 1);
+                        binaryWriter.Write(packet);
+                        crc32.SlurpBlock(memoryStream.GetBuffer(), 0, 8 + packet.Length);
+                        binaryWriter.Write(crc32.Crc32Result);
+
+                        logger.debug("sending to socket: {0}", BitConverter.ToString(memoryStream.GetBuffer(), 0, (int) memoryStream.Position).Replace("-","").ToLower());
+                        await socketToSend.Send(memoryStream.GetBuffer(), 0, (int) memoryStream.Position);
+                    }
+                }
+            } catch (Exception e) {
+                throw new MTProtoTransportException("unable to send packet", e);
+            }
         }
 
 
         public void Dispose() {
-            throw new NotImplementedException();
+            disposed = true;
+            lock (this) {
+                if (socket != null) {
+                    socket.Dispose();
+                    socket = null;
+                }
+            }
         }
     }
 }

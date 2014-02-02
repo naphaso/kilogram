@@ -3,6 +3,7 @@ using System.IO;
 using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using Telegram.Core.Logging;
+using Telegram.MTProto.Network;
 
 namespace Telegram.MTProto {
     

@@ -10,6 +10,10 @@ namespace Telegram.MTProto.Network {
             buffer = new byte[size];
         }
 
+        public void Clear() {
+            readIndex = 0;
+            writeIndex = 0;
+        }
         public event InputHandler InputEvent;
         public void AddChunk(byte[] chunk) {
             //Debug.Log("add chunk start: r " + readIndex + ", w " + writeIndex);

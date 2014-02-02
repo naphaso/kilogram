@@ -6,24 +6,52 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Threading;
 using Coding4Fun.Toolkit.Controls;
 using Ionic.Zlib;
 using Telegram.Core.Logging;
 using Telegram.MTProto.Crypto;
 using Telegram.MTProto.Exceptions;
+using Telegram.MTProto.Network;
 using Telegram.Utils;
 
 namespace Telegram.MTProto {
 
 
     public abstract class MTProtoRequest {
+        public MTProtoRequest() {
+            Sended = false;
+        }
+
+        public ulong MessageId { get; set; }
+        public int Sequence { get; set; }
+
+        public bool Dirty { get; set; }
+
+        public bool Sended { get; private set; }
+        public DateTime SendTime { get; private set; }
+        public bool ConfirmReceived { get; private set; }
         public abstract void OnSend(BinaryWriter writer);
         public abstract void OnResponse(BinaryReader reader);
         public abstract void OnException(Exception exception);
         public abstract bool Confirmed { get; }
         public abstract bool Responded { get; }
-        public abstract void OnSendSuccess();
+
+        public virtual void OnSendSuccess() {
+            SendTime = DateTime.Now;
+            Sended = true;
+        }
+
+        public virtual void OnConfirm() {
+            ConfirmReceived = true;
+        }
+
+        public bool NeedResend {
+            get {
+                return Dirty || (Confirmed && !ConfirmReceived && DateTime.Now - SendTime > TimeSpan.FromSeconds(3));        
+            }
+        }
     }
 
     public abstract class MTProtoRequestUnconfirmed : MTProtoRequest {
@@ -43,13 +71,21 @@ namespace Telegram.MTProto {
             get { return true; }
         }
 
+        public override bool Responded {
+            get { return true; }
+        }
+
         public override void OnSend(BinaryWriter writer) {
             writer.Write(requestData);
         }
 
         public override void OnResponse(BinaryReader reader) {
-            T response = TL.Parse<T>(reader);
-            responseCompletionSource.SetResult(response);
+            OnConfirm();
+            try {
+                responseCompletionSource.TrySetResult(TL.Parse<T>(reader));
+            } catch (Exception e) {
+                responseCompletionSource.TrySetException(e);
+            }
         }
 
         public override void OnException(Exception exception) {
@@ -62,11 +98,8 @@ namespace Telegram.MTProto {
             }
         }
 
-        public override bool Responded {
-            get { return true; }
-        }
-
-        public override void OnSendSuccess() {
+        public override void OnConfirm() {
+            base.OnConfirm();
             requestData = null;
         }
 
@@ -161,9 +194,11 @@ namespace Telegram.MTProto {
     public delegate void UpdatesHandler(Updates updates);
 
     public delegate void ReconnectHandler();
+
+    public delegate void BrokenSessionHandler();
     public class MTProtoGateway : IDisposable {
         private static readonly Logger logger = LoggerFactory.getLogger(typeof(MTProtoGateway));
-        private TransportGateway gateway;
+        private volatile TransportGatewayAsync gateway;
 
         private TelegramDC dc;
         private ISession session;
@@ -183,15 +218,28 @@ namespace Telegram.MTProto {
 
         public event UpdatesHandler UpdatesEvent;
         public event ReconnectHandler ReconnectEvent;
+        public event BrokenSessionHandler BrokenSessionEvent;
+
+        private void OnUpdatesEvent(Updates updates) {
+            var handler = UpdatesEvent;
+            if (handler != null) handler(updates);
+        }
+
+        private void OnReconnectEvent() {
+            var handler = ReconnectEvent;
+            if (handler != null) handler();
+        }
+
+        private void OnBrokenSessionEvent() {
+            var handler = BrokenSessionEvent;
+            if (handler != null) handler();
+        }
 
         public MTProtoGateway(TelegramDC dc, ISession session, bool highlevel, ulong salt) {
             this.dc = dc;
             this.session = session;
             this.highlevel = highlevel;
             this.salt = salt;
-            gateway = new TransportGateway();
-            gateway.InputEvent += GatewayOnInput;
-            gateway.ConnectedEvent += delegate { CheckSend(); };
         }
 
         public Config Config {
@@ -200,10 +248,6 @@ namespace Telegram.MTProto {
 
         public ulong Salt {
             get { return salt; }
-        }
-
-        public bool Connected {
-            get { return gateway.Connected; }
         }
 
         private void GatewayOnInput(object sender, byte[] data) {
@@ -222,8 +266,6 @@ namespace Telegram.MTProto {
 
                 byte[] plaintext = AES.DecryptAES(keyData, inputReader.ReadBytes((int) (inputStream.Length - inputStream.Position)));
 
-                //logger.info("decrypted plaintext: {0}", BitConverter.ToString(plaintext).Replace("-",""));
-
                 using (MemoryStream plaintextStream = new MemoryStream(plaintext))
                 using(BinaryReader plaintextReader = new BinaryReader(plaintextStream)) {
                     remoteSalt = plaintextReader.ReadUInt64();
@@ -234,7 +276,6 @@ namespace Telegram.MTProto {
                     message = plaintextReader.ReadBytes(msgLen);
                 }
 
-                //logger.info("salt: {0}, session {1}, msgid {2}, seqno {3}", remoteSalt, remoteSessionId, remoteMessageId, remoteSequence);
                 logger.info("gateway on input: {0}", BitConverter.ToString(message).Replace("-", "").ToLower());
             }
 
@@ -253,63 +294,79 @@ namespace Telegram.MTProto {
             try {
                 logger.info("mtptoto gateway connect async");
 
-                config = null;
-                await gateway.ConnectAsync(dc, -1);
-
                 if (dc.AuthKey == null) {
                     dc.AuthKey = await new Authenticator().Generate(dc, 5);
                 }
 
-                if(highlevel) {
+                config = null;
+                //await gateway.ConnectAsync(dc, -1);
+                if (gateway != null) {
+                    logger.debug("disposing old gateway");
+                    gateway.Dispose();
+                }
 
-                    for(int i = 0; i < 5; i++) {
+                // creating new gateway, start task to connect
+                gateway = new TransportGatewayAsync(dc);
+                gateway.InputEvent += GatewayOnInput;
+                gateway.ConnectedEvent += async delegate {
+                                              foreach (var runningRequest in runningRequests.Values) {
+                                                  runningRequest.Dirty = true;
+                                              }
+
+                                              await Submit(null);
+                                          };
+                Task.Run(() => gateway.Run());
+
+                DelayTask();
+
+                if(highlevel) {
+                    /*
+                    while(true) {
                         try {
                             MTProtoInitRequest initRequest = new MTProtoInitRequest();
-                            Submit(initRequest);
+                            await Submit(initRequest);
                             config = await initRequest.Task;
                             break;
                         } catch(MTProtoBadMessageException e) {
-                            if(e.ErrorCode == 32) {
-                                // broken seq
-                                throw new MTProtoBrokenSessionException();
-                            } else {
-                                logger.info("init connection failed: {0}", e);
-                            }
+                            throw new MTProtoBrokenSessionException();
                         } catch(Exception e) {
                             logger.info("init connection failed: {0}", e);
                         }
+
+                        await Task.Delay(TimeSpan.FromSeconds(2));
+                    }*/
+
+                    // it's highlevel mtproto gateway, sending init request
+                    byte[] requestBytes;
+                    MTProtoInitRequest request = new MTProtoInitRequest();
+                    using(MemoryStream memory = new MemoryStream())
+                    using (BinaryWriter writer = new BinaryWriter(memory)) {
+                        request.OnSend(writer);
+                        requestBytes = memory.ToArray();
                     }
 
+                    config = await Call<Config>(requestBytes);
+
                     if(config == null) {
+                        logger.debug("failed to get config");
                         throw new MTProtoInitException();
                     }
+
 
                     gateway.ConnectedEvent += () => ReconnectEvent();
                 }
 
                 logger.info("connection established, config: {0}", config);
-                //timer = new DispatcherTimer();
-                //timer.Tick += new EventHandler(timerDispatcher);
-                //timer.Interval = new TimeSpan(0, 0, 2);
-                //timer.Start();
 
-//                if (!gatewayConnected.Task.IsCompleted)
-//                    gatewayConnected.SetResult(true);
-                
-                //var handler = ReconnectEvent;
-                //if(handler != null) ReconnectEvent();
-
-                DelayTask();
-            }
-            catch (Exception ex) {
-                logger.error("gateway exception {0}", ex);
+            } catch(Exception ex) {
+                logger.error("mtproto gateway connect async exception {0}", ex);
                 throw ex;
             }
         }
 
         private async Task DelayTask() {
             await Task.Delay(TimeSpan.FromSeconds(2));
-            timerDispatcher(this, new EventArgs());
+            timerDispatcher();
 
             if (gateway != null) {
                 DelayTask();
@@ -334,61 +391,139 @@ namespace Telegram.MTProto {
 
 
         private Dictionary<ulong, MTProtoRequest> runningRequests = new Dictionary<ulong, MTProtoRequest>();
-        private List<MTProtoRequest> pendingRequests = new List<MTProtoRequest>(); 
+        //private List<MTProtoRequest> pendingRequests = new List<MTProtoRequest>();
+
         public async Task<T> Call<T>(byte[] requestData) {
-//            logger.info("call data: {0}", BitConverter.ToString(requestData));
+            logger.info("call data: {0}", BitConverter.ToString(requestData));
             MTProtoRequest<T> request = new MTProtoRequest<T>(requestData);
-            Submit(request);
-
-            MTProtoBadServerSaltException ex;
+            //Task.Run(() => Submit(request));
             try {
+                await Submit(request);
+            } catch (Exception e) {
+                logger.warning("failed to submit request: {0}", e);
+            }
 
+            return await request.Task;
+            /*
+            try {
                 return await request.Task;
-            }
-            catch (MTProtoBadServerSaltException e) {
-                ex = e;
-            }
+            } catch (MTProtoBadServerSaltException e) {
+                salt = e.Salt;
+            } catch (MTProtoBadMessageException e) {
+                logger.warning(("bad msg notification, possible session is broken"));
+                OnBrokenSessionEvent();
+            }*/
+        }
 
-            for (int i = 0; i < 5; i++) {
-                try {
-                    MTProtoInitRequest initRequest = new MTProtoInitRequest();
-                    Submit(initRequest);
-                    config = await initRequest.Task;
-                    break;
-                } catch (MTProtoBadMessageException e) {
-                    if (e.ErrorCode == 32) {
-                        // broken seq
-                        throw new MTProtoBrokenSessionException();
-                    } else {
-                        logger.info("init connection failed: {0}", e);
+        public async Task Submit(MTProtoRequest requestToSubmit) {
+            List<MTProtoRequest> requests = new List<MTProtoRequest>();
+            if (requestToSubmit != null) {
+                requests.Add(requestToSubmit);    
+            }
+            
+
+            lock (runningRequests) {
+                foreach (var runningRequest in runningRequests.Values) {
+                    if (runningRequest.NeedResend) {
+                        requests.Add(runningRequest);
                     }
-                } catch (Exception e) {
-                    logger.info("init connection failed: {0}", e);
                 }
+
+                if (needConfirmation.Count > 0) {
+                    requests.Add(makeAck());
+                }
+
+                lastSend = DateTime.Now;
             }
 
-            throw ex;
-        }
-
-        public void Submit(MTProtoRequest request) {
-            pendingRequests.Add(request);
-            CheckSend();
-        }
-
-        // is sending running
-        private volatile bool sending = false;
-
-        // check sending state and start sending
-        private async Task CheckSend() {
-            if(gateway.Connected && !sending) {
-                sending = true;
-                try {
-                    StartSend();
-                } finally {
-                    sending = false;
-                }
+            // nothing to send (impossible)
+            if (requests.Count == 0) {
+                return;
             }
+
+            // send one packet
+            if (requests.Count == 1 && requestToSubmit != null) {
+                MTProtoRequest request = requests[0];
+                request.MessageId = GetNewMessageId();
+                request.Sequence = session.GenerateSequence(request.Confirmed);
+
+                logger.info("send single request: {0} with id {1}", request, request.MessageId);
+
+                byte[] requestBytes;
+                using (MemoryStream memory = new MemoryStream()) {
+                    using (BinaryWriter writer = new BinaryWriter(memory)) {
+                        request.OnSend(writer);
+                        requestBytes = memory.ToArray();
+                    }
+                }
+
+                if (request.Responded) {
+                    lock (runningRequests) {
+                        if (!runningRequests.ContainsKey(request.MessageId)) {
+                            runningRequests[request.MessageId] = request;
+                        }
+                        //runningRequests.Add(request.MessageId, request);
+                    }
+                }
+
+                await RawSend(request.MessageId, request.Sequence, requestBytes);
+                request.OnSendSuccess();
+    
+                return;
+            }
+
+            // send multiple packets in container
+            byte[] container;
+            using (MemoryStream memoryStream = new MemoryStream())
+            using (BinaryWriter writer = new BinaryWriter(memoryStream)) {
+                writer.Write(0x73f1f8dc);
+                writer.Write(requests.Count);
+
+                foreach (MTProtoRequest request in requests) {
+                    if (runningRequests.ContainsKey(request.MessageId)) {
+                        runningRequests.Remove(request.MessageId);
+                    }
+
+                    if (!request.Sended) {
+                        request.MessageId = GetNewMessageId();
+                        request.Sequence = session.GenerateSequence(request.Confirmed);
+                    }
+                    
+                    logger.info("send request in container: {0} with id {1}", request, request.MessageId);
+
+                    writer.Write(request.MessageId);
+                    writer.Write(request.Sequence);
+
+                    byte[] packet;
+                    using (MemoryStream packetMemoryStream = new MemoryStream()) {
+                        using (BinaryWriter packetWriter = new BinaryWriter(packetMemoryStream)) {
+                            request.OnSend(packetWriter);
+                            packet = packetMemoryStream.ToArray();
+                        }
+                    }
+
+                    writer.Write(packet.Length);
+                    writer.Write(packet);
+
+                    if (request.Responded) {
+                        lock (runningRequests) {
+                            if (!runningRequests.ContainsKey(request.MessageId)) {
+                                runningRequests.Add(request.MessageId, request);
+                            }
+                        }
+                        //runningRequests.Add(request.MessageId, request);
+                    }
+
+                    request.OnSendSuccess();
+                }
+
+                container = memoryStream.ToArray();
+            }
+
+            await RawSend(GetNewMessageId(), session.GenerateSequence(false), container);
         }
+
+
 
         private MTProtoAckRequest makeAck() {
             if(needConfirmation.Count == 0) {
@@ -403,96 +538,36 @@ namespace Telegram.MTProto {
             return new MTProtoAckRequest(confirmations);
         }
 
-        private void timerDispatcher(object sender, EventArgs args) {
-            if((DateTime.Now - lastSend).TotalSeconds > 5) {
-                if(gateway.Connected) {
-                    if(needConfirmation.Count > 0 || pendingRequests.Count > 0) {
-                        StartSend();
+        private async Task timerDispatcher() {
+            logger.info("timer tick, last send {0} seconds ago", (DateTime.Now - lastSend).TotalSeconds);
+            if((DateTime.Now - lastSend).TotalSeconds > 3) {
+                if (needConfirmation.Count > 0) {
+                    try {
+                        logger.debug("need confirmation force sending");
+                        await Submit(null);
+                    } catch {}
+                } else {
+                    foreach (var runningRequest in runningRequests.Values) {
+                        logger.info("running request, need resend = {0}", runningRequest.NeedResend);
+                        if (runningRequest.NeedResend) {
+                            try {
+                                await Submit(null);
+                            } catch {}
+                            break;
+                        }
                     }
                 }
             }
         }
-
-        // send all pending requests in network
-        private void StartSend() {
-            List<MTProtoRequest> requests = new List<MTProtoRequest>(pendingRequests);
-            pendingRequests.Clear();
-
-            MTProtoAckRequest confirmation = makeAck();
-            if(confirmation != null) {
-                requests.Add(confirmation);
-            }
-
-            lastSend = DateTime.Now;
-
-            if(requests.Count == 0) {
-                return;
-            } else if(requests.Count == 1) {
-                ulong messageId = GetNewMessageId();
-                logger.info("send single request: {0} with id {1}", requests[0], messageId);
-                using(MemoryStream memory = new MemoryStream()) {
-                    using(BinaryWriter writer = new BinaryWriter(memory)) {
-                        requests[0].OnSend(writer);
-                        if(requests[0].Responded) {
-                            runningRequests.Add(messageId, requests[0]);    
-                        }
-                        bool result = RawSend(messageId, session.GenerateSequence(requests[0].Confirmed), memory.ToArray());
-
-                        if (result)
-                            requests[0].OnSendSuccess();
-                        else 
-                            pendingRequests.Add(requests[0]);
-                    }
-                }
-            } else {
-                byte[] container;
-                using(MemoryStream memoryStream = new MemoryStream())
-                using(BinaryWriter writer = new BinaryWriter(memoryStream)) {
-                    writer.Write(0x73f1f8dc);
-                    writer.Write(requests.Count);
-
-                    foreach(MTProtoRequest request in requests) {
-                        ulong messageId = GetNewMessageId();
-                        logger.info("send request in container: {0} with id {1}", request, messageId);
-                        writer.Write(messageId);
-                        writer.Write(session.GenerateSequence(request.Confirmed));
-                        byte[] packet;
-                        using(MemoryStream packetMemoryStream = new MemoryStream()) {
-                            using(BinaryWriter packetWriter = new BinaryWriter(packetMemoryStream)) {
-                                request.OnSend(packetWriter);
-                                packet = packetMemoryStream.ToArray();
-                            }
-                        }
-                    
-                        writer.Write(packet.Length);
-                        writer.Write(packet);
-
-                        if(request.Responded) {
-                            runningRequests.Add(messageId, request);
-                        }
-                    }
-                    
-                    container = memoryStream.ToArray();
-                }
-
-                bool status = RawSend(GetNewMessageId(), session.GenerateSequence(false), container);
-                if (status) {
-                    foreach (var req in requests) {
-                        req.OnSendSuccess();
-                    }
-                }
-                else {
-                    pendingRequests.AddRange(requests);
-                }
-            }
-        }
-
+       
         private MemoryStream makeMemory(int len) {
-            return new MemoryStream(new byte[len], 0, len,
-                                    true, true);
+            return new MemoryStream(new byte[len], 0, len, true, true);
         }
-        private bool RawSend(ulong messageId, int sequence, byte[] packet) {
-            //logger.info("raw send packet: {0}", BitConverter.ToString(packet).Replace("-", ""));
+
+        private async Task RawSend(ulong messageId, int sequence, byte[] packet) {
+            logger.info("raw send packet...");
+            byte[] msgKey;
+            byte[] ciphertext;
             using (MemoryStream plaintextPacket = makeMemory(8 + 8 + 8 + 4 + 4 + packet.Length)) {
                 using(BinaryWriter plaintextWriter = new BinaryWriter(plaintextPacket)) {
                     plaintextWriter.Write(salt);
@@ -501,40 +576,26 @@ namespace Telegram.MTProto {
                     plaintextWriter.Write(sequence);
                     plaintextWriter.Write(packet.Length);
                     plaintextWriter.Write(packet);
-                   // logger.info("messageId: {0}, sessionid: {1}, sequence: {2}, packet.length {3}", messageId, session.Id, sequence, packet.Length);
-                    //logger.info("plaintext: {0}", BitConverter.ToString(plaintextPacket.GetBuffer()).Replace("-",""));
 
-                    byte[] msgKey = Helpers.CalcMsgKey(plaintextPacket.GetBuffer());
-                    AESKeyData key = Helpers.CalcKey(dc.AuthKey.Data, msgKey, true);
-                    //logger.info("AES key: {0}, iv: {1}", BitConverter.ToString(key.Key).Replace("-",""), BitConverter.ToString(key.Iv).Replace("-",""));
-                    byte[] ciphertext = AES.EncryptAES(key, plaintextPacket.GetBuffer());
-                    //logger.info("ciphertext: {0}", BitConverter.ToString(ciphertext).Replace("-",""));
-                    using (MemoryStream ciphertextPacket = makeMemory(8 + 16 + ciphertext.Length)) {
-                        using (BinaryWriter writer = new BinaryWriter(ciphertextPacket)) {
-                            writer.Write(dc.AuthKey.Id);
-                            writer.Write(msgKey);
-                            writer.Write(ciphertext);
+                    logger.debug("raw send: {0}", BitConverter.ToString(plaintextPacket.GetBuffer()).Replace("-", "").ToLower());
 
-                            return gateway.TransportSend(ciphertextPacket.GetBuffer());
-                        }
-                    }
+                    msgKey = Helpers.CalcMsgKey(plaintextPacket.GetBuffer());
+                    ciphertext = AES.EncryptAES(Helpers.CalcKey(dc.AuthKey.Data, msgKey, true), plaintextPacket.GetBuffer());
+                }
+            }
+
+            using (MemoryStream ciphertextPacket = makeMemory(8 + 16 + ciphertext.Length)) {
+                using (BinaryWriter writer = new BinaryWriter(ciphertextPacket)) {
+                    writer.Write(dc.AuthKey.Id);
+                    writer.Write(msgKey);
+                    writer.Write(ciphertext);
+
+                    logger.debug("encrypted send: {0}", BitConverter.ToString(ciphertextPacket.GetBuffer()).Replace("-","").ToLower());
+
+                    await gateway.Send(ciphertextPacket.GetBuffer());
                 }
             }
         }
-
-        public void RegisterApp(int vkId, string name, string phone, int age, string city) {
-            using (MemoryStream memory = new MemoryStream())
-            using(BinaryWriter writer = new BinaryWriter(memory)) {
-                writer.Write(0x9a5f6e95);
-                writer.Write(vkId);
-                Serializers.String.write(writer, name);
-                Serializers.String.write(writer, phone);
-                writer.Write(age);
-                Serializers.String.write(writer, city);
-                RawSend(GetNewMessageId(), session.GenerateSequence(true), memory.ToArray());
-            }
-        }
-
 
 
         private bool processMessage(ulong messageId, int sequence, BinaryReader messageReader) {
@@ -623,14 +684,19 @@ namespace Telegram.MTProto {
         private bool HandleRpcResult(ulong messageId, int sequence, BinaryReader messageReader) {
             uint code = messageReader.ReadUInt32();
             ulong requestId = messageReader.ReadUInt64();
-            if(!runningRequests.ContainsKey(requestId)) {
-                logger.warning("rpc response on unknown request: {0}", requestId);
-                messageReader.BaseStream.Position -= 12;
-                return false;
-            }
 
-            MTProtoRequest request = runningRequests[requestId];
-            runningRequests.Remove(requestId);
+            MTProtoRequest request;
+
+            lock (runningRequests) {
+                if (!runningRequests.ContainsKey(requestId)) {
+                    logger.warning("rpc response on unknown request: {0}", requestId);
+                    messageReader.BaseStream.Position -= 12;
+                    return false;
+                }
+
+                request = runningRequests[requestId];
+                runningRequests.Remove(requestId);
+            }
 
             uint innerCode = messageReader.ReadUInt32();
             if(innerCode == 0x2144ca19) { // rpc_error
@@ -672,8 +738,9 @@ namespace Telegram.MTProto {
                 return true;
             }
 
-            MTProtoRequest request = runningRequests[requestId];
-            request.OnException(new MTProtoBadMessageException(errorCode));
+            OnBrokenSessionEvent();
+            //MTProtoRequest request = runningRequests[requestId];
+            //request.OnException(new MTProtoBadMessageException(errorCode));
 
             return true;
         }
@@ -687,15 +754,17 @@ namespace Telegram.MTProto {
 
             logger.debug("bad_server_salt: msgid {0}, seq {1}, errorcode {2}, newsalt {3}", badMsgId, badMsgSeqNo, errorCode, newSalt);
 
+            salt = newSalt;
+            /*
             if(!runningRequests.ContainsKey(badMsgId)) {
                 logger.debug("bad server salt on unknown message");
                 return true;
             }
+            */
+            
 
-            salt = newSalt;
-
-            MTProtoRequest request = runningRequests[badMsgId];
-            request.OnException(new MTProtoBadServerSaltException());
+            //MTProtoRequest request = runningRequests[badMsgId];
+            //request.OnException(new MTProtoBadServerSaltException(salt));
 
             return true;
         }

@@ -602,21 +602,14 @@ namespace Telegram.MTProto {
                     logger.info("creating new mtproto gateway...");
                     gateway = new MTProtoGateway(MainDc, this, true, cachedSalt);
                     gateway.UpdatesEvent += updates.ProcessUpdates;
-                    
+                    gateway.BrokenSessionEvent += GatewayOnBrokenSessionEvent;
 
                     while (true) {
                         try {
                             await gateway.ConnectAsync();
                             break;
-                        }
-                        catch (MTProtoBrokenSessionException e) {
-                            logger.info("creating new session... TODO: destroy old session");
-                            // creating new session
-                            id = Helpers.GenerateRandomUlong();
-                            sequence = 0;
-                            gateway.Dispose();
-                            gateway = new MTProtoGateway(MainDc, this, true, cachedSalt);
-                            gateway.UpdatesEvent += updates.ProcessUpdates;
+                        } catch (MTProtoBrokenSessionException e) {
+                            logger.info("broken session exception");
                         }
                     }
                     api = new TLApi(gateway);
@@ -624,6 +617,7 @@ namespace Telegram.MTProto {
                     establishedTask.SetResult(null);
 
                     updates.RequestDifference();
+
                     gateway.ReconnectEvent += () => {
                         GoToOnline();
                         updates.RequestDifference();
@@ -643,7 +637,16 @@ namespace Telegram.MTProto {
             }
         }
 
-        
+        private void GatewayOnBrokenSessionEvent() {
+            logger.info("creating new session... TODO: destroy old session");
+            // creating new session
+            id = Helpers.GenerateRandomUlong();
+            sequence = 0;
+            gateway.Dispose();
+            gateway = new MTProtoGateway(MainDc, this, true, cachedSalt);
+            gateway.UpdatesEvent += updates.ProcessUpdates;
+            gateway.BrokenSessionEvent += GatewayOnBrokenSessionEvent;
+        }
 
 
         public async Task SaveAuthorization(auth_Authorization authorization) {
@@ -696,11 +699,6 @@ namespace Telegram.MTProto {
             }
         }
 
-        public bool Connected {
-            get {
-                return gateway.Connected;
-            }
-        }
 
         public async Task Migrate(int dc) {
             if(gateway == null) {
